@@ -6,6 +6,7 @@ using namespace std;
 class Entity {
     public:
         Entity (float x, float y, float size, string imagePath);
+        sf::Sprite getSprite();
 
     protected:
         float _x;

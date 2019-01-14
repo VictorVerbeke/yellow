@@ -2,5 +2,5 @@
 
 Player::Player (float x, float y, float size, string imagePath)
 :
-    Character(x, y, size, imagePath)
+    Character(x, y, size, 100, imagePath)
 {}

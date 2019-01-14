@@ -1,8 +1,11 @@
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include "Player.hh"
 
 int main ()
 {
-    sf::Window window(sf::VideoMode(800, 600), "My window");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    Player yun(10, 10, 700, "images/yun_test.png");
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -21,6 +24,11 @@ int main ()
                     break;
             }
         }
+
+        window.draw(yun.getSprite());
+
+        // end the current frame
+        window.display();
     }
 
     return 0;

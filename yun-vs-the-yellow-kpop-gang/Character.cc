@@ -4,7 +4,8 @@
 
 using namespace std;
 
-Character::Character (float x, float y, float size, string imagePath)
+Character::Character (float x, float y, float size, int hp, string imagePath)
 :
-    Entity(x, y, size, imagePath)
+    Entity(x, y, size, imagePath),
+    _hp(hp)
 {}
