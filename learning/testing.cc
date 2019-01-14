@@ -58,6 +58,8 @@ int main ()
         // set the character size
         text.setCharacterSize(40); // in pixels, not points!
 
+        text.setPosition(400 - text.getLocalBounds().width / 2, 10);
+
         // set the color
         text.setFillColor(sf::Color::Yellow);
 
