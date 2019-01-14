@@ -6,6 +6,8 @@ CFLAGS = -Wall -g -std=c++11
 CLIBS = -L/usr/local/include/SFML -lsfml-graphics  -lsfml-window -lsfml-system
 INCDIR = -I/usr/local/include/SFML
 
+all: $(EXEC)
+
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) $(CLIBS) -o $(EXEC)
 
@@ -14,3 +16,5 @@ $(EXEC): $(OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(EXEC)
+
+.PHONY: all clean

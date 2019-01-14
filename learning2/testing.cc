@@ -6,7 +6,7 @@ using namespace std;
 
 int main ()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     window.setPosition(sf::Vector2i(10, 10));
@@ -19,7 +19,7 @@ int main ()
     cout << size.y << endl;
 
     // Create shapes
-    sf::CircleShape shape(50.f);
+    sf::CircleShape shape(200.f);
 
 
     // run the program as long as the window is open
@@ -29,6 +29,7 @@ int main ()
         sf::Event event;
         while (window.pollEvent(event))
         {
+
             if (event.type == sf::Event::KeyPressed){
                 switch(event.key.code){
                     case sf::Keyboard::Left :
@@ -51,7 +52,11 @@ int main ()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
         window.draw(shape);
+
+        // end the current frame
+        window.display();
     }
 
     return 0;
