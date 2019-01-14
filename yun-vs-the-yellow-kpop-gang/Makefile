@@ -1,4 +1,4 @@
-EXEC = testing
+EXEC = yun
 SOURCES = $(wildcard *.cc)
 OBJECTS = $(SOURCES:.cc=.o)
 CC = g++
