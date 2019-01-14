@@ -6,6 +6,8 @@ using namespace std;
 int main ()
 {
     sf::Window window(sf::VideoMode(800, 600), "My window");
+    window.setFramerateLimit(60);
+    window.setVerticalSyncEnable(true);
 
     // change the position of the window (relatively to the desktop)
     window.setPosition(sf::Vector2i(10, 10));
