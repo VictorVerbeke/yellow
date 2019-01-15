@@ -5,9 +5,9 @@ using namespace std;
 
 Entity::Entity (float x, float y, float size, string imagePath)
 :
+    _size(size),
     _x(x),
-    _y(y),
-    _size(size)
+    _y(y)
 {
     int res = _texture.loadFromFile(imagePath, sf::IntRect(x, y, size, size));
     if (!res) {
