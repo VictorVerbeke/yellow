@@ -10,7 +10,7 @@ using namespace std;
 int main ()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
-    Player yun(10, 10, 700, "images/yun_test.png");
+    Player yun(10, 10, 100, "images/yun_test_100.png");
 
     // Flags for key pressed
     bool upFlag = false;
@@ -57,10 +57,10 @@ int main ()
         }
 
         // Update coordinates
-        if (leftFlag) x -= SPRITE_SPEED;
-        if (rightFlag) x += SPRITE_SPEED;
-        if (upFlag) y -= SPRITE_SPEED;
-        if (downFlag) y += SPRITE_SPEED;
+        if (leftFlag && x > 0) x -= SPRITE_SPEED;
+        if (rightFlag && x < window.getSize().x - yun._size) x += SPRITE_SPEED;
+        if (upFlag && y > 0) y -= SPRITE_SPEED;
+        if (downFlag && y < window.getSize().y - yun._size) y += SPRITE_SPEED;
 
         // Clear the window and apply grey background
         window.clear(sf::Color(127,127,127));
@@ -72,7 +72,7 @@ int main ()
         // end the current frame
         window.display();
 
-        cout << x << endl;
+
     }
 
     return 0;

@@ -9,7 +9,7 @@ Entity::Entity (float x, float y, float size, string imagePath)
     _y(y),
     _size(size)
 {
-    int res = _texture.loadFromFile(imagePath, sf::IntRect(x, y, x + size, y + size));
+    int res = _texture.loadFromFile(imagePath, sf::IntRect(x, y, size, size));
     if (!res) {
         cout << "Error reading texture file (" << imagePath << ")." << endl;
         exit(1);
