@@ -18,8 +18,3 @@ Entity::Entity (float x, float y, float size, string imagePath)
     _texture.setSmooth(true);
     _sprite.setTexture(_texture);
 }
-
-sf::Sprite Entity::getSprite ()
-{
-    return _sprite;
-}
