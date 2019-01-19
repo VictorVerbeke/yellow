@@ -74,6 +74,8 @@ int main ()
         // end the current frame
         window.display();
 
+        cout << "x : " << yun._sprite.x << ", y : " << yun._sprite.x << endl;
+
 
     }
 
