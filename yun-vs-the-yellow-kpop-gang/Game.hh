@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <string>
 #include <cmath>
+#include <vector>
+#include <exception>
 #include "Player.hh"
 #include "Pellet.hh"
 #include "Enemy.hh"
@@ -15,9 +17,14 @@ using namespace std;
 
 class Game : public sf::RenderWindow {
     public :
-        Game();
         Game(sf::VideoMode mode, string name);
         ~Game();
+
+        // Methodes du jeu
+        void beginGame();
+        void checkEvent();
+        void moveYun();
+        void refreshDisplay();
 
         // Methodes de déplacement
         void moveEntity(Player *object, float x, float y);
@@ -33,6 +40,22 @@ class Game : public sf::RenderWindow {
         void drawEntity(PowerUp *object);
         void drawEntity(Pellet *object);
 
+        // Attributs : Entités
+        Player yun;
+        vector<Enemy> enemyVector;
+        vector<Pellet> pelletVector;
+        vector<PowerUp> pUpVector;
+        Boss boss;
+
+        // Attributs : Flags
+        bool upFlag;
+        bool downFlag;
+        bool leftFlag;
+        bool rightFlag;
+
+        // Attributs : Controles
+        float x;
+        float y;
 
     private :
         // Rien LOL
