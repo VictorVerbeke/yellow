@@ -13,11 +13,11 @@
 
 using namespace std;
 
-class GameWindow: public sf::RenderWindow {
+class Game : public sf::RenderWindow {
     public :
-        GameWindow();
-        GameWindow(sf::VideoMode mode, string name);
-        ~GameWindow();
+        Game();
+        Game(sf::VideoMode mode, string name);
+        ~Game();
 
         // Methodes de déplacement
         void moveEntity(Player *object, float x, float y);
