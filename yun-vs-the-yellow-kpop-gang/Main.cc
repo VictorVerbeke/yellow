@@ -2,6 +2,9 @@
 #include "Player.hh"
 #include "Game.hh"
 #include "Enemy.hh"
+#include "Pellet.hh"
+#include "Boss.hh"
+
 #define SPRITE_SPEED 2
 
 using namespace std;
