@@ -10,6 +10,8 @@ class Entity {
         float _size;
         sf::Texture _texture;
 
+        void setPosition(float x, float y);
+
     protected:
         float _x;
         float _y;

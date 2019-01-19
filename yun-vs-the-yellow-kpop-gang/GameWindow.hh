@@ -1,9 +1,10 @@
-#pragma once 
+#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <string>
+#include "Entity.hh"
 
 using namespace std;
 
@@ -13,11 +14,9 @@ class GameWindow: public sf::RenderWindow{
         GameWindow(sf::VideoMode mode, string name);
         ~GameWindow();
 
-        template <typename T>
-        void setPosition(T object, float x, float y);
+        void setPosition(Entity object, float x, float y);
 
-        template <typename T>
-        void drawItem(T object);
+        void drawItem(Entity object);
 
 
     private :

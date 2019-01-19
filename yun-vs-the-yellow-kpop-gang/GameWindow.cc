@@ -24,19 +24,16 @@ GameWindow::~GameWindow(){
     delete(this);
 }
 
-template <typename T>
-void GameWindow::setPosition(T object, float x, float y){
+void GameWindow::setPosition(Entity object, float x, float y){
     try {
         object._sprite.setPosition(x, y);
-        object._x = x;
-        object._y = y;
+        object.setPosition(x, y);
     } catch (exception const& ex){
         cout << "Exception: " << ex.what() << endl;
     }
 }
 
-template <typename T>
-void GameWindow::drawItem(T object){
+void GameWindow::drawItem(Entity object){
     try {
         this->draw(object._sprite);
     } catch (exception const& ex){
