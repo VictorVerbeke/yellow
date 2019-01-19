@@ -1,7 +1,6 @@
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include "Player.hh"
 #include <iostream>
+#include "Player.hh"
+#include "GameWindow.hh"
 
 #define SPRITE_SPEED 1
 
@@ -9,7 +8,7 @@ using namespace std;
 
 int main ()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    GameWindow window(sf::VideoMode(800, 600), "My window");
     Player yun(10, 10, 100, "images/yun_test_100.png");
 
     // Flags for key pressed
@@ -65,9 +64,12 @@ int main ()
         // Clear the window and apply grey background
         window.clear(sf::Color(127,127,127));
 
-        yun._sprite.setPosition(x, y);
-
-        window.draw(yun._sprite);
+        try {
+            window.setPosition(yun, x, y);
+            window.drawItem(yun);
+        } catch (exception const& ex) {
+            cout << "Exception : " << ex.what() << endl;
+        }
 
         // end the current frame
         window.display();
