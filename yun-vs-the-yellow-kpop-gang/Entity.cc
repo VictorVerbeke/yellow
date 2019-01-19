@@ -19,8 +19,8 @@ Entity::Entity (float x, float y, float size, string imagePath)
     _sprite.setTexture(_texture);
 }
 
-
-void Entity::setPosition(float x, float y){
-    _x = x;
-    _y = y;
-}
+//
+// void Entity::setPosition(float x, float y){
+//     _x = x;
+//     _y = y;
+// }

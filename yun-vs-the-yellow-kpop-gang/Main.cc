@@ -2,14 +2,14 @@
 #include "Player.hh"
 #include "GameWindow.hh"
 
-#define SPRITE_SPEED 1
+#define SPRITE_SPEED 2
 
 using namespace std;
 
 int main ()
 {
     GameWindow window(sf::VideoMode(800, 600), "My window");
-    Player yun(10, 10, 100, "images/yun_test_100.png");
+    Player yun(0, 0, 100, "images/yun_test_100.png");
 
     // Flags for key pressed
     bool upFlag = false;
@@ -17,9 +17,8 @@ int main ()
     bool leftFlag = false;
     bool rightFlag = false;
 
-    float x = 10.0;
-    float y = 10.0;
-
+    float x = 0;
+    float y = 0;
     // run the program as long as the window is open
     while (window.isOpen())
     {
@@ -39,6 +38,7 @@ int main ()
                     if (event.key.code == sf::Keyboard::Down) downFlag = true;
                     if (event.key.code == sf::Keyboard::Left) leftFlag = true;
                     if (event.key.code == sf::Keyboard::Right) rightFlag = true;
+                    if (event.key.code == sf::Keyboard::Space) yun.fire();
 
                     break;
 
@@ -56,6 +56,8 @@ int main ()
         }
 
         // Update coordinates
+        x = 0;
+        y = 0;
         if (leftFlag && x > 0) x -= SPRITE_SPEED;
         if (rightFlag && x < window.getSize().x - yun._size) x += SPRITE_SPEED;
         if (upFlag && y > 0) y -= SPRITE_SPEED;
@@ -64,17 +66,10 @@ int main ()
         // Clear the window and apply grey background
         window.clear(sf::Color(127,127,127));
 
-        try {
-            window.setPosition(yun, x, y);
-            window.drawItem(yun);
-        } catch (exception const& ex) {
-            cout << "Exception : " << ex.what() << endl;
-        }
-
+        window.moveEntity(&yun, x, y);
+        window.drawEntity(&yun);
         // end the current frame
         window.display();
-
-        cout << "x : " << yun._sprite.x << ", y : " << yun._sprite.x << endl;
 
 
     }

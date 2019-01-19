@@ -2,5 +2,16 @@
 #include <cmath>
 #include "Pellet.hh"
 
-#define PI 3.141592653
 using namespace std;
+
+Pellet::Pellet(float x, float y, float size, string imagePath,
+               float speed, float direction, int damage)
+:
+    Entity(x, y, size, imagePath),
+    _speed(speed),
+    _direction(direction),
+    _damage(damage){}
+
+Pellet::~Pellet(){
+    delete(this);
+}
