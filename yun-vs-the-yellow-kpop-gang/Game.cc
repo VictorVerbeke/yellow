@@ -49,9 +49,9 @@ void Game::beginGame(){
         checkEvent();
         scriptedEvents();
         moveEntities();
-        enemyAttack();
         checkAllCollisions();
         refreshDisplay();
+        enemyAttack();
     }
 }
 
@@ -75,7 +75,7 @@ void Game::checkEvent(){
                 if (event.key.code == sf::Keyboard::Left) leftFlag = true;
                 if (event.key.code == sf::Keyboard::Right) rightFlag = true;
                 if (event.key.code == sf::Keyboard::LShift) shiftFlag = true;
-                if (event.key.code == sf::Keyboard::Space) firingFlag = true;
+                if (event.key.code == sf::Keyboard::RShift) firingFlag = true;
                 if (event.key.code == sf::Keyboard::Escape) close();
                 break;
 
@@ -85,7 +85,7 @@ void Game::checkEvent(){
                 if (event.key.code == sf::Keyboard::Left) leftFlag = false;
                 if (event.key.code == sf::Keyboard::Right) rightFlag = false;
                 if (event.key.code == sf::Keyboard::LShift) shiftFlag = false;
-                if (event.key.code == sf::Keyboard::Space) firingFlag = false;
+                if (event.key.code == sf::Keyboard::RShift) firingFlag = false;
                 break;
 
             default:
@@ -144,7 +144,7 @@ void Game::refreshDisplay(){
 void Game::enemyAttack(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
-        addPelletToVector((&(*itEnemy))->fire());
+        addPelletToVector((&(*itEnemy))->fire(yun._sprite.getPosition()));
         (&(*itEnemy))->decreaseCD();
     }
 }

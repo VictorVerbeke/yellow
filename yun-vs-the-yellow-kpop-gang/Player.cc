@@ -28,7 +28,7 @@ void Player::operator-(const float &b) {
 Pellet* Player::fire(){
     if (_fireCD == 0) {
         _fireCD = PLAYERFIRECD;
-        Pellet* created = new Pellet(0, 0, 32, "images/angery_32.png",
+        Pellet *created = new Pellet(0, 0, 32, "images/angery_32.png",
                                     PLAYERPELLETSPEED, 0, 1, 1); //90 = down
         created->_x = this->_x + this->_size - 20;
         created->_y = this->_y + (this->_size)/2 - 20;

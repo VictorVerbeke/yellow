@@ -8,26 +8,28 @@ Enemy::Enemy(float x, float y, float size, int hp,
     _speed(ENEMYMOVEMENTSPEED),
     _direction(-90),
     _directionVariation(1),
-    _fireCD(0)
+    _fireCD(ENEMYFIRECD)
 {}
 
 Enemy::~Enemy(){
 }
 
-Pellet* Enemy::fire(){
+Pellet* Enemy::fire(sf::Vector2f yunPos){
 
-    if (_fireCD > 0) {
-        _fireCD --;
-        return NULL; // Exception sur push_back(NULL) à faire
-    }
-    else {
+    if (_fireCD == 0) {
+        sf::Vector2f startingPos = this->_sprite.getPosition();
+        float dX = yunPos.x + 50 - startingPos.x;
+        float dY = yunPos.y + 50 - startingPos.y;
+        float angle = (atan2(dY, dX) * 180 / PI);
         _fireCD = ENEMYFIRECD;
         Pellet *enemyPellet = new Pellet(0, 0, 32, "images/angery_32.png",
-                                    ENEMYPELLETSPEED, 180, ENEMYDAMAGE, 0);
-        enemyPellet->_x = this->_x - 5;
-        enemyPellet->_y = this->_y + (this->_size)/2 - 5;
+                                    ENEMYPELLETSPEED, angle, ENEMYDAMAGE, 0);
+        enemyPellet->_x = (this->_size / 2)*cos(angle/180*PI) + (this->_x);
+        enemyPellet->_y = (this->_size / 2)*sin(angle/180*PI) + (this->_y);
         return enemyPellet;
     }
+    return NULL;
+
 }
 
 void Enemy::decreaseCD(){

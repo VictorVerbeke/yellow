@@ -9,6 +9,7 @@
 #define ENEMYMOVEMENTSPEED 2
 #define ENEMYDAMAGE 5
 #define INVULTEMPS 30
+#define PI 3.141592653
 
 using namespace std;
 

@@ -15,7 +15,6 @@
 #include "PowerUp.hh"
 
 #define PLAYER_SPEED 4
-#define PI 3.141592653
 
 using namespace std;
 
@@ -69,7 +68,7 @@ class Game : public sf::RenderWindow {
 
         // Attributs : Audio
         sf::Music _music;
-        
+
         // Attributs : Entités
         Player yun;
         vector<Enemy> enemyVector;
