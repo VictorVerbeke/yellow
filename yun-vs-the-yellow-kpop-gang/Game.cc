@@ -18,6 +18,16 @@ Game::Game(sf::VideoMode mode, string name) :
     shiftFlag = false;
     firingFlag = false;
 
+    // Création des Sprites
+    int res = _backgroundTexture.loadFromFile("images/fond_1620_1080.jpg");
+    if (!res) {
+        cout << "Error reading texture file (images/fond_800_600.jpg)." << endl;
+        exit(1);
+    }
+    _backgroundSprite.setTexture(_backgroundTexture);
+    _backgroundSprite.setTextureRect(sf::IntRect(0, 0, 1620, this->getSize().y));
+    _backgroundSprite.setPosition(0,0);
+    _backgroundSprite.setTexture(_backgroundTexture);
     // Autres assignations
     _frameCounter = 0;
 }
@@ -37,7 +47,6 @@ void Game::beginGame(){
         enemyAttack();
         checkAllCollisions();
         refreshDisplay();
-        _frameCounter++;
     }
 }
 
@@ -82,6 +91,8 @@ void Game::checkEvent(){
 }
 
 void Game::scriptedEvents(){
+
+    _frameCounter++;
     switch (_frameCounter){
         case 100 : {
             cout << "Bon. ";
@@ -120,6 +131,7 @@ void Game::scriptedEvents(){
 void Game::refreshDisplay(){
     // Clear the window and apply grey background
     clear(sf::Color(127,127,127));
+    drawBackground();
     drawEntities();
     display();
 }
@@ -158,8 +170,7 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
     }
 }
 
-void Game::checkYunCollisionsPowerUp(
-}
+void Game::checkYunCollisionsPowerUp(){}
 
 // Methodes de collision
 void Game::checkYunCollisions(){
@@ -333,6 +344,12 @@ void Game::moveEntities(){
 
 
 // Methodes d'affichage
+void Game::drawBackground(){
+    draw(_backgroundSprite);
+    _backgroundSprite.setPosition(-0.1*_frameCounter, 0);
+}
+
+
 void Game::drawEntity(Player* object){
     draw(object->_sprite);
     // On en profite : on réduit le cooldown de tir à chaque frame

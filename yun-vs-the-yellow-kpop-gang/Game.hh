@@ -48,6 +48,7 @@ class Game : public sf::RenderWindow {
         void moveEntities();
 
         // Methodes d'affichage
+        void drawBackground();
         void drawEntity(Player *object);
         void drawEntity(Boss *object);
         void drawEntity(Enemy *object);
@@ -60,6 +61,11 @@ class Game : public sf::RenderWindow {
         void addEnemyToVector(Enemy *object);
         void addPowerUpToVector(PowerUp *object);
         void addBossToVector(Boss *object);
+
+        // Attributs : Sprites
+        sf::Sprite _backgroundSprite;
+        sf::Texture _backgroundTexture;
+
 
         // Attributs : Entités
         Player yun;
