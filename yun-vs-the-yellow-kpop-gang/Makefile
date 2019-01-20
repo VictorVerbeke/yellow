@@ -3,7 +3,7 @@ SOURCES = $(wildcard *.cc)
 OBJECTS = $(SOURCES:.cc=.o)
 CC = g++
 CFLAGS = -Wall -g -std=c++11
-CLIBS = -L/usr/local/include/SFML -lsfml-graphics  -lsfml-window -lsfml-system
+CLIBS = -L/usr/local/include/SFML -lsfml-graphics  -lsfml-window -lsfml-system -lsfml-audio
 INCDIR = -I/usr/local/include/SFML
 
 all: $(EXEC)

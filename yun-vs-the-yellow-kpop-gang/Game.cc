@@ -28,6 +28,11 @@ Game::Game(sf::VideoMode mode, string name) :
     _backgroundSprite.setTextureRect(sf::IntRect(0, 0, 1620, this->getSize().y));
     _backgroundSprite.setPosition(0,0);
     _backgroundSprite.setTexture(_backgroundTexture);
+
+    // Création de l'Audio
+    if (!_music.openFromFile("sounds/musics/level1.ogg")) exit(1);
+    _music.play();
+
     // Autres assignations
     _frameCounter = 0;
 }

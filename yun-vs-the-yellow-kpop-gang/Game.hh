@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include <stdexcept>
 #include <string>
 #include <cmath>
@@ -66,7 +67,9 @@ class Game : public sf::RenderWindow {
         sf::Sprite _backgroundSprite;
         sf::Texture _backgroundTexture;
 
-
+        // Attributs : Audio
+        sf::Music _music;
+        
         // Attributs : Entités
         Player yun;
         vector<Enemy> enemyVector;

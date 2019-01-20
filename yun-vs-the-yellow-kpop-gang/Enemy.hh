@@ -2,9 +2,6 @@
 #include "Character.hh"
 #include "Pellet.hh"
 
-#define FIRECD 30
-#define ENEMYSPEED 2
-
 enum Pattern {null, line, wave, still};
 
 class Enemy: public Character {
@@ -17,7 +14,7 @@ class Enemy: public Character {
         // Methodes
         Pellet* fire();
         void decreaseCD();
-        
+
         // Attributs
         Pattern _pattern;
         float _speed;

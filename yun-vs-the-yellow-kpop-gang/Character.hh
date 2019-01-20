@@ -4,9 +4,10 @@
 
 #define PLAYERFIRECD 15
 #define PLAYERPELLETSPEED 10
-#define ENEMYFIRECD 40
+#define ENEMYFIRECD 80
 #define ENEMYPELLETSPEED 4
-#define ENEMYDAMAGE 20
+#define ENEMYMOVEMENTSPEED 2
+#define ENEMYDAMAGE 5
 #define INVULTEMPS 30
 
 using namespace std;
