@@ -19,6 +19,9 @@ Game::Game(sf::VideoMode mode, string name) :
     leftFlag = false;
     shiftFlag = false;
     firingFlag = false;
+
+    // Autres assignations
+    _frameCounter = 0;
 }
 
 Game::~Game(){
@@ -32,9 +35,10 @@ void Game::beginGame(){
     while (isOpen())
     {
         checkEvent();
+        scriptedEvents();
         moveEntities();
         refreshDisplay();
-
+        cout << _frameCounter++ << endl << endl;
     }
 }
 
@@ -76,6 +80,10 @@ void Game::checkEvent(){
         }
     }
     if (firingFlag) addPelletToVector(yun.fire());
+}
+
+void Game::scriptedEvents(){
+    //TODO
 }
 
 void Game::moveYun(){
@@ -165,11 +173,12 @@ void Game::moveEntity(PowerUp *object){
 }
 
 void Game::moveEntities(){
+
     moveYun();
+
     for (vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); ){
         // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            delete(&(*it));
             it = enemyVector.erase(it);
         } else {
             moveEntity(&(*it));
@@ -181,7 +190,6 @@ void Game::moveEntities(){
     for (vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); ){
         // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            delete(&(*it));
             it = pelletVector.erase(it);
         } else {
             moveEntity(&(*it));
@@ -192,7 +200,6 @@ void Game::moveEntities(){
     for (vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); ){
         // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            // delete(&(*it));
             it = pUpVector.erase(it);
         } else {
             moveEntity(&(*it));
@@ -203,7 +210,6 @@ void Game::moveEntities(){
     for (vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); ){
         // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            // delete(&(*it));
             it = bossVector.erase(it);
         } else {
             moveEntity(&(*it));
@@ -214,7 +220,7 @@ void Game::moveEntities(){
 }
 
 
-// Methodes d'affichagethis->_x, this->_y
+// Methodes d'affichage
 void Game::drawEntity(Player* object){
     draw(object->_sprite);
     // On en profite : on réduit le cooldown de tir à chaque frame
@@ -246,12 +252,10 @@ void Game::drawEntities(){
         drawEntity(&(*it));
     for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
         drawEntity(&(*it));
-    cout << "iterator begin." << endl;
     for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++){
         cout << &(*it) << endl;
         drawEntity(&(*it));
     }
-    cout << "iterator end" << endl << endl;
     // Draw the Player after everything.
     drawEntity(&yun);
 }

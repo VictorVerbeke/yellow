@@ -26,6 +26,7 @@ class Game : public sf::RenderWindow {
         // Methodes du jeu
         void beginGame();
         void checkEvent();
+        void scriptedEvents();
         void moveYun();
         void refreshDisplay();
 
@@ -71,6 +72,6 @@ class Game : public sf::RenderWindow {
         float y;
 
     private :
-        // Rien LOL
+        unsigned long int _frameCounter;
 
 };
