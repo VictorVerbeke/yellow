@@ -1,10 +1,11 @@
 #pragma once
 #include "Enemy.hh"
-enum Name { GirlGeneration, _2NE1, Jonghyun };
+enum Name { none, GirlGeneration, _2NE1, Jonghyun };
 
 class Boss: public Enemy {
     public:
         // Constructeurs & Destructeurs
+        Boss();
         Boss(float x, float y, float size, int hp,
              string imagePath, Pattern pattern, Name name);
         ~Boss(); // LVL 1 CROOK

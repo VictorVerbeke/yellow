@@ -3,6 +3,12 @@
 #define SPECIALFIRECD2 250
 #define SPECIALFIRECD3 200
 
+Boss::Boss():
+    Enemy(0,0,0,100,NULL, null),
+    _name(none),
+    _phase(0),
+    _specialFireCD(0){}
+
 Boss::Boss(float x, float y, float size, int hp,
      string imagePath, Pattern pattern, Name name)
 :

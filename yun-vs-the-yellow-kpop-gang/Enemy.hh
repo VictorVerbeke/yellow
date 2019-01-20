@@ -2,7 +2,8 @@
 #include "Character.hh"
 #include "Pellet.hh"
 
-enum Pattern {line, wave, still};
+#define FIRECD 30
+enum Pattern {null, line, wave, still};
 
 class Enemy: public Character {
     public:

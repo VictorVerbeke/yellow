@@ -1,5 +1,5 @@
 #include "Enemy.hh"
-#define FIRECD 30
+
 
 Enemy::Enemy(float x, float y, float size, int hp,
              string imagePath, Pattern pattern)

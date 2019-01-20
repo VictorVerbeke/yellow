@@ -13,6 +13,9 @@
 #include "Boss.hh"
 #include "PowerUp.hh"
 
+#define PLAYER_SPEED 4
+#define PI 3.141592653
+
 using namespace std;
 
 class Game : public sf::RenderWindow {
@@ -45,13 +48,14 @@ class Game : public sf::RenderWindow {
         vector<Enemy> enemyVector;
         vector<Pellet> pelletVector;
         vector<PowerUp> pUpVector;
-        Boss boss;
+        vector<Boss> bossVector;
 
         // Attributs : Flags
         bool upFlag;
         bool downFlag;
         bool leftFlag;
         bool rightFlag;
+        bool shiftFlag;
 
         // Attributs : Controles
         float x;

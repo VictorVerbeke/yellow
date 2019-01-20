@@ -1,9 +1,11 @@
 #include "Game.hh"
-#define PI 3.141592653
+
+Player yun_template(0, 0, 100, "images/yun_test_100.png");
 
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name)
 {
+
     //setIcon("images/icon.png");
     setMouseCursorVisible(false);
     setVerticalSyncEnabled(false);
@@ -15,10 +17,10 @@ Game::Game(sf::VideoMode mode, string name) :
     downFlag = false;
     rightFlag = false;
     leftFlag = false;
+    shiftFlag = false;
 
     x = 0;
     y = 0;
-    yun = new Player(0, 0, 100, "images/yun_test_100.png");
 }
 
 Game::~Game(){
@@ -29,11 +31,11 @@ Game::~Game(){
 void Game::beginGame(){
 
     // Run the program as long as the window is open
-    while (game.isOpen())
+    while (isOpen())
     {
-        game.checkEvent();
-        game.moveYun();
-        game.refreshDisplay();
+        checkEvent();
+        moveYun();
+        refreshDisplay();
 
     }
 }
@@ -41,12 +43,12 @@ void Game::beginGame(){
 void Game::checkEvent(){
 
     sf::Event event;
-    while (game.pollEvent(event))
+    while (pollEvent(event))
     {
         switch (event.type) {
             case sf::Event::Closed:
                 // "close requested" event: we close the window
-                game.close();
+                close();
                 break;
 
             case sf::Event::KeyPressed:
@@ -55,8 +57,9 @@ void Game::checkEvent(){
                 if (event.key.code == sf::Keyboard::Down) downFlag = true;
                 if (event.key.code == sf::Keyboard::Left) leftFlag = true;
                 if (event.key.code == sf::Keyboard::Right) rightFlag = true;
+                if (event.key.code == sf::Keyboard::LShift) shiftFlag = true;
                 if (event.key.code == sf::Keyboard::Space) yun.fire();
-
+                if (event.key.code == sf::Keyboard::Escape) close();
                 break;
 
             case sf::Event::KeyReleased:
@@ -64,7 +67,7 @@ void Game::checkEvent(){
                 if (event.key.code == sf::Keyboard::Down) downFlag = false;
                 if (event.key.code == sf::Keyboard::Left) leftFlag = false;
                 if (event.key.code == sf::Keyboard::Right) rightFlag = false;
-
+                if (event.key.code == sf::Keyboard::LShift) shiftFlag = false;
                 break;
 
             default:
@@ -78,22 +81,39 @@ void Game::moveYun(){
     // Update coordinates
     x = 0;
     y = 0;
-    if (leftFlag && x > 0) x -= SPRITE_SPEED;
-    if (rightFlag && x < game.getSize().x - yun._size) x += SPRITE_SPEED;
-    if (upFlag && y > 0) y -= SPRITE_SPEED;
-    if (downFlag && y < game.getSize().y - yun._size) y += SPRITE_SPEED;
-    game.moveEntity(&yun, x, y);
+    if (leftFlag && yun._x > 0) x -= PLAYER_SPEED;
+    if (rightFlag && yun._x < getSize().x - yun._size) x += PLAYER_SPEED;
+    if (upFlag && yun._y > 0) y -= PLAYER_SPEED;
+    if (downFlag && yun._y < getSize().y - yun._size) y += PLAYER_SPEED;
+    if (shiftFlag){
+        x = x/2;
+        y = y/2;
+    }
+    moveEntity(&yun, x, y);
 }
 
 void Game::refreshDisplay(){
     // Clear the window and apply grey background
-    game.clear(sf::Color(127,127,127));
+    clear(sf::Color(127,127,127));
 
-    game.drawEntity(&yun);
+    // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
+    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
+        drawEntity(&(*it));
+
+    // Draw the Player
+    drawEntity(&yun);
 
     // end the current frame
-    game.display();
+    display();
 }
+
+
 // Methodes de déplacement
 void Game::moveEntity(Player *object, float x, float y){
     object->_x += x;
@@ -127,7 +147,7 @@ void Game::moveEntity(PowerUp *object){
 }
 
 // Methodes d'affichage
-void Game::drawEntity(Player *object){
+void Game::drawEntity(Player object){
     draw(object->_sprite);
 }
 
