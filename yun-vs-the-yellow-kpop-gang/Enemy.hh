@@ -13,8 +13,11 @@ class Enemy: public Character {
         Enemy(float x, float y, float size, int hp,
               string imagePath, Pattern pattern);
         ~Enemy();
+
+        // Methodes
         Pellet* fire();
 
+        // Attributs
         Pattern _pattern;
         float _speed;
         float _direction;

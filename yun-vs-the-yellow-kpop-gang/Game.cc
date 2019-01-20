@@ -1,7 +1,5 @@
 #include "Game.hh"
 
-Player yun_template(0, 0, 100, "images/yun_test_100.png");
-
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name)
 {
@@ -25,7 +23,6 @@ Game::Game(sf::VideoMode mode, string name) :
 }
 
 Game::~Game(){
-    delete(this);
 }
 
 // Methode principale : Là où se déroule tout le jeu, beginGame().
@@ -34,12 +31,13 @@ void Game::beginGame(){
     // Run the program as long as the window is open
     while (isOpen())
     {
-
         checkEvent();
         scriptedEvents();
         moveEntities();
+        checkCollisions();
         refreshDisplay();
-        cout << _frameCounter++ << endl << endl;
+        cout << yun.getHp() << ", " << _frameCounter << endl << endl;
+        _frameCounter++;
     }
 }
 
@@ -119,8 +117,27 @@ void Game::scriptedEvents(){
     }
 }
 
-void Game::moveYun(){
+void Game::refreshDisplay(){
+    // Clear the window and apply grey background
+    clear(sf::Color(127,127,127));
+    drawEntities();
+    display();
+}
 
+void Game::checkCollisions(){
+
+    // Le joueur ne doit toucher ni les balles, ni les ennemis
+    vector<Enemy>::iterator it = enemyVector.begin();
+    for ( ; it != enemyVector.end(); it++){
+        if (yun._sprite.getGlobalBounds().intersects((&(*it))->_sprite.getGlobalBounds())){;
+            yun - 10;
+        }
+    }
+}
+
+
+// Methodes de déplacement
+void Game::moveYun(){
     // Update coordinates
     x = 0;
     y = 0;
@@ -135,15 +152,6 @@ void Game::moveYun(){
     moveEntity(&yun, x, y);
 }
 
-void Game::refreshDisplay(){
-    // Clear the window and apply grey background
-    clear(sf::Color(127,127,127));
-    drawEntities();
-    display();
-}
-
-
-// Methodes de déplacement
 void Game::moveEntity(Player *object, float x, float y){
     object->_x += x;
     object->_y += y;
@@ -209,36 +217,44 @@ void Game::moveEntity(PowerUp *object){
 
 void Game::moveEntities(){
     moveYun();
-    for (vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); ){
-        if ((&(*it))->_x < -(&(*it))->_size || (&(*it))->_y < -(&(*it))->_size || (&(*it))->_y > getSize().y){
-            it = enemyVector.erase(it);
+
+    vector<Enemy>::iterator itEnemy = enemyVector.begin();
+    for ( ; itEnemy != enemyVector.end(); ){
+        if ((&(*itEnemy))->_x < -(&(*itEnemy))->_size || (&(*itEnemy))->_y < -(&(*itEnemy))->_size || (&(*itEnemy))->_y > getSize().y){
+            itEnemy = enemyVector.erase(itEnemy);
         } else {
-            moveEntity(&(*it));
-            it++;
+            moveEntity(&(*itEnemy));
+            itEnemy++;
         }
     }
-    for (vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); ){
-        if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            it = pelletVector.erase(it);
+
+    vector<Pellet>::iterator itPellet = pelletVector.begin();
+    for ( ; itPellet != pelletVector.end(); ){
+        if ((&(*itPellet))->_x < 0 || (&(*itPellet))->_x > getSize().x || (&(*itPellet))->_y < 0 || (&(*itPellet))->_y > getSize().y){
+            itPellet = pelletVector.erase(itPellet);
         } else {
-            moveEntity(&(*it));
-            it++;
+            moveEntity(&(*itPellet));
+            itPellet++;
         }
     }
-    for (vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); ){
-        if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            it = pUpVector.erase(it);
+
+    vector<PowerUp>::iterator itPowerUp = pUpVector.begin();
+    for ( ; itPowerUp != pUpVector.end(); ){
+        if ((&(*itPowerUp))->_x < 0 || (&(*itPowerUp))->_x > getSize().x || (&(*itPowerUp))->_y < 0 || (&(*itPowerUp))->_y > getSize().y){
+            itPowerUp = pUpVector.erase(itPowerUp);
         } else {
-            moveEntity(&(*it));
-            it++;
+            moveEntity(&(*itPowerUp));
+            itPowerUp++;
         }
     }
-    for (vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); ){
-        if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
-            it = bossVector.erase(it);
+
+    vector<Boss>::iterator itBoss = bossVector.begin();
+    for ( ; itBoss != bossVector.end(); ){
+        if ((&(*itBoss))->_x < 0 || (&(*itBoss))->_x > getSize().x || (&(*itBoss))->_y < 0 || (&(*itBoss))->_y > getSize().y){
+            itBoss = bossVector.erase(itBoss);
         } else {
-            moveEntity(&(*it));
-            it++;
+            moveEntity(&(*itBoss));
+            itBoss++;
         }
     }
 

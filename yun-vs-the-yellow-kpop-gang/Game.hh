@@ -29,6 +29,7 @@ class Game : public sf::RenderWindow {
         void scriptedEvents();
         void moveYun();
         void refreshDisplay();
+        void checkCollisions();
 
         // Methodes de déplacement
         void moveEntity(Player *object, float x, float y);

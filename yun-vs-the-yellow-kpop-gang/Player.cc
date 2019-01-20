@@ -1,6 +1,6 @@
 #include "Player.hh"
-#define FIRECD 5
-#define PLAYERPELLETSPEED 30
+#define FIRECD 15
+#define PLAYERPELLETSPEED 10
 #define PLAYERDAMAGE 50
 using namespace std;
 
@@ -15,16 +15,22 @@ Player::Player (float x, float y, float size, string imagePath)
 
 
 Player::~Player(){
-    delete(this);
 }
+
+// Overloads
+void Player::operator-(const float &b) {
+    this->setHp(this->getHp() - b);
+}
+
+// Methodes
 
 Pellet* Player::fire(){
     if (_fireCD == 0) {
         _fireCD = FIRECD;
         Pellet* created = new Pellet(0, 0, 32, "images/angery_32.png",
-                                    PLAYERPELLETSPEED, 0, PLAYERDAMAGE); //90 = down
-        created->_x = this->_x;
-        created->_y = this->_y;
+                                    PLAYERPELLETSPEED, 0, PLAYERDAMAGE, 1); //90 = down
+        created->_x = this->_x + this->_size - 20;
+        created->_y = this->_y + (this->_size)/2 - 20;
         return created;
     }
     return NULL;

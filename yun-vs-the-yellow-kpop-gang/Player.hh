@@ -11,7 +11,10 @@ class Player: public Character {
         Player();
         Player (float x, float y, float size, string imagePath);
         ~Player();
+        // Overload opérateurs
+        void operator-(const float &b);
 
+        // Methodes
         Pellet* fire();
         void decreaseCD();
 
