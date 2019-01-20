@@ -1,6 +1,5 @@
 #include "Enemy.hh"
 
-
 Enemy::Enemy(float x, float y, float size, int hp,
              string imagePath, Pattern pattern)
 :
@@ -16,12 +15,21 @@ Enemy::~Enemy(){
 }
 
 Pellet* Enemy::fire(){
+    
     if (_fireCD > 0) {
         _fireCD --;
         return NULL; // Exception sur push_back(NULL) à faire
     }
     else {
         _fireCD = FIRECD;
-        return NULL; // TODO Faire la création de Pellet
+        Pellet *enemyPellet = new Pellet(0, 0, 32, "images/angery_32.png",
+                                    ENEMYPELLETSPEED, 180, ENEMYDAMAGE, 0);
+        enemyPellet->_x = this->_x - 5;
+        enemyPellet->_y = this->_y + (this->_size)/2 - 5;
+        return enemyPellet;
     }
+}
+
+void Enemy::decreaseCD(){
+    if (_fireCD > 0) _fireCD--;
 }

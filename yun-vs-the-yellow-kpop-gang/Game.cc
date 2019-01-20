@@ -34,6 +34,7 @@ void Game::beginGame(){
         checkEvent();
         scriptedEvents();
         moveEntities();
+        enemyAttack();
         checkCollisions();
         refreshDisplay();
         _frameCounter++;
@@ -123,10 +124,18 @@ void Game::refreshDisplay(){
     display();
 }
 
-void Game::checkCollisions(){
+void Game::enemyAttack(){
+    vector<Enemy>::iterator itEnemy = enemyVector.begin();
+    for ( ; itEnemy != enemyVector.end(); itEnemy++){
+        addPelletToVector((&(*itEnemy))->fire());
+        (&(*itEnemy))->decreaseCD();
+    }
+}
 
-    // Le joueur ne doit toucher ni les balles, ni les ennemis
-    if (yun.invulCD == 0){
+// Methodes de collision
+void Game::checkYunCollisions(){
+    if (yun._invulCD == 0)
+    {
         // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
         vector<Enemy>::iterator itEnemy = enemyVector.begin();
         for ( ; itEnemy != enemyVector.end(); itEnemy++){
@@ -135,31 +144,61 @@ void Game::checkCollisions(){
             }
         }
 
-        // Il prend aussi des dégats des pellets et les supprime.
         vector<Pellet>::iterator itPellet = pelletVector.begin();
-        for ( ; itPellet != pelletVector.end(); ){
-            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){;
-                if ((&(*itPellet))->_target == 0) { // Si les pellets visent Yun
+        for ( ; itPellet != pelletVector.end(); )
+        {
+            if ((&(*itPellet))->_target == 0) // Si les pellets visent Yun
+            {
+                if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds()))
+                {
                     yun - (&(*itPellet))->_damage;  // Il prend des dégats
                     itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
-                }
-            } else itPellet++;
-        }
-    } else {
-
-        // Si yun est invulnérable, il supprime uniquement les pellets rencontrés.
-        yun.invulCD--;
-        vector<Pellet>::iterator itPellet = pelletVector.begin();
-        for ( ; itPellet != pelletVector.end(); ){
-            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){;
-                if ((&(*itPellet))->_target == 0)
-                    itPellet = pelletVector.erase(itPellet);
+                } else itPellet++;
             } else itPellet++;
         }
     }
+    else
+    {
+        yun._invulCD--;
+        vector<Pellet>::iterator itPellet = pelletVector.begin();
+        for ( ; itPellet != pelletVector.end(); )
+        {
+            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds()))
+            {
+                if ((&(*itPellet))->_target == 0){
+                    itPellet = pelletVector.erase(itPellet);
+                } else itPellet++;
+            } else itPellet++;
+        }
+    }
+}
 
+void Game::checkEnemyCollisions(){
+    bool collisionDetected = false;
+    // Les ennemis ne sont blessés que par les pellets tirés par Yun
+    vector<Enemy>::iterator itEnemy = enemyVector.begin();
+    for ( ; itEnemy != enemyVector.end(); ){
+        collisionDetected = false;
+        vector<Pellet>::iterator itPellet = pelletVector.begin();
+        for ( ; itPellet != pelletVector.end(); ){
+            if (collisionDetected == false){
+                if ((&(*itPellet))->_target == 1){
+                    if ((&(*itEnemy))->_sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){
+                        itEnemy = enemyVector.erase(itEnemy);
+                        itPellet = pelletVector.erase(itPellet);
+                        collisionDetected = true;
+                    } else itPellet++;
+                } else itPellet++;
+            } else itPellet++;
+        }
+        if (collisionDetected == false) itEnemy++;
+    }
+}
 
+void Game::checkCollisions(){
 
+    checkYunCollisions();
+    checkEnemyCollisions();
 
 
 }

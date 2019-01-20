@@ -19,7 +19,7 @@ class Player: public Character {
         void decreaseCD();
 
         // Attributs
-        int invulCD;
+        int _invulCD;
 
     protected:
         unsigned int _fireCD;

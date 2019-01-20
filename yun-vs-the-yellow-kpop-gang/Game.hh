@@ -29,6 +29,11 @@ class Game : public sf::RenderWindow {
         void scriptedEvents();
         void moveYun();
         void refreshDisplay();
+        void enemyAttack();
+        
+        // Methodes de collision
+        void checkYunCollisions();
+        void checkEnemyCollisions();
         void checkCollisions();
 
         // Methodes de déplacement

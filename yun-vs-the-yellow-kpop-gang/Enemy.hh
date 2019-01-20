@@ -16,7 +16,8 @@ class Enemy: public Character {
 
         // Methodes
         Pellet* fire();
-
+        void decreaseCD();
+        
         // Attributs
         Pattern _pattern;
         float _speed;
