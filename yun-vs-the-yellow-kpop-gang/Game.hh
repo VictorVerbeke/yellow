@@ -64,6 +64,7 @@ class Game : public sf::RenderWindow {
         bool leftFlag;
         bool rightFlag;
         bool shiftFlag;
+        bool firingFlag;
 
         // Attributs : Controles
         float x;

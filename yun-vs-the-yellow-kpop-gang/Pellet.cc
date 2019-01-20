@@ -13,5 +13,4 @@ Pellet::Pellet(float x, float y, float size, string imagePath,
     _damage(damage){}
 
 Pellet::~Pellet(){
-    delete(this);
 }

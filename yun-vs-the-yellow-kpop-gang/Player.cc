@@ -1,5 +1,8 @@
 #include "Player.hh"
 #define FIRECD 5
+#define PLAYERPELLETSPEED 30
+#define PLAYERDAMAGE 50
+using namespace std;
 
 Player::Player ():
     Character(0, 0, 100, 100, "images/yun_test_100.png"),
@@ -18,8 +21,11 @@ Player::~Player(){
 Pellet* Player::fire(){
     if (_fireCD == 0) {
         _fireCD = FIRECD;
-        return new Pellet(this->_x, this->_y, 100, "images/yun_test_100.png",
-                          8, 90, 20);
+        Pellet* created = new Pellet(0, 0, 32, "images/angery_32.png",
+                                    PLAYERPELLETSPEED, 90, PLAYERDAMAGE); //90 = down
+        created->_x = this->_x;
+        created->_y = this->_y;
+        return created;
     }
     return NULL;
 }

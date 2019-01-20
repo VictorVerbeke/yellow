@@ -13,7 +13,6 @@ class Entity {
         sf::Sprite _sprite;
         sf::Texture _texture;
 
-
     protected:
 
 };

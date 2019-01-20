@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.hh"
 #include "Pellet.hh"
+#include <iostream>
 #include <algorithm>
 
 using namespace std;
@@ -12,7 +13,6 @@ class Player: public Character {
         ~Player();
 
         Pellet* fire();
-
         void decreaseCD();
 
     protected:
