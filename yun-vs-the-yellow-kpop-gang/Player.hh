@@ -13,6 +13,8 @@ class Player: public Character {
 
         Pellet* fire();
 
+        void decreaseCD();
+
     protected:
         unsigned int _fireCD;
 };

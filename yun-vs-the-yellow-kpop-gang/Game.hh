@@ -35,6 +35,7 @@ class Game : public sf::RenderWindow {
         void moveEntity(Enemy *object);
         void moveEntity(PowerUp *object);
         void moveEntity(Pellet *object);
+        void moveEntities();
 
         // Methodes d'affichage
         void drawEntity(Player *object);
@@ -42,6 +43,13 @@ class Game : public sf::RenderWindow {
         void drawEntity(Enemy *object);
         void drawEntity(PowerUp *object);
         void drawEntity(Pellet *object);
+        void drawEntities();
+
+        // Methodes d'ajout d'instances
+        void addPelletToVector(Pellet *object);
+        void addEnemyToVector(Enemy *object);
+        void addPowerUpToVector(PowerUp *object);
+        void addBossToVector(Boss *object);
 
         // Attributs : Entités
         Player yun;

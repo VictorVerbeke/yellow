@@ -1,5 +1,5 @@
 #include "Player.hh"
-#define FIRECD 30
+#define FIRECD 5
 
 Player::Player ():
     Character(0, 0, 100, 100, "images/yun_test_100.png"),
@@ -16,12 +16,14 @@ Player::~Player(){
 }
 
 Pellet* Player::fire(){
-    if (_fireCD > 0) {
-        _fireCD --;
-        return NULL; // Exception sur push_back(NULL) à faire
-    }
-    else {
+    if (_fireCD == 0) {
         _fireCD = FIRECD;
-        return NULL; // TODO Faire la création de Pellet
+        return new Pellet(this->_x, this->_y, 100, "images/yun_test_100.png",
+                          8, 90, 20);
     }
+    return NULL;
+}
+
+void Player::decreaseCD(){
+    if (_fireCD > 0) _fireCD--;
 }

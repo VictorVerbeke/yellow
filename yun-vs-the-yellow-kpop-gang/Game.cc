@@ -34,7 +34,7 @@ void Game::beginGame(){
     while (isOpen())
     {
         checkEvent();
-        moveYun();
+        moveEntities();
         refreshDisplay();
 
     }
@@ -58,7 +58,7 @@ void Game::checkEvent(){
                 if (event.key.code == sf::Keyboard::Left) leftFlag = true;
                 if (event.key.code == sf::Keyboard::Right) rightFlag = true;
                 if (event.key.code == sf::Keyboard::LShift) shiftFlag = true;
-                if (event.key.code == sf::Keyboard::Space) yun.fire();
+                if (event.key.code == sf::Keyboard::Space) addPelletToVector(yun.fire());
                 if (event.key.code == sf::Keyboard::Escape) close();
                 break;
 
@@ -95,21 +95,7 @@ void Game::moveYun(){
 void Game::refreshDisplay(){
     // Clear the window and apply grey background
     clear(sf::Color(127,127,127));
-
-    // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
-    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
-        drawEntity(&(*it));
-    for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
-        drawEntity(&(*it));
-    for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
-        drawEntity(&(*it));
-    for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
-        drawEntity(&(*it));
-
-    // Draw the Player
-    drawEntity(&yun);
-
-    // end the current frame
+    drawEntities();
     display();
 }
 
@@ -165,20 +151,35 @@ void Game::moveEntity(Boss *object){
 }
 
 void Game::moveEntity(Pellet *object){
-    object->_x = object->_x + (object->_speed) * cos(object->_direction * PI / 180);
-    object->_y = object->_y + (object->_speed) * sin(object->_direction * PI / 180);
+    object->_x += (object->_speed) * cos(object->_direction * PI / 180);
+    object->_y += (object->_speed) * sin(object->_direction * PI / 180);
     object->_sprite.setPosition(object->_x, object->_y);
 }
 
 void Game::moveEntity(PowerUp *object){
-    object->_x = object->_x + (object->_speed) * cos(object->_direction * PI / 180);
-    object->_y = object->_y + (object->_speed) * sin(object->_direction * PI / 180);
+    object->_x += (object->_speed) * cos(object->_direction * PI / 180);
+    object->_y += (object->_speed) * sin(object->_direction * PI / 180);
     object->_sprite.setPosition(object->_x, object->_y);
 }
 
-// Methodes d'affichage
+void Game::moveEntities(){
+    moveYun();
+    for (vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
+        moveEntity(&(*it));
+    for (vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
+        moveEntity(&(*it));
+    for (vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
+        moveEntity(&(*it));
+    for (vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
+        moveEntity(&(*it));
+}
+
+
+// Methodes d'affichagethis->_x, this->_y
 void Game::drawEntity(Player* object){
     draw(object->_sprite);
+    // On en profite : on réduit le cooldown de tir à chaque frame
+    object->decreaseCD();
 }
 
 void Game::drawEntity(Boss *object){
@@ -195,4 +196,36 @@ void Game::drawEntity(PowerUp *object){
 
 void Game::drawEntity(Pellet *object){
     draw(object->_sprite);
+}
+
+void Game::drawEntities(){
+    // Draw the Player
+    drawEntity(&yun);
+    // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
+    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
+        drawEntity(&(*it));
+    for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
+        drawEntity(&(*it));
+}
+
+
+// Methodes d'ajout d'instances
+void Game::addPelletToVector(Pellet* object){
+    if (object != NULL) pelletVector.push_back(*object);
+}
+
+void Game::addEnemyToVector(Enemy* object){
+    if (object != NULL) enemyVector.push_back(*object);
+}
+
+void Game::addPowerUpToVector(PowerUp* object){
+    if (object != NULL) pUpVector.push_back(*object);
+}
+
+void Game::addBossToVector(Boss* object){
+    if (object != NULL) bossVector.push_back(*object);
 }
