@@ -36,7 +36,6 @@ void Game::beginGame(){
         moveEntities();
         checkCollisions();
         refreshDisplay();
-        cout << yun.getHp() << ", " << _frameCounter << endl << endl;
         _frameCounter++;
     }
 }
@@ -127,12 +126,42 @@ void Game::refreshDisplay(){
 void Game::checkCollisions(){
 
     // Le joueur ne doit toucher ni les balles, ni les ennemis
-    vector<Enemy>::iterator it = enemyVector.begin();
-    for ( ; it != enemyVector.end(); it++){
-        if (yun._sprite.getGlobalBounds().intersects((&(*it))->_sprite.getGlobalBounds())){;
-            yun - 10;
+    if (yun.invulCD == 0){
+        // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
+        vector<Enemy>::iterator itEnemy = enemyVector.begin();
+        for ( ; itEnemy != enemyVector.end(); itEnemy++){
+            if (yun._sprite.getGlobalBounds().intersects((&(*itEnemy))->_sprite.getGlobalBounds())){;
+                yun - 10;
+            }
+        }
+
+        // Il prend aussi des dégats des pellets et les supprime.
+        vector<Pellet>::iterator itPellet = pelletVector.begin();
+        for ( ; itPellet != pelletVector.end(); ){
+            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){;
+                if ((&(*itPellet))->_target == 0) { // Si les pellets visent Yun
+                    yun - (&(*itPellet))->_damage;  // Il prend des dégats
+                    itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
+                }
+            } else itPellet++;
+        }
+    } else {
+
+        // Si yun est invulnérable, il supprime uniquement les pellets rencontrés.
+        yun.invulCD--;
+        vector<Pellet>::iterator itPellet = pelletVector.begin();
+        for ( ; itPellet != pelletVector.end(); ){
+            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){;
+                if ((&(*itPellet))->_target == 0)
+                    itPellet = pelletVector.erase(itPellet);
+            } else itPellet++;
         }
     }
+
+
+
+
+
 }
 
 

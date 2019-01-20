@@ -2,6 +2,8 @@
 #define FIRECD 15
 #define PLAYERPELLETSPEED 10
 #define PLAYERDAMAGE 50
+#define INVULTEMPS 30
+
 using namespace std;
 
 Player::Player ():
@@ -20,6 +22,8 @@ Player::~Player(){
 // Overloads
 void Player::operator-(const float &b) {
     this->setHp(this->getHp() - b);
+    this->invulCD = INVULTEMPS;
+    cout << "Yun a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
 }
 
 // Methodes
