@@ -30,11 +30,14 @@ class Game : public sf::RenderWindow {
         void moveYun();
         void refreshDisplay();
         void enemyAttack();
-        
+
         // Methodes de collision
         void checkYunCollisions();
+        void checkYunCollisionsEnemies();
+        void checkYunCollisionsPellets(bool vulnerable);
+        void checkYunCollisionsPowerUp();
         void checkEnemyCollisions();
-        void checkCollisions();
+        void checkAllCollisions();
 
         // Methodes de déplacement
         void moveEntity(Player *object, float x, float y);
