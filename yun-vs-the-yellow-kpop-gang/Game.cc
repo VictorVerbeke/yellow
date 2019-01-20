@@ -122,15 +122,45 @@ void Game::moveEntity(Player *object, float x, float y){
 
 }
 
-void Game::moveEntity(Enemy *object, float x, float y){
-    object->_x += x;
-    object->_y += y;
+void Game::moveEntity(Enemy *object){
+    switch (object->_pattern){
+        case line:
+            object->_x += object->_speed;
+            break;
+
+        case wave:
+            object->_x += object->_speed * sin(object->_direction);
+            object->_y += object->_speed * cos(object->_direction);
+            if (object->_direction >= 315) object->_directionVariation = -1;
+            if (object->_direction <= 225) object->_directionVariation = 1;
+            object->_direction += object->_directionVariation;
+            break;
+
+        case still:
+        default:
+            break;
+    }
     object->_sprite.setPosition(object->_x, object->_y);
 }
 
-void Game::moveEntity(Boss *object, float x, float y){
-    object->_x += x;
-    object->_y += y;
+void Game::moveEntity(Boss *object){
+    switch (object->_pattern){
+        case line:
+            object->_x += object->_speed;
+            break;
+
+        case wave:
+            object->_x += object->_speed * sin(object->_direction);
+            object->_y += object->_speed * cos(object->_direction);
+            if (object->_direction >= 315) object->_directionVariation = -1;
+            if (object->_direction <= 225) object->_directionVariation = 1;
+            object->_direction += object->_directionVariation;
+            break;
+
+        case still:
+        default:
+            break;
+    }
     object->_sprite.setPosition(object->_x, object->_y);
 }
 
@@ -147,7 +177,7 @@ void Game::moveEntity(PowerUp *object){
 }
 
 // Methodes d'affichage
-void Game::drawEntity(Player object){
+void Game::drawEntity(Player* object){
     draw(object->_sprite);
 }
 

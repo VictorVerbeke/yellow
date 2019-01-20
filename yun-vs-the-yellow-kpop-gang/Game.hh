@@ -31,8 +31,8 @@ class Game : public sf::RenderWindow {
 
         // Methodes de déplacement
         void moveEntity(Player *object, float x, float y);
-        void moveEntity(Boss *object, float x, float y);
-        void moveEntity(Enemy *object, float x, float y);
+        void moveEntity(Boss *object);
+        void moveEntity(Enemy *object);
         void moveEntity(PowerUp *object);
         void moveEntity(Pellet *object);
 

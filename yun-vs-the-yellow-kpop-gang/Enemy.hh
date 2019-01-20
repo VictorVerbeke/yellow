@@ -3,7 +3,7 @@
 #include "Pellet.hh"
 
 #define FIRECD 30
-enum Pattern {null, line, wave, still};
+enum Pattern {null = -1, line = 0, wave, still};
 
 class Enemy: public Character {
     public:
@@ -14,7 +14,9 @@ class Enemy: public Character {
         Pellet* fire();
 
         Pattern _pattern;
-
+        float _speed;
+        float _direction;
+        int _directionVariation;
     protected:
         unsigned int _fireCD;
 };
