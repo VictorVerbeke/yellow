@@ -70,8 +70,8 @@ class Game : public sf::RenderWindow {
         // Attributs : Controles
         float x;
         float y;
+        long int _frameCounter;
 
     private :
-        unsigned long int _frameCounter;
 
 };

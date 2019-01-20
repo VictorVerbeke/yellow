@@ -34,6 +34,7 @@ void Game::beginGame(){
     // Run the program as long as the window is open
     while (isOpen())
     {
+
         checkEvent();
         scriptedEvents();
         moveEntities();
@@ -83,7 +84,39 @@ void Game::checkEvent(){
 }
 
 void Game::scriptedEvents(){
-    //TODO
+    switch (_frameCounter){
+        case 100 : {
+            cout << "Bon. ";
+            Enemy* enemy1 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            Enemy* enemy2 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            Enemy* enemy3 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            cout << "Check 1... ";
+            enemy1->_x = 1000; enemy1->_y = 100;
+            enemy2->_x = 1000; enemy2->_y = 250;
+            enemy3->_x = 1000; enemy3->_y = 400;
+            cout << "2... ";
+            addEnemyToVector(enemy1);
+            addEnemyToVector(enemy2);
+            addEnemyToVector(enemy3); cout << "5 !" << endl;
+            break;
+        }
+
+        case 1000 : {
+            Enemy* enemy4 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            Enemy* enemy5 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            Enemy* enemy6 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
+            enemy4->_x = 1000; enemy4->_y = 100;
+            enemy5->_x = 1000; enemy5->_y = 250;
+            enemy6->_x = 1000; enemy6->_y = 400;
+            addEnemyToVector(enemy4);
+            addEnemyToVector(enemy5);
+            addEnemyToVector(enemy6);
+            break;
+        }
+
+        default :
+            break;
+    }
 }
 
 void Game::moveYun(){
@@ -121,14 +154,15 @@ void Game::moveEntity(Player *object, float x, float y){
 void Game::moveEntity(Enemy *object){
     switch (object->_pattern){
         case line:
-            object->_x += object->_speed;
+            object->_x += object->_speed * sin(object->_direction * PI /180);
+            object->_y += object->_speed * cos(object->_direction * PI /180);
             break;
 
         case wave:
-            object->_x += object->_speed * sin(object->_direction);
-            object->_y += object->_speed * cos(object->_direction);
-            if (object->_direction >= 315) object->_directionVariation = -1;
-            if (object->_direction <= 225) object->_directionVariation = 1;
+            object->_x += object->_speed * sin(object->_direction * PI / 180);
+            object->_y += object->_speed * cos(object->_direction * PI / 180);
+            if (object->_direction >= -45) object->_directionVariation = -1;
+            if (object->_direction <= -135) object->_directionVariation = 1;
             object->_direction += object->_directionVariation;
             break;
 
@@ -142,12 +176,13 @@ void Game::moveEntity(Enemy *object){
 void Game::moveEntity(Boss *object){
     switch (object->_pattern){
         case line:
-            object->_x += object->_speed;
+        object->_x += object->_speed * sin(object->_direction * PI /180);
+        object->_y += object->_speed * cos(object->_direction * PI /180);
             break;
 
         case wave:
-            object->_x += object->_speed * sin(object->_direction);
-            object->_y += object->_speed * cos(object->_direction);
+            object->_x += object->_speed * sin(object->_direction * PI / 180);
+            object->_y += object->_speed * cos(object->_direction * PI / 180);
             if (object->_direction >= 315) object->_directionVariation = -1;
             if (object->_direction <= 225) object->_directionVariation = 1;
             object->_direction += object->_directionVariation;
@@ -173,22 +208,16 @@ void Game::moveEntity(PowerUp *object){
 }
 
 void Game::moveEntities(){
-
     moveYun();
-
     for (vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); ){
-        // if offscreen
-        if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
+        if ((&(*it))->_x < -(&(*it))->_size || (&(*it))->_y < -(&(*it))->_size || (&(*it))->_y > getSize().y){
             it = enemyVector.erase(it);
         } else {
             moveEntity(&(*it));
             it++;
         }
-
     }
-
     for (vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); ){
-        // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
             it = pelletVector.erase(it);
         } else {
@@ -196,9 +225,7 @@ void Game::moveEntities(){
             it++;
         }
     }
-
     for (vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); ){
-        // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
             it = pUpVector.erase(it);
         } else {
@@ -206,9 +233,7 @@ void Game::moveEntities(){
             it++;
         }
     }
-
     for (vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); ){
-        // if offscreen
         if ((&(*it))->_x < 0 || (&(*it))->_x > getSize().x || (&(*it))->_y < 0 || (&(*it))->_y > getSize().y){
             it = bossVector.erase(it);
         } else {
@@ -252,10 +277,8 @@ void Game::drawEntities(){
         drawEntity(&(*it));
     for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
         drawEntity(&(*it));
-    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++){
-        cout << &(*it) << endl;
+    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
         drawEntity(&(*it));
-    }
     // Draw the Player after everything.
     drawEntity(&yun);
 }

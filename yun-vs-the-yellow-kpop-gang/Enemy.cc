@@ -6,13 +6,13 @@ Enemy::Enemy(float x, float y, float size, int hp,
 :
     Character(x, y, size, 50, imagePath),
     _pattern(pattern),
-    _speed(1),
-    _direction(270),
-    _directionVariation(0),
-    _fireCD(0){}
+    _speed(ENEMYSPEED),
+    _direction(-90),
+    _directionVariation(1),
+    _fireCD(0)
+{}
 
 Enemy::~Enemy(){
-    delete(this);
 }
 
 Pellet* Enemy::fire(){

@@ -22,7 +22,7 @@ Pellet* Player::fire(){
     if (_fireCD == 0) {
         _fireCD = FIRECD;
         Pellet* created = new Pellet(0, 0, 32, "images/angery_32.png",
-                                    PLAYERPELLETSPEED, 90, PLAYERDAMAGE); //90 = down
+                                    PLAYERPELLETSPEED, 0, PLAYERDAMAGE); //90 = down
         created->_x = this->_x;
         created->_y = this->_y;
         return created;
