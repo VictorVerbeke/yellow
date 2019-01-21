@@ -1,4 +1,5 @@
 #include "Enemy.hh"
+#include <math.h>
 
 Enemy::Enemy(float x, float y, float size, int hp,
              string imagePath, Pattern pattern)
