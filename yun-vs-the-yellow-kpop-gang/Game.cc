@@ -4,7 +4,8 @@ Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
     _frameCounter(0),
     _menuSelection(0),
-    _gameState(beginState)
+    _gameState(beginState),
+    _difficulty(0)
 {
 
     //setIcon("images/icon.png");
@@ -51,6 +52,7 @@ Game::~Game(){
 // Methode principale : Là où se déroule tout le jeu, beginGame().
 void Game::beginGame(){
     changeState(mainMenu);
+    setDifficulty(1);
     // Run the program as long as the window is open
     while (isOpen())
     {
@@ -321,24 +323,25 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
 void Game::checkYunCollisionsPowerUp(){}
 
 void Game::checkEnemyCollisions(){
-    bool collisionDetected = false;
+    bool enemyKilled = false;
     // Les ennemis ne sont blessés que par les pellets tirés par Yun
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); ){
-        collisionDetected = false;
+        enemyKilled = false;
         vector<Pellet>::iterator itPellet = pelletVector.begin();
         for ( ; itPellet != pelletVector.end(); ){
-            if (collisionDetected == false){
+            if (enemyKilled == false){
                 if ((&(*itPellet))->_target == 1){
                     if ((&(*itEnemy))->_sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){
-                        itEnemy = enemyVector.erase(itEnemy);
+                        itEnemy - (&(*itPellet))->_damage;
                         itPellet = pelletVector.erase(itPellet);
-                        collisionDetected = true;
+                        if ((&(*itEnemy))->getHp() <= 0) enemyKilled = true;
                     } else itPellet++;
                 } else itPellet++;
             } else itPellet++;
         }
-        if (collisionDetected == false) itEnemy++;
+        if (enemyKilled == false) itEnemy++;
+        else itEnemy = enemyVector.erase(itEnemy);
     }
 }
 
@@ -356,10 +359,10 @@ void Game::moveYun(){
     // Update coordinates
     x = 0;
     y = 0;
-    if (leftFlag && yun._x > 0) x -= PLAYER_SPEED;
-    if (rightFlag && yun._x < getSize().x - yun._size) x += PLAYER_SPEED;
-    if (upFlag && yun._y > 0) y -= PLAYER_SPEED;
-    if (downFlag && yun._y < getSize().y - yun._size) y += PLAYER_SPEED;
+    if (leftFlag && yun._x > 0) x -= yun._playerMovementSpeed;
+    if (rightFlag && yun._x < getSize().x - yun._size) x += yun._playerMovementSpeed;
+    if (upFlag && yun._y > 0) y -= yun._playerMovementSpeed;
+    if (downFlag && yun._y < getSize().y - yun._size) y += yun._playerMovementSpeed;
     if (shiftFlag){
         x = x/2;
         y = y/2;
@@ -534,6 +537,7 @@ void Game::drawCursor(){
     draw(_cursor_Spr);
 }
 
+
 // Methodes d'affichage Ingame
 void Game::drawBackground(){
     draw(_ingameBG_Spr);
@@ -674,4 +678,58 @@ void Game::setDifficulty(int i){
 
 void Game::modifyDifficulty(){
 
+    switch (_difficulty)
+    {
+        case 0 :
+            yun._playerFireCD = 15;
+            yun._playerFireDamage = 20;
+            yun._playerFireSpeed = 10;
+            yun._playerMovementSpeed = 4;
+            yun._playerInvulCD = 100;
+            yun._enemyFireCD = 120;
+            yun._enemyFireDamage = 5;
+            yun._enemyFireSpeed = 4;
+            yun._enemyMovementSpeed = 2;
+            yun._enemyStandardHP = 30;
+            break;
+
+        case 1 :
+            yun._playerFireCD = 15;
+            yun._playerFireDamage = 10;
+            yun._playerFireSpeed = 10;
+            yun._playerMovementSpeed = 4;
+            yun._playerInvulCD = 60;
+            yun._enemyFireCD = 80;
+            yun._enemyFireDamage = 5;
+            yun._enemyFireSpeed = 4;
+            yun._enemyMovementSpeed = 2;
+            yun._enemyStandardHP = 30;
+            break;
+
+        case 2 :
+            yun._playerFireCD = 15;
+            yun._playerFireDamage = 10;
+            yun._playerFireSpeed = 10;
+            yun._playerMovementSpeed = 4;
+            yun._playerInvulCD = 40;
+            yun._enemyFireCD = 60;
+            yun._enemyFireDamage = 10;
+            yun._enemyFireSpeed = 4;
+            yun._enemyMovementSpeed = 2;
+            yun._enemyStandardHP = 40;
+            break;
+
+        case 3:
+            yun._playerFireCD = 15;
+            yun._playerFireDamage = 10;
+            yun._playerFireSpeed = 10;
+            yun._playerMovementSpeed = 4;
+            yun._playerInvulCD = 30;
+            yun._enemyFireCD = 40;
+            yun._enemyFireDamage = 15;
+            yun._enemyFireSpeed = 6;
+            yun._enemyMovementSpeed = 3;
+            yun._enemyStandardHP = 60;
+            break;
+    }
 }
