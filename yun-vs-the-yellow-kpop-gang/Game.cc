@@ -89,18 +89,16 @@ void Game::scriptedEvents(){
             Enemy* enemy1 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
             Enemy* enemy2 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
             Enemy* enemy3 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            cout << "Check 1... ";
             enemy1->_x = 1000; enemy1->_y = 100;
             enemy2->_x = 1000; enemy2->_y = 250;
             enemy3->_x = 1000; enemy3->_y = 400;
-            cout << "2... ";
             addEnemyToVector(enemy1);
             addEnemyToVector(enemy2);
-            addEnemyToVector(enemy3); cout << "5 !" << endl;
+            addEnemyToVector(enemy3);
             break;
         }
 
-        case 1000 : {
+        case 500 : {
             Enemy* enemy4 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
             Enemy* enemy5 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
             Enemy* enemy6 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
