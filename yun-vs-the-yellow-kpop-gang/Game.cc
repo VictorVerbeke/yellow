@@ -696,33 +696,33 @@ void Game::modifyDifficulty(){
     {
         case 0 :
             yun._playerFireCD = 15;
-            yun._playerFireDamage = 20;
+            yun._playerFireDamage = 50;
             yun._playerFireSpeed = 10;
             yun._playerMovementSpeed = 4;
             yun._playerInvulCD = 100;
             yun._enemyFireCD = 120;
             yun._enemyFireDamage = 5;
-            yun._enemyFireSpeed = 4;
+            yun._enemyFireSpeed = 2;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
             break;
 
         case 1 :
             yun._playerFireCD = 15;
-            yun._playerFireDamage = 10;
+            yun._playerFireDamage = 20;
             yun._playerFireSpeed = 10;
             yun._playerMovementSpeed = 4;
             yun._playerInvulCD = 60;
             yun._enemyFireCD = 80;
             yun._enemyFireDamage = 5;
-            yun._enemyFireSpeed = 4;
+            yun._enemyFireSpeed = 3;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
             break;
 
         case 2 :
             yun._playerFireCD = 15;
-            yun._playerFireDamage = 10;
+            yun._playerFireDamage = 15;
             yun._playerFireSpeed = 10;
             yun._playerMovementSpeed = 4;
             yun._playerInvulCD = 40;
@@ -730,7 +730,7 @@ void Game::modifyDifficulty(){
             yun._enemyFireDamage = 10;
             yun._enemyFireSpeed = 4;
             yun._enemyMovementSpeed = 2;
-            yun._enemyStandardHP = 40;
+            yun._enemyStandardHP = 30;
             break;
 
         case 3:
@@ -741,9 +741,9 @@ void Game::modifyDifficulty(){
             yun._playerInvulCD = 30;
             yun._enemyFireCD = 40;
             yun._enemyFireDamage = 15;
-            yun._enemyFireSpeed = 6;
-            yun._enemyMovementSpeed = 3;
-            yun._enemyStandardHP = 60;
+            yun._enemyFireSpeed = 5;
+            yun._enemyMovementSpeed = 2;
+            yun._enemyStandardHP = 40;
             break;
     }
 }
