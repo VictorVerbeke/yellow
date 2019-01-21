@@ -13,8 +13,15 @@ Enemy::Enemy(float x, float y, float size, int hp,
 {}
 
 Enemy::~Enemy(){
+
 }
 
+// Overloads
+void Enemy::operator-(const float &b) {
+    this->setHp(this->getHp() - b);
+}
+
+// Methodes
 Pellet* Enemy::fire(sf::Vector2f yunPos){
 
     if (_fireCD == 0) {

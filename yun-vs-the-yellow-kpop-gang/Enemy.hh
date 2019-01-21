@@ -14,6 +14,9 @@ class Enemy: public Character {
               string imagePath, Pattern pattern);
         ~Enemy();
 
+        // Overloads
+        void operator-(const float &b);
+        
         // Methodes
         Pellet* fire(sf::Vector2f yunPos);
         void decreaseCD();

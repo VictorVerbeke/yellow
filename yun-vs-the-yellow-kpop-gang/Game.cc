@@ -1,11 +1,25 @@
 #include "Game.hh"
 
+// Déclaration nécessaire pour fonctionner des
+// éléments statiques de Character.
+float Character::_playerFireCD = 15;
+float Character::_playerFireDamage = 10;
+float Character::_playerFireSpeed = 10;
+float Character::_playerMovementSpeed = 4;
+float Character::_playerInvulCD = 60;
+float Character::_enemyFireCD = 80;
+float Character::_enemyFireDamage = 5;
+float Character::_enemyFireSpeed = 4;
+float Character::_enemyMovementSpeed = 2;
+float Character::_enemyStandardHP = 30;
+
+
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
     _frameCounter(0),
     _menuSelection(0),
-    _gameState(beginState),
-    _difficulty(0)
+    _difficulty(0),
+    _gameState(beginState)
 {
 
     //setIcon("images/icon.png");
@@ -320,7 +334,7 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
     }
 }
 
-void Game::checkYunCollisionsPowerUp(){}
+void Game::checkYunCollisionsPowerUp(){} // TODO
 
 void Game::checkEnemyCollisions(){
     bool enemyKilled = false;
@@ -333,9 +347,13 @@ void Game::checkEnemyCollisions(){
             if (enemyKilled == false){
                 if ((&(*itPellet))->_target == 1){
                     if ((&(*itEnemy))->_sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){
-                        itEnemy - (&(*itPellet))->_damage;
+                        (*itEnemy) - (&(*itPellet))->_damage;
+                        cout << "Un ennemi a pris " << (&(*itPellet))->_damage << " et il lui reste " << (&(*itEnemy))->getHp() << endl;
                         itPellet = pelletVector.erase(itPellet);
-                        if ((&(*itEnemy))->getHp() <= 0) enemyKilled = true;
+                        if ((&(*itEnemy))->getHp() <= 0) {
+                            enemyKilled = true;
+                            cout << "Enemy killed" << endl;
+                        }
                     } else itPellet++;
                 } else itPellet++;
             } else itPellet++;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.hh"
-enum Name { none, GirlGeneration, _2NE1, Jonghyun };
+
+enum Name { none, Beenzino, GirlGeneration, Jonghyun };
 
 class Boss: public Enemy {
     public:
@@ -13,9 +14,11 @@ class Boss: public Enemy {
         // Methodes
         Pellet* SpecialFire(float size);
         void nextPhase();
+
         // Attributs
         Name _name;
         int _phase;
+        
     protected:
         unsigned int _specialFireCD;
 };
