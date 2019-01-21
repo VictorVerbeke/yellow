@@ -27,7 +27,7 @@ Game::Game(sf::VideoMode mode, string name) :
     assignationSprites(&_mainMenuBG_Spr, &_mainMenuBG_Tex, "images/main_menu_bg.png");
     assignationSprites(&_optionsBG_Spr, &_optionsBG_Tex, "images/options_bg.png");
     assignationSprites(&_selectLvlBG_Spr, &_selectLvlBG_Tex, "images/select_lvl_bg.png");
-
+    assignationSprites(&_cursor_Spr, &_cursor_Tex, "images/cursor_24.png", 24, 24);
 }
 
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
@@ -130,7 +130,7 @@ void Game::goMenuSelection(int sel){
             if (sel == 0) changeState(level1);      // Bouton "New Game"
             else if (sel == 1) changeState(selectLvl);   // Bouton "Level Select"
             else if (sel == 2) changeState(options);     // Bouton "Options"
-            else if (sel == 3) exit(0);                  // Bouton "Exit Game"
+            else if (sel == 3) this->close();                  // Bouton "Exit Game"
             break;
 
         case selectLvl:
@@ -159,8 +159,8 @@ void Game::checkEventMainMenu(){
                 close();
                 break;
 
-            case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%4;
+            case sf::Event::KeyPressed:         // Ci-dessous : Equivaut à (x-1) % 4 mais ca marche pas bizarrement.
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection + 3)%4;
                 if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%4;
                 if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
                 if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
@@ -184,7 +184,7 @@ void Game::checkEventOptions(){
                 break;
 
             case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%3;
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection + 2) % 3;
                 else if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%3;
                 else if (event.key.code == sf::Keyboard::Left)
                 {
@@ -218,7 +218,7 @@ void Game::checkEventSelectLvl(){
                 break;
 
             case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%2;
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection + 1)%2;
                 else if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%2;
                 else if (event.key.code == sf::Keyboard::Left) changeLevel(-1); // Affiche le niveau précédent
                 else if (event.key.code == sf::Keyboard::Right) changeLevel(1); // Affiche le niveau suivant
@@ -478,18 +478,21 @@ void Game::moveEntities(){
 void Game::drawMainMenu(){
     clear(sf::Color(0,127,0));
     draw(_mainMenuBG_Spr);
+    drawCursor();
     display();
 }
 
 void Game::drawOptions(){
     clear(sf::Color(127,0,0));
     draw(_optionsBG_Spr);
+    drawCursor();
     display();
 }
 
 void Game::drawSelectLvl(){
     clear(sf::Color(0,0,127));
     draw(_selectLvlBG_Spr);
+    drawCursor();
     display();
 }
 
@@ -501,6 +504,33 @@ void Game::drawIngame(){
     display();
 }
 
+void Game::drawCursor(){
+    // Dépend du State et de _menuSelection.
+    switch(_gameState){
+        case mainMenu :
+            if (_menuSelection == 0) _cursor_Spr.setPosition(597, 462);
+            if (_menuSelection == 1) _cursor_Spr.setPosition(577, 496);
+            if (_menuSelection == 2) _cursor_Spr.setPosition(640, 530);
+            if (_menuSelection == 3) _cursor_Spr.setPosition(607, 564);
+            break;
+
+        case selectLvl :
+            if (_menuSelection == 0) _cursor_Spr.setPosition(542, 366);
+            if (_menuSelection == 1) _cursor_Spr.setPosition(501, 463);
+            break;
+
+        case options :
+            if (_menuSelection == 0) _cursor_Spr.setPosition(340, 215);
+            if (_menuSelection == 1) _cursor_Spr.setPosition(340, 315);
+            if (_menuSelection == 2) _cursor_Spr.setPosition(470, 460);
+            break;
+
+        default: // On le sort de l'écran.
+            _cursor_Spr.setPosition(-100, -100);
+            break;
+    }
+    draw(_cursor_Spr);
+}
 
 // Methodes d'affichage Ingame
 void Game::drawBackground(){

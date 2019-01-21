@@ -75,6 +75,8 @@ class Game : public sf::RenderWindow {
         void drawSelectLvl();   // état il y a une fonction courte qui permet
         void drawIngame();      // d'afficher les menus ou le jeu en cours.
 
+        void drawCursor();      // Permet d'afficher le curseur.
+
         // Methodes d'affichage Ingame
         void drawBackground();              // En jeu, on veut afficher le fond,
         void drawEntity(Player *object);    // puis chaque entité. On a donc une
@@ -107,6 +109,8 @@ class Game : public sf::RenderWindow {
         sf::Texture _optionsBG_Tex;     // sélections à highlight.
         sf::Sprite _selectLvlBG_Spr;    // BG pour BackGround, Spr pour Sprite,
         sf::Texture _selectLvlBG_Tex;   // Tex pour Texture.
+        sf::Sprite _cursor_Spr;         // Celui-là à gauche, c'est pour les
+        sf::Texture _cursor_Tex;        // menus, pour indiquer le choix actuel.
 
         // Attributs : Audio
         sf::Music _music;   // Car c'est important la musique.
