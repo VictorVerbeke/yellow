@@ -44,6 +44,11 @@ Game::Game(sf::VideoMode mode, string name) :
     assignationSprites(&_optionsBG_Spr, &_optionsBG_Tex, "images/options_bg.png");
     assignationSprites(&_selectLvlBG_Spr, &_selectLvlBG_Tex, "images/select_lvl_bg.png");
     assignationSprites(&_cursor_Spr, &_cursor_Tex, "images/cursor_24.png", 24, 24);
+    assignationSprites(&_panel_Spr, &_panel_lvl1_Tex, "images/Beenzino_panel_390_290.png", 390, 290);
+    _panel_Spr.setPosition(34, 263);
+
+    // Création textures panels
+    assignationTexturesPanels();
 }
 
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
@@ -58,6 +63,26 @@ void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePat
     spr->setTextureRect(sf::IntRect(0, 0, x, y));
     spr->setPosition(0,0);
     spr->setTexture(*tex);
+}
+
+void Game::assignationTexturesPanels(){
+
+    int res;
+    res = _panel_lvl1_Tex.loadFromFile("images/Beenzino_panel_390_290.png");
+    if (!res) {
+        cout << "Error reading texture (images/Beenzino_panel_390_290.png)" << endl;
+        exit(1);
+    }
+    res = _panel_lvl2_Tex.loadFromFile("images/GirlGeneration_panel_390_290.png");
+    if (!res) {
+        cout << "Error reading texture (images/GirlGeneration_panel_390_290.png)" << endl;
+        exit(1);
+    }
+    res = _panel_lvl3_Tex.loadFromFile("images/Jonghyun_panel_390_290.png");
+    if (!res) {
+        cout << "Error reading texture (images/Jonghyun_panel_390_290.png)" << endl;
+        exit(1);
+    }
 }
 
 Game::~Game(){
@@ -511,6 +536,7 @@ void Game::drawOptions(){
 void Game::drawSelectLvl(){
     clear(sf::Color(0,0,127));
     draw(_selectLvlBG_Spr);
+    draw(_panel_Spr);
     drawCursor();
     display();
 }
@@ -550,7 +576,6 @@ void Game::drawCursor(){
     }
     draw(_cursor_Spr);
 }
-
 
 // Methodes d'affichage Ingame
 void Game::drawBackground(){
@@ -629,7 +654,10 @@ void Game::changeState(State nextState){
             break;
 
         case selectLvl :
-            _selectedLevel = level1;
+            _selectedLevel = level1; // Petit hack pour toujours afficher le
+            changeLevel(1);     // premier niveau en arrivant sur le menu :
+            changeLevel(-1);    // mettre au niveau 1, avancer puis reculer pour
+                                // mettre à jour l'affichage.
         case mainMenu :
         case options :
             if ((_gameState == beginState) || (_gameState == level3) || (_gameState == level2) || (_gameState == level1))
@@ -656,16 +684,29 @@ void Game::changeLevel(int i){
 
     switch(_selectedLevel){
         case level1 :
-            if (i > 0) _selectedLevel = level2;
+            if (i > 0){
+                _panel_Spr.setTexture(_panel_lvl2_Tex);
+                _selectedLevel = level2;
+            }
+
             break;
 
         case level2 :
-            if (i > 0) _selectedLevel = level3;
-            if (i < 0) _selectedLevel = level1;
+            if (i > 0) {
+                _panel_Spr.setTexture(_panel_lvl3_Tex);
+                _selectedLevel = level3;
+            }
+            if (i < 0) {
+                _panel_Spr.setTexture(_panel_lvl1_Tex);
+                _selectedLevel = level1;
+            }
             break;
 
         case level3 :
-            if (i < 0) _selectedLevel = level2;
+            if (i < 0) {
+                _panel_Spr.setTexture(_panel_lvl2_Tex);
+                _selectedLevel = level2;
+            }
             break;
 
         default :

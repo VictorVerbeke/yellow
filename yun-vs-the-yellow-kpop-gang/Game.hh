@@ -33,8 +33,9 @@ class Game : public sf::RenderWindow {
 
         void assignationSprites(sf::Sprite *spr, sf::Texture *tex,
                                 string imagePath, int = 800, int = 600);
-        // Utilisé dans le constructeur pour initialiser toutes les
-        // attributs Sprite des menus.
+        void assignationTexturesPanels();
+        // Utilisés dans le constructeur pour initialiser toutes les
+        // attributs Sprite des menus, ainsi que les trois textures des panels.
 
         // Methodes du jeu
         void beginGame();       // Démarre le jeu, boucle principale.
@@ -77,10 +78,10 @@ class Game : public sf::RenderWindow {
         void drawIngame();      // d'afficher les menus ou le jeu en cours.
 
         void drawCursor();      // Permet d'afficher le curseur.
-
+        void drawPanel();       // Affiche le panel associé au niveau choisi.
         // Methodes d'affichage Ingame
         void drawBackground();              // En jeu, on veut afficher le fond,
-        void drawEntity(Player *object);    // puis chaque entité. On a donc une
+        void drawEntity(Player *object);    // puis chaque entité. On a do1nc une
         void drawEntity(Boss *object);      // méthode pour chaque entité, puis
         void drawEntity(Enemy *object);     // une méthode drawEntities pour
         void drawEntity(PowerUp *object);   // toutes les appeler.
@@ -112,6 +113,10 @@ class Game : public sf::RenderWindow {
         sf::Texture _selectLvlBG_Tex;   // Tex pour Texture.
         sf::Sprite _cursor_Spr;         // Celui-là à gauche, c'est pour les
         sf::Texture _cursor_Tex;        // menus, pour indiquer le choix actuel.
+        sf::Sprite _panel_Spr;
+        sf::Texture _panel_lvl1_Tex;
+        sf::Texture _panel_lvl2_Tex;
+        sf::Texture _panel_lvl3_Tex;
 
         // Attributs : Audio
         sf::Music _music;   // Car c'est important la musique.
