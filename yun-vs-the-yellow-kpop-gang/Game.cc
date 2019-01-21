@@ -1,7 +1,9 @@
 #include "Game.hh"
 
 Game::Game(sf::VideoMode mode, string name) :
-    sf::RenderWindow(mode, name)
+    sf::RenderWindow(mode, name),
+    _frameCounter(0),
+    _menuSelection(0)
 {
 
     //setIcon("images/icon.png");
@@ -9,6 +11,8 @@ Game::Game(sf::VideoMode mode, string name) :
     setVerticalSyncEnabled(false);
     setFramerateLimit(60);
     setActive(true);
+    _music.setLoop(true);
+    _volume = 100;
 
     // Assignations des valeurs de base aux Attributs : Flags
     upFlag = false;
@@ -19,22 +23,25 @@ Game::Game(sf::VideoMode mode, string name) :
     firingFlag = false;
 
     // Création des Sprites
-    int res = _backgroundTexture.loadFromFile("images/fond_1620_1080.jpg");
+    assignationSprites(&_ingameBG_Spr, &_ingameBG_Tex, "images/ingame_bg.jpg", 1620, 1080);
+    assignationSprites(&_mainMenuBG_Spr, &_mainMenuBG_Tex, "images/main_menu_bg.png");
+    assignationSprites(&_optionsBG_Spr, &_optionsBG_Tex, "images/options_bg.png");
+    assignationSprites(&_selectLvlBG_Spr, &_selectLvlBG_Tex, "images/select_lvl_bg.png");
+
+}
+
+void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
+
+    int res;
+    res = tex->loadFromFile(imagePath);
     if (!res) {
-        cout << "Error reading texture file (images/fond_800_600.jpg)." << endl;
+        cout << "Error reading texture (" << imagePath << ')' << endl;
         exit(1);
     }
-    _backgroundSprite.setTexture(_backgroundTexture);
-    _backgroundSprite.setTextureRect(sf::IntRect(0, 0, 1620, this->getSize().y));
-    _backgroundSprite.setPosition(0,0);
-    _backgroundSprite.setTexture(_backgroundTexture);
-
-    // Création de l'Audio
-    if (!_music.openFromFile("sounds/musics/level1.ogg")) exit(1);
-    _music.play();
-
-    // Autres assignations
-    _frameCounter = 0;
+    spr->setTexture(*tex);
+    spr->setTextureRect(sf::IntRect(0, 0, x, y));
+    spr->setPosition(0,0);
+    spr->setTexture(*tex);
 }
 
 Game::~Game(){
@@ -42,57 +49,35 @@ Game::~Game(){
 
 // Methode principale : Là où se déroule tout le jeu, beginGame().
 void Game::beginGame(){
-
+    changeState(mainMenu);
     // Run the program as long as the window is open
     while (isOpen())
     {
-        checkEvent();
-        scriptedEvents();
-        moveEntities();
-        checkAllCollisions();
-        refreshDisplay();
-        enemyAttack();
-    }
-}
-
-void Game::checkEvent(){
-
-    x = 0;
-    y = 0;
-    sf::Event event;
-    while (pollEvent(event))
-    {
-        switch (event.type) {
-            case sf::Event::Closed:
-                // "close requested" event: we close the window
-                close();
+        switch (_gameState){
+            case mainMenu:
+                checkEventMainMenu();
+                drawMainMenu();
                 break;
-
-            case sf::Event::KeyPressed:
-                // Process the up, down, left and right keys
-                if (event.key.code == sf::Keyboard::Up) upFlag = true;
-                if (event.key.code == sf::Keyboard::Down) downFlag = true;
-                if (event.key.code == sf::Keyboard::Left) leftFlag = true;
-                if (event.key.code == sf::Keyboard::Right) rightFlag = true;
-                if (event.key.code == sf::Keyboard::LShift) shiftFlag = true;
-                if (event.key.code == sf::Keyboard::RShift) firingFlag = true;
-                if (event.key.code == sf::Keyboard::Escape) close();
+            case options:
+                checkEventOptions();
+                drawOptions();
                 break;
-
-            case sf::Event::KeyReleased:
-                if (event.key.code == sf::Keyboard::Up) upFlag = false;
-                if (event.key.code == sf::Keyboard::Down) downFlag = false;
-                if (event.key.code == sf::Keyboard::Left) leftFlag = false;
-                if (event.key.code == sf::Keyboard::Right) rightFlag = false;
-                if (event.key.code == sf::Keyboard::LShift) shiftFlag = false;
-                if (event.key.code == sf::Keyboard::RShift) firingFlag = false;
+            case selectLvl:
+                checkEventSelectLvl();
+                drawSelectLvl();
                 break;
-
-            default:
+            case level1:
+                checkEventIngame();
+                scriptedEvents();
+                moveEntities();
+                checkAllCollisions();
+                drawIngame();
+                enemyAttack();
+                break;
+            default :
                 break;
         }
     }
-    if (firingFlag) addPelletToVector(yun.fire());
 }
 
 void Game::scriptedEvents(){
@@ -133,20 +118,178 @@ void Game::scriptedEvents(){
     }
 }
 
-void Game::refreshDisplay(){
-    // Clear the window and apply grey background
-    clear(sf::Color(127,127,127));
-    drawBackground();
-    drawEntities();
-    display();
-}
-
 void Game::enemyAttack(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
         addPelletToVector((&(*itEnemy))->fire(yun._sprite.getPosition()));
         (&(*itEnemy))->decreaseCD();
     }
+}
+
+void Game::goMenuSelection(int sel){
+    switch(_gameState){
+        case mainMenu :
+            if (sel == 0) changeState(level1);      // Bouton "New Game"
+            else if (sel == 1) changeState(selectLvl);   // Bouton "Level Select"
+            else if (sel == 2) changeState(options);     // Bouton "Options"
+            else if (sel == 3) exit(0);                  // Bouton "Exit Game"
+            break;
+
+        case selectLvl:
+            if (sel == 0) changeState(_selectedLevel);
+            else if (sel == 1) changeState(mainMenu);// Bouton "Back to main menu"
+            break;
+
+        case options:
+            if (sel == 2) changeState(mainMenu);// Bouton "Back to main menu"
+            // Les autres boutons n'en sont pas, ils modifient des valeurs.
+            break;
+        default:
+            break;
+    }
+}
+
+
+// Gestion des events.
+void Game::checkEventMainMenu(){
+
+    sf::Event event;
+    while(pollEvent(event))
+    {
+        switch(event.type){
+            case sf::Event::Closed:
+                close();
+                break;
+
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%4;
+                if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%4;
+                if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
+                if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
+                if (event.key.code == sf::Keyboard::Escape) close();
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void Game::checkEventOptions(){
+
+    sf::Event event;
+    while(pollEvent(event))
+    {
+        switch(event.type){
+            case sf::Event::Closed:
+                close();
+                break;
+
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%3;
+                else if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%3;
+                else if (event.key.code == sf::Keyboard::Left)
+                {
+                    if (_menuSelection == 0) setVolume(-1);     // Baisser le volume
+                    else if (_menuSelection == 1) setDifficulty(-1); // Baisser la difficulté
+                }
+                else if (event.key.code == sf::Keyboard::Right)
+                {
+                    if (_menuSelection == 0) setVolume(1);      // Augmenter le volume
+                    else if (_menuSelection == 1) setDifficulty(1);  // Augmenter la difficulté
+                }
+                else if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
+                else if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
+                else if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void Game::checkEventSelectLvl(){
+
+    sf::Event event;
+    while(pollEvent(event))
+    {
+        switch(event.type){
+            case sf::Event::Closed:
+                close();
+                break;
+
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection - 1)%2;
+                else if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%2;
+                else if (event.key.code == sf::Keyboard::Left) changeLevel(-1); // Affiche le niveau précédent
+                else if (event.key.code == sf::Keyboard::Right) changeLevel(1); // Affiche le niveau suivant
+                else if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
+                else if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
+                else if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void Game::checkEventIngame(){
+
+    x = 0;
+    y = 0;
+    sf::Event event;
+
+    while (pollEvent(event))
+    {
+        switch (event.type) {
+                case sf::Event::Closed:
+                // "close requested" event: we close the window
+                close();
+                break;
+
+            case sf::Event::KeyPressed:
+                // Process the up, down, left and right keys
+                if (event.key.code == sf::Keyboard::Up) upFlag = true;
+                if (event.key.code == sf::Keyboard::Down) downFlag = true;
+                if (event.key.code == sf::Keyboard::Left) leftFlag = true;
+                if (event.key.code == sf::Keyboard::Right) rightFlag = true;
+                if (event.key.code == sf::Keyboard::LShift) shiftFlag = true;
+                if (event.key.code == sf::Keyboard::Space) firingFlag = true;
+                if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
+                break;
+
+            case sf::Event::KeyReleased:
+                if (event.key.code == sf::Keyboard::Up) upFlag = false;
+                if (event.key.code == sf::Keyboard::Down) downFlag = false;
+                if (event.key.code == sf::Keyboard::Left) leftFlag = false;
+                if (event.key.code == sf::Keyboard::Right) rightFlag = false;
+                if (event.key.code == sf::Keyboard::LShift) shiftFlag = false;
+                if (event.key.code == sf::Keyboard::S) firingFlag = false;
+                break;
+
+            default:
+                break;
+        }
+    }
+    if (firingFlag) addPelletToVector(yun.fire());
+}
+
+
+// Methodes de collision:checkEventSel
+void Game::checkYunCollisions(){
+    if (yun._invulCD == 0)
+    {
+        checkYunCollisionsEnemies();
+        checkYunCollisionsPellets(true);
+    }
+    else
+    {
+        yun._invulCD--;
+        checkYunCollisionsPellets(false);
+    }
+    checkYunCollisionsPowerUp();
 }
 
 void Game::checkYunCollisionsEnemies(){
@@ -176,21 +319,6 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
 }
 
 void Game::checkYunCollisionsPowerUp(){}
-
-// Methodes de collision
-void Game::checkYunCollisions(){
-    if (yun._invulCD == 0)
-    {
-        checkYunCollisionsEnemies();
-        checkYunCollisionsPellets(true);
-    }
-    else
-    {
-        yun._invulCD--;
-        checkYunCollisionsPellets(false);
-    }
-    checkYunCollisionsPowerUp();
-}
 
 void Game::checkEnemyCollisions(){
     bool collisionDetected = false;
@@ -223,7 +351,7 @@ void Game::checkAllCollisions(){
 }
 
 
-// Methodes de déplacement
+// Methodes de déplacementgoMe
 void Game::moveYun(){
     // Update coordinates
     x = 0;
@@ -348,12 +476,39 @@ void Game::moveEntities(){
 }
 
 
-// Methodes d'affichage
-void Game::drawBackground(){
-    draw(_backgroundSprite);
-    _backgroundSprite.setPosition(-0.1*_frameCounter, 0);
+// Methodes d'affichage générales
+void Game::drawMainMenu(){
+    clear(sf::Color(0,127,0));
+    draw(_mainMenuBG_Spr);
+    display();
 }
 
+void Game::drawOptions(){
+    clear(sf::Color(127,0,0));
+    draw(_optionsBG_Spr);
+    display();
+}
+
+void Game::drawSelectLvl(){
+    clear(sf::Color(0,0,127));
+    draw(_selectLvlBG_Spr);
+    display();
+}
+
+void Game::drawIngame(){
+    // Clear the window and apply grey background
+    clear(sf::Color(0,0,0));
+    drawBackground();
+    drawEntities();
+    display();
+}
+
+
+// Methodes d'affichage Ingame
+void Game::drawBackground(){
+    draw(_ingameBG_Spr);
+    _ingameBG_Spr.setPosition(-0.1*_frameCounter, 0);
+}
 
 void Game::drawEntity(Player* object){
     draw(object->_sprite);
@@ -409,4 +564,87 @@ void Game::addPowerUpToVector(PowerUp* object){
 
 void Game::addBossToVector(Boss* object){
     if (object != NULL) bossVector.push_back(*object);
+}
+
+// Gestion
+void Game::changeState(State nextState){
+    _gameState = nextState;
+    _frameCounter = 0;
+    yun.setHp(100);
+    _menuSelection = 0;
+    switch (_gameState){
+        case level1 :
+        case level2 :
+        case level3 :
+            changeMusic("sounds/musics/battle_music.ogg");
+            break;
+
+        case mainMenu :
+            changeMusic("sounds/musics/main_menu_music.ogg");
+            break;
+
+        case options :
+            changeMusic("sounds/musics/options_music.ogg");
+            break;
+
+        case selectLvl :
+            _selectedLevel = level1;
+            changeMusic("sounds/musics/select_lvl_music.ogg");
+            break;
+
+        default:
+            break;
+    }
+}
+
+void Game::changeMusic(string musicPath){
+
+    _music.pause();
+    if (!_music.openFromFile(musicPath)){
+        cerr << "Failed to open music : " << musicPath << endl;
+        exit(1);
+    }
+    _music.play();
+}
+
+void Game::changeLevel(int i){
+
+    switch(_selectedLevel){
+        case level1 :
+            if (i > 0) _selectedLevel = level2;
+            break;
+
+        case level2 :
+            if (i > 0) _selectedLevel = level3;
+            if (i < 0) _selectedLevel = level1;
+            break;
+
+        case level3 :
+            if (i < 0) _selectedLevel = level2;
+            break;
+
+        default :
+            break;
+    }
+}
+
+void Game::setVolume(int i){
+    if (i > 0){
+        if (_volume < 100) _volume += 5;
+    }
+    else if (i < 0){
+        if (_volume > 0) _volume -= 5;
+    }
+    _music.setVolume(_volume);
+}
+
+void Game::setDifficulty(int i){
+    // La difficulté va de 0 (easy) à 3 (yun, soit very hard)
+    if (i > 0) if (_difficulty < 3) _difficulty++;
+    if (i < 0) if (_difficulty > 0) _difficulty--;
+    modifyDifficulty();
+}
+
+void Game::modifyDifficulty(){
+
 }
