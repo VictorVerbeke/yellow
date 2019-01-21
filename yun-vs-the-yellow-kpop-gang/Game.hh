@@ -30,8 +30,10 @@ class Game : public sf::RenderWindow {
         Game(sf::VideoMode mode, string name);
         ~Game();
 
-        void assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int = 800, int = 600);
-        // Utilisé dans le constructeur pour initialiser toutes les attributs Sprite.
+        void assignationSprites(sf::Sprite *spr, sf::Texture *tex,
+                                string imagePath, int = 800, int = 600);
+        // Utilisé dans le constructeur pour initialiser toutes les
+        // attributs Sprite des menus.
 
         // Methodes du jeu
         void beginGame();       // Démarre le jeu, boucle principale.
