@@ -348,12 +348,7 @@ void Game::checkEnemyCollisions(){
                 if ((&(*itPellet))->_target == 1){
                     if ((&(*itEnemy))->_sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){
                         (*itEnemy) - (&(*itPellet))->_damage;
-                        cout << "Un ennemi a pris " << (&(*itPellet))->_damage << " et il lui reste " << (&(*itEnemy))->getHp() << endl;
-                        itPellet = pelletVector.erase(itPellet);
-                        if ((&(*itEnemy))->getHp() <= 0) {
-                            enemyKilled = true;
-                            cout << "Enemy killed" << endl;
-                        }
+                        if ((&(*itEnemy))->getHp() <= 0) enemyKilled = true;
                     } else itPellet++;
                 } else itPellet++;
             } else itPellet++;
