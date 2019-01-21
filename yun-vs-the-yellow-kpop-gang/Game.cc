@@ -3,7 +3,8 @@
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
     _frameCounter(0),
-    _menuSelection(0)
+    _menuSelection(0),
+    _gameState(beginState)
 {
 
     //setIcon("images/icon.png");
@@ -75,6 +76,7 @@ void Game::beginGame(){
                 enemyAttack();
                 break;
             default :
+                changeState(mainMenu);
                 break;
         }
     }
@@ -594,30 +596,27 @@ void Game::addBossToVector(Boss* object){
     if (object != NULL) bossVector.push_back(*object);
 }
 
-// Gestion
+// Gestion    _gameState;
 void Game::changeState(State nextState){
-    _gameState = nextState;
     _frameCounter = 0;
-    yun.setHp(100);
     _menuSelection = 0;
-    switch (_gameState){
+    yun.setHp(100);
+    switch (nextState){
         case level1 :
         case level2 :
         case level3 :
-            changeMusic("sounds/musics/battle_music.ogg");
-            break;
-
-        case mainMenu :
-            changeMusic("sounds/musics/main_menu_music.ogg");
-            break;
-
-        case options :
-            changeMusic("sounds/musics/options_music.ogg");
+            if ((_gameState == mainMenu) || (_gameState == selectLvl))
+                changeMusic("sounds/musics/battle_music.ogg");
+            _gameState = nextState;
             break;
 
         case selectLvl :
             _selectedLevel = level1;
-            changeMusic("sounds/musics/select_lvl_music.ogg");
+        case mainMenu :
+        case options :
+            if ((_gameState == beginState) || (_gameState == level3) || (_gameState == level2) || (_gameState == level1))
+                changeMusic("sounds/musics/main_menu_music.ogg");
+            _gameState = nextState;
             break;
 
         default:

@@ -16,12 +16,13 @@
 
 #define PLAYER_SPEED 4
 
-enum State { mainMenu = 0,  // Je sais que c'est inutile
-            options = 1,    // de faire tous ces = i,
-            selectLvl = 2,  // cependant je trouve ça plus
-            level1 = 3,     // visuel et ça aide pour
-            level2 = 4,     // la méthode changeState.
-            level3 = 5};
+enum State {beginState = 0,
+            mainMenu = 1,  // Je sais que c'est inutile
+            options = 2,    // de faire tous ces = i,
+            selectLvl = 3,  // cependant je trouve ça plus
+            level1 = 4,     // visuel et ça aide pour
+            level2 = 5,     // la méthode changeState.
+            level3 = 6};
 
 using namespace std;
 
