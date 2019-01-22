@@ -1,4 +1,5 @@
 #include "Game.hh"
+#include <ctime>
 
 // Déclaration nécessaire pour fonctionner des
 // éléments statiques de Character.
@@ -74,6 +75,10 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficultyText.setString(_difficultyNames[_difficulty]);
     _difficultyText.setFillColor(sf::Color::Yellow);
     _difficultyText.setPosition(605, 292);
+
+
+    // PLAYER SOUND BUFFERS
+    _damage1.loadFromFile("sounds/yun_phrases/damage_1.ogg");
 }
 
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
@@ -342,6 +347,14 @@ void Game::checkYunCollisions(){
     {
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
+
+
+        if (std::rand() > RAND_MAX)
+            _playerSound.setBuffer(_damage1);
+        else
+            _playerSound.setBuffer(_damage2);
+
+        _playerSound.play();
     }
     else
     {
@@ -779,7 +792,7 @@ void Game::modifyDifficulty(){
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setFillColor(sf::Color::Green);
+            _difficultyText.setColor(sf::Color::Green);
             break;
 
         case 1 :
@@ -794,7 +807,7 @@ void Game::modifyDifficulty(){
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setFillColor(sf::Color::Yellow);
+            _difficultyText.setColor(sf::Color::Yellow);
             break;
 
         case 2 :
@@ -809,7 +822,7 @@ void Game::modifyDifficulty(){
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setFillColor(orange);
+            _difficultyText.setColor(orange);
             break;
 
         case 3:
@@ -824,7 +837,7 @@ void Game::modifyDifficulty(){
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 40;
             // change difficulty text color
-            _difficultyText.setFillColor(sf::Color::Red);
+            _difficultyText.setColor(sf::Color::Red);
             break;
     }
 }
