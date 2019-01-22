@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <cmath>
 #include <vector>
 #include <exception>
@@ -150,6 +151,10 @@ class Game : public sf::RenderWindow {
 
     private:
         State _gameState;   // Etat dans lequel le jeu se trouve.
+        sf::Font _font;
+        sf::Text _volumeText;
+        sf::Text _difficultyText;
+        vector<string> _difficultyNames;
 };
 
 

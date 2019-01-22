@@ -49,6 +49,28 @@ Game::Game(sf::VideoMode mode, string name) :
 
     // Création textures panels
     assignationTexturesPanels();
+
+
+    // Text labels for volume & difficulty
+    stringstream s;
+    s << _volume << "%";
+    _font.loadFromFile("fonts/OpenSans-Bold.ttf");
+    _volumeText.setFont(_font);
+    _volumeText.setCharacterSize(50);
+    _volumeText.setString(s.str());
+    _volumeText.setFillColor(sf::Color::Yellow);
+    _volumeText.setPosition(590, 193);
+
+    _difficultyNames.push_back("Easy");
+    _difficultyNames.push_back("Normal");
+    _difficultyNames.push_back("Hard");
+    _difficultyNames.push_back("YUN.");
+
+    _difficultyText.setFont(_font);
+    _difficultyText.setCharacterSize(50);
+    _difficultyText.setString(_difficultyNames[_difficulty]);
+    _difficultyText.setFillColor(sf::Color::Yellow);
+    _difficultyText.setPosition(605, 292);
 }
 
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
@@ -530,6 +552,8 @@ void Game::drawMainMenu(){
 void Game::drawOptions(){
     clear(sf::Color(127,0,0));
     draw(_optionsBG_Spr);
+    draw(_volumeText);
+    draw(_difficultyText);
     drawCursor();
     display();
 }
@@ -702,7 +726,13 @@ void Game::setVolume(int i){
     else if (i < 0){
         if (_volume > 0) _volume -= 5;
     }
+
+    stringstream s;
+
+    s << _volume << "%";
+
     _music.setVolume(_volume);
+    _volumeText.setString(s.str());
 }
 
 void Game::setDifficulty(int i){
@@ -710,9 +740,13 @@ void Game::setDifficulty(int i){
     if (i > 0) if (_difficulty < 3) _difficulty++;
     if (i < 0) if (_difficulty > 0) _difficulty--;
     modifyDifficulty();
+    _difficultyText.setString(_difficultyNames[_difficulty]);
 }
 
 void Game::modifyDifficulty(){
+
+    // To change the color of the difficulty text
+    sf::Color orange(255, 132, 26, 255);
 
     switch (_difficulty)
     {
@@ -727,6 +761,8 @@ void Game::modifyDifficulty(){
             yun._enemyFireSpeed = 2;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
+            // change difficulty text color
+            _difficultyText.setFillColor(sf::Color::Green);
             break;
 
         case 1 :
@@ -740,6 +776,8 @@ void Game::modifyDifficulty(){
             yun._enemyFireSpeed = 3;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
+            // change difficulty text color
+            _difficultyText.setFillColor(sf::Color::Yellow);
             break;
 
         case 2 :
@@ -753,6 +791,8 @@ void Game::modifyDifficulty(){
             yun._enemyFireSpeed = 4;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 30;
+            // change difficulty text color
+            _difficultyText.setFillColor(orange);
             break;
 
         case 3:
@@ -766,6 +806,8 @@ void Game::modifyDifficulty(){
             yun._enemyFireSpeed = 5;
             yun._enemyMovementSpeed = 2;
             yun._enemyStandardHP = 40;
+            // change difficulty text color
+            _difficultyText.setFillColor(sf::Color::Red);
             break;
     }
 }
