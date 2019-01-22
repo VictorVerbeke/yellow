@@ -48,7 +48,10 @@ Game::Game(sf::VideoMode mode, string name) :
     assignationSprites(&_panel_Spr, &_panel_lvl1_Tex, "images/Beenzino_panel_390_290.png", 390, 290);
     _panel_Spr.setPosition(34, 263);
 
-    // Création textures panels
+    // Création textures
+    Pellet* a = new Pellet(0,0,0, "images/pellets/_ally_spr_0.png", 0, 0, 0, 0);
+    a->initializeTextures();
+    delete a;
     assignationTexturesPanels();
 
 
@@ -349,7 +352,6 @@ void Game::checkEventIngame(){
 void Game::checkYunCollisions(){
     if (yun._invulCD == 0)
     {
-
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
 
@@ -364,10 +366,6 @@ void Game::checkYunCollisions(){
     else
     {
         yun._invulCD--;
-        if (yun._invulCD == 0){
-            yun._sprite.setTexture(yun._stillTex);
-            yun._isHurt = false;
-        }
         checkYunCollisionsPellets(false);
     }
     checkYunCollisionsPowerUp();
@@ -392,10 +390,7 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
         {
             if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds()))
             {
-                if (vulnerable) {
-                    yun - (&(*itPellet))->_damage;  // Il prend des dégats
-                    yun._sprite.setTexture(yun._hurtTex);
-                }
+                if (vulnerable) yun - (&(*itPellet))->_damage;  // Il prend des dégats
                 itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
             } else itPellet++;
         } else itPellet++;
@@ -661,21 +656,43 @@ void Game::drawBackground(){
     _ingameBG_Spr.setPosition(-0.1*_frameCounter, 0);
 }
 
+// void Game::drawEntity(Player* object){
+//     draw(object->_sprite);
+//     // On en profite : on réduit le cooldown de tir à chaque frame
+//     object->decreaseCD();
+// }
+//
+// void Game::drawEntity(Boss *object){
+//     draw(object->_sprite);
+// }
+//
+// void Game::drawEntity(Enemy *object){
+//     draw(object->_sprite);
+// }
+//
+// void Game::drawEntity(PowerUp *object){
+//     draw(object->_sprite);
+// }
+//
+// void Game::drawEntity(Pellet *object){
+//     draw(object->_sprite);
+//     object->_frameCounter++;
+//     if (object->_frameCounter++ == 3) object->nextFrame();
+// }
+
 void Game::drawEntities(){
 
     // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
-    for (auto enemy : enemyVector) drawEntity(enemy);
-
-    for (auto boss : bossVector) drawEntity(boss);
-
-    for (auto pUp : pUpVector) drawEntity(pUp);
-
-    for (auto pellet : pelletVector) drawEntity(pellet);
-
+    for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
+        drawEntity((*it));
+    for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
+        drawEntity((*it));
+    for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
+        drawEntity((*it));
+    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
+        drawEntity((*it));
     // Draw the Player after everything.
     drawEntity(yun);
-    // Decrease player shooting cooldown
-    yun.decreaseCD();
 }
 
 
