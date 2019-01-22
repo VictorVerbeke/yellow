@@ -584,41 +584,20 @@ void Game::drawBackground(){
     _ingameBG_Spr.setPosition(-0.1*_frameCounter, 0);
 }
 
-// void Game::drawEntity(Player* object){
-//     draw(object->_sprite);
-//     // On en profite : on réduit le cooldown de tir à chaque frame
-//     object->decreaseCD();
-// }
-//
-// void Game::drawEntity(Boss *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(Enemy *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(PowerUp *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(Pellet *object){
-//     draw(object->_sprite);
-// }
-
 void Game::drawEntities(){
 
     // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
-    for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
-        drawEntity((*it));
-    for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
-        drawEntity((*it));
-    for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
-        drawEntity((*it));
-    for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
-        drawEntity((*it));
+    for (auto enemy : enemyVector) drawEntity(enemy);
+
+    for (auto boss : bossVector) drawEntity(boss);
+
+    for (auto pUp : pUpVector) drawEntity(pUp);
+
+    for (auto pellet : pelletVector) drawEntity(pellet);
+
     // Draw the Player after everything.
     drawEntity(yun);
+    // Decrease player shooting cooldown
     yun.decreaseCD();
 }
 
