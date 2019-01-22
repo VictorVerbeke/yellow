@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include "Textures.hh"
 using namespace std;
 
 class Entity {

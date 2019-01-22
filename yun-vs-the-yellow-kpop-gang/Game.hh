@@ -14,7 +14,7 @@
 #include "Enemy.hh"
 #include "Boss.hh"
 #include "PowerUp.hh"
-
+#include "Textures.hh"
 #define PLAYER_SPEED 4
 
 enum State {beginState = 0,
@@ -117,6 +117,7 @@ class Game : public sf::RenderWindow {
         sf::Texture _panel_lvl1_Tex;
         sf::Texture _panel_lvl2_Tex;
         sf::Texture _panel_lvl3_Tex;
+
 
         // Attributs : Audio
         sf::Music _music;   // Car c'est important la musique.

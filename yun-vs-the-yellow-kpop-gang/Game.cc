@@ -14,6 +14,23 @@ float Character::_enemyFireSpeed = 4;
 float Character::_enemyMovementSpeed = 2;
 float Character::_enemyStandardHP = 30;
 
+sf::Texture* Textures::_ally_tex0 = NULL;
+sf::Texture* Textures::_ally_tex1 = NULL;
+sf::Texture* Textures::_ally_tex2 = NULL;
+sf::Texture* Textures::_ally_tex3 = NULL;
+sf::Texture* Textures::_ally_tex4 = NULL;
+sf::Texture* Textures::_ally_tex5 = NULL;
+sf::Texture* Textures::_ally_tex6 = NULL;
+sf::Texture* Textures::_ally_tex7 = NULL;
+sf::Texture* Textures::_enemy_tex0 = NULL;
+sf::Texture* Textures::_enemy_tex1 = NULL;
+sf::Texture* Textures::_enemy_tex2 = NULL;
+sf::Texture* Textures::_enemy_tex3 = NULL;
+sf::Texture* Textures::_enemy_tex4 = NULL;
+sf::Texture* Textures::_enemy_tex5 = NULL;
+sf::Texture* Textures::_enemy_tex6 = NULL;
+sf::Texture* Textures::_enemy_tex7 = NULL;
+
 
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
@@ -22,8 +39,8 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficulty(0),
     _gameState(beginState)
 {
-
     //setIcon("images/icon.png");
+    new Textures();
     setMouseCursorVisible(false);
     setVerticalSyncEnabled(false);
     setFramerateLimit(60);
@@ -49,9 +66,6 @@ Game::Game(sf::VideoMode mode, string name) :
     _panel_Spr.setPosition(34, 263);
 
     // Création textures
-    Pellet* a = new Pellet(0,0,0, "images/pellets/_ally_spr_0.png", 0, 0, 0, 0);
-    a->initializeTextures();
-    delete a;
     assignationTexturesPanels();
 
 
@@ -62,7 +76,7 @@ Game::Game(sf::VideoMode mode, string name) :
     _volumeText.setFont(_font);
     _volumeText.setCharacterSize(50);
     _volumeText.setString(s.str());
-    _volumeText.setFillColor(sf::Color::Yellow);
+    _volumeText.setColor(sf::Color::Yellow);
     _volumeText.setPosition(590, 193);
 
     _difficultyNames.push_back("Easy");
@@ -73,7 +87,7 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficultyText.setFont(_font);
     _difficultyText.setCharacterSize(50);
     _difficultyText.setString(_difficultyNames[_difficulty]);
-    _difficultyText.setFillColor(sf::Color::Yellow);
+    _difficultyText.setColor(sf::Color::Yellow);
     _difficultyText.setPosition(605, 292);
 
 
@@ -438,6 +452,7 @@ void Game::moveYun(){
         y = y/2;
     }
     moveEntity(&yun, x, y);
+    yun.decreaseCD();
 }
 
 void Game::moveEntity(Player *object, float x, float y){
@@ -495,12 +510,16 @@ void Game::moveEntity(Pellet *object){
     object->_x += (object->_speed) * cos(object->_direction * PI / 180);
     object->_y += (object->_speed) * sin(object->_direction * PI / 180);
     object->_sprite.setPosition(object->_x, object->_y);
+    object->_frameCounter++;
+    if (object->_frameCounter == 3) object->nextFrame();
+
 }
 
 void Game::moveEntity(PowerUp *object){
     object->_x += (object->_speed) * cos(object->_direction * PI / 180);
     object->_y += (object->_speed) * sin(object->_direction * PI / 180);
     object->_sprite.setPosition(object->_x, object->_y);
+
 }
 
 void Game::moveEntities(){
@@ -636,8 +655,6 @@ void Game::drawBackground(){
 //
 // void Game::drawEntity(Pellet *object){
 //     draw(object->_sprite);
-//     object->_frameCounter++;
-//     if (object->_frameCounter++ == 3) object->nextFrame();
 // }
 
 void Game::drawEntities(){

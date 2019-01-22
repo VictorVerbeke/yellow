@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.hh"
+#include "Textures.hh"
 
 enum BonusType { speed, strength, invul };
 

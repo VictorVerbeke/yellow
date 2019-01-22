@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.hh"
 #include "Pellet.hh"
+#include "Textures.hh"
 
 #define PI 3.141592653
 

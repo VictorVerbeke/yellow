@@ -33,7 +33,7 @@ Pellet* Enemy::fire(sf::Vector2f yunPos){
         float dY = yunPos.y  - startingPos.y;
         float angle = (atan2(dY, dX) * 180 / PI);
         _fireCD = _enemyFireCD;
-        Pellet *enemyPellet = new Pellet(0, 0, 32, "images/angery_32.png",
+        Pellet *enemyPellet = new Pellet(0, 0, 32, "images/pellets/enemy_spr_0.png",
                                     _enemyFireSpeed, angle, _enemyFireDamage, 0);
         enemyPellet->_x = (this->_size / 2)*cos(angle/180*PI) + (this->_x);
         enemyPellet->_y = (this->_size / 2)*sin(angle/180*PI) + (this->_y);

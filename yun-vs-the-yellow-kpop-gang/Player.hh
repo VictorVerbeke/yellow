@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.hh"
 #include "Pellet.hh"
+#include "Textures.hh"
 #include <iostream>
 #include <algorithm>
 

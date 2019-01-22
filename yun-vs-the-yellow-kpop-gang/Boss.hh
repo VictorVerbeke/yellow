@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.hh"
+#include "Textures.hh"
 
 enum Name { none, Beenzino, GirlGeneration, Jonghyun };
 
@@ -18,7 +19,7 @@ class Boss: public Enemy {
         // Attributs
         Name _name;
         int _phase;
-        
+
     protected:
         unsigned int _specialFireCD;
 };

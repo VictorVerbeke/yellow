@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.hh"
 #include "Pellet.hh"
+#include "Textures.hh"
 #include <iostream>
 
 using namespace std;
@@ -16,7 +17,7 @@ class Enemy: public Character {
 
         // Overloads
         void operator-(const float &b);
-        
+
         // Methodes
         Pellet* fire(sf::Vector2f yunPos);
         void decreaseCD();
