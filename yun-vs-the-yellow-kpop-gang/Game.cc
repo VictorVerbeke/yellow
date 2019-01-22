@@ -92,7 +92,14 @@ Game::Game(sf::VideoMode mode, string name) :
 
 
     // PLAYER SOUND BUFFERS
-    _damage1.loadFromFile("sounds/yun_phrases/damage_1.ogg");
+    _bufferDamage1.loadFromFile("sounds/yun_phrases/damage_1.ogg");
+    _bufferDamage2.loadFromFile("sounds/yun_phrases/damage_2.ogg");
+
+    _bufferKill1.loadFromFile("sounds/yun_phrases/oui.ogg");
+    _bufferKill2.loadFromFile("sounds/yun_phrases/protocole_rip_1.ogg");
+    _bufferKill3.loadFromFile("sounds/yun_phrases/protocole_rip_2.ogg");
+    _bufferKill4.loadFromFile("sounds/yun_phrases/RIP.ogg");
+    _bufferKill5.loadFromFile("sounds/yun_phrases/seine.ogg");
 }
 
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
@@ -363,12 +370,12 @@ void Game::checkYunCollisions(){
         checkYunCollisionsPellets(true);
 
 
-        if (std::rand() > RAND_MAX)
-            _playerSound.setBuffer(_damage1);
+        if (rand() > RAND_MAX / 2)
+            _playerDamageSound.setBuffer(_bufferDamage1);
         else
-            _playerSound.setBuffer(_damage2);
+            _playerDamageSound.setBuffer(_bufferDamage2);
 
-        _playerSound.play();
+        _playerDamageSound.play();
     }
     else
     {
@@ -424,8 +431,41 @@ void Game::checkEnemyCollisions(){
                 } else itPellet++;
             } else itPellet++;
         }
+
         if (enemyKilled == false) itEnemy++;
-        else itEnemy = enemyVector.erase(itEnemy);
+        else {
+            itEnemy = enemyVector.erase(itEnemy);
+
+            // Enemy killed, play a victory sound
+
+            // Choose a random number between 0 and 4
+            int min = 0;
+            int max = 4;
+            int random_sound = min + (rand() % static_cast<int>(max - min + 1));
+
+            // Assing a sound buffer according to the number
+            switch (random_sound) {
+                case 0:
+                    _playerKillSound.setBuffer(_bufferKill1);
+                    break;
+                case 1:
+                    _playerKillSound.setBuffer(_bufferKill2);
+                    break;
+                case 2:
+                    _playerKillSound.setBuffer(_bufferKill3);
+                    break;
+                case 3:
+                    _playerKillSound.setBuffer(_bufferKill4);
+                    break;
+                case 4:
+                default:
+                    _playerKillSound.setBuffer(_bufferKill5);
+                    break;
+            }
+
+            // Play the sound
+            _playerKillSound.play();
+        }
     }
 }
 
