@@ -20,6 +20,9 @@ class Player: public Character {
 
         // Attributs
         int _invulCD;
+        sf::Texture _hurtTex;
+        sf::Texture _stillTex;
+        bool _isHurt; //Indique si il est touché, pour l'animation.
 
     protected:
         unsigned int _fireCD;

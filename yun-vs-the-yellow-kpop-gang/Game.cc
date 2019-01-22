@@ -128,13 +128,9 @@ void Game::scriptedEvents(){
     _frameCounter++;
     switch (_frameCounter){
         case 100 : {
-            cout << "Bon. ";
-            Enemy* enemy1 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            Enemy* enemy2 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            Enemy* enemy3 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            enemy1->_x = 1000; enemy1->_y = 100;
-            enemy2->_x = 1000; enemy2->_y = 250;
-            enemy3->_x = 1000; enemy3->_y = 400;
+            Enemy* enemy1 = new Enemy(900, 100, 32, yun._enemyStandardHP, "images/idol1_32.png", wave);
+            Enemy* enemy2 = new Enemy(900, 250, 32, yun._enemyStandardHP, "images/idol2_32.png", wave);
+            Enemy* enemy3 = new Enemy(900, 400, 32, yun._enemyStandardHP, "images/idol3_32.png", wave);
             addEnemyToVector(enemy1);
             addEnemyToVector(enemy2);
             addEnemyToVector(enemy3);
@@ -142,12 +138,9 @@ void Game::scriptedEvents(){
         }
 
         case 500 : {
-            Enemy* enemy4 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            Enemy* enemy5 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            Enemy* enemy6 = new Enemy(0, 0, 48, 50, "images/minion_48.png", wave);
-            enemy4->_x = 1000; enemy4->_y = 100;
-            enemy5->_x = 1000; enemy5->_y = 250;
-            enemy6->_x = 1000; enemy6->_y = 400;
+            Enemy* enemy4 = new Enemy(900, 100, 32, yun._enemyStandardHP, "images/idol1_32.png", wave);
+            Enemy* enemy5 = new Enemy(900, 250, 32, yun._enemyStandardHP, "images/idol2_32.png", wave);
+            Enemy* enemy6 = new Enemy(900, 400, 32, yun._enemyStandardHP, "images/idol3_32.png", wave);
             addEnemyToVector(enemy4);
             addEnemyToVector(enemy5);
             addEnemyToVector(enemy6);
@@ -322,12 +315,17 @@ void Game::checkEventIngame(){
 void Game::checkYunCollisions(){
     if (yun._invulCD == 0)
     {
+
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
     }
     else
     {
         yun._invulCD--;
+        if (yun._invulCD == 0){
+            yun._sprite.setTexture(yun._stillTex);
+            yun._isHurt = false;
+        }
         checkYunCollisionsPellets(false);
     }
     checkYunCollisionsPowerUp();
@@ -352,7 +350,10 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
         {
             if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds()))
             {
-                if (vulnerable) yun - (&(*itPellet))->_damage;  // Il prend des dégats
+                if (vulnerable) {
+                    yun - (&(*itPellet))->_damage;  // Il prend des dégats
+                    yun._sprite.setTexture(yun._hurtTex);
+                }
                 itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
             } else itPellet++;
         } else itPellet++;

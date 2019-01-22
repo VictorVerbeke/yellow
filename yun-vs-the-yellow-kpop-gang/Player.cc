@@ -3,14 +3,22 @@
 using namespace std;
 
 Player::Player ():
-    Character(0, 0, 100, 100, "images/yun_test_100.png"),
+    Character(0, 0, 64, 100, "images/yun_still_64.png"),
     _invulCD(0),
     _fireCD(0)
 {
-    // Initialisation des attributs partagés par les characters. On suppose que
-    // la difficulté de base est à "Normal".
-    // Toutes ces valeurs sont exprimées en frames, soit n * 1/60 secondes.
-
+    // Attribution des sprites still & hurt.
+    int res;
+    res = _stillTex.loadFromFile("images/yun_still_64.png");
+    if (!res) {
+        cout << "Error reading texture (images/yun_still_64.png)" << endl;
+        exit(1);
+    }
+    res = _hurtTex.loadFromFile("images/yun_hurt_64.png");
+    if (!res) {
+        cout << "Error reading texture (images/yun_hurt_64.png)" << endl;
+        exit(1);
+    }
 }
 
 Player::Player (float x, float y, float size, string imagePath)
@@ -25,6 +33,7 @@ Player::~Player(){
 // Overloads
 void Player::operator-(const float &b) {
     this->setHp(this->getHp() - b);
+    this->_isHurt = true;
     this->_invulCD = _playerInvulCD;
     cout << "Yun a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
 }
