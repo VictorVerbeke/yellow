@@ -83,7 +83,7 @@ class Game : public sf::RenderWindow {
         void drawBackground();          // En jeu, on veut afficher le fond,
                                             // puis chaque entité. On a do1nc une
         template<class T>                   // méthode pour chaque entité, puis
-        void drawEntity (T object);         // une méthode drawEntities pour                           
+        void drawEntity (T object);         // une méthode drawEntities pour
         void drawEntities();                // toutes les appeler.
 
 
