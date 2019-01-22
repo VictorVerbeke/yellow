@@ -10,7 +10,7 @@ using namespace std;
 class Player: public Character {
     public:
         Player();
-        Player (float x, float y, float size, string imagePath);
+        Player (float x, float y, float size, sf::Texture* tex);
         ~Player();
         // Overload opérateurs
         void operator-(const float &b);

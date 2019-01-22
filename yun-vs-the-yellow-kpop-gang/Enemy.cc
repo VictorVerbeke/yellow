@@ -2,9 +2,9 @@
 #include <math.h>
 
 Enemy::Enemy(float x, float y, float size, int hp,
-             string imagePath, Pattern pattern)
+             sf::Texture* tex, Pattern pattern)
 :
-    Character(0, 0, size, 50, imagePath),
+    Character(0, 0, size, 50, tex),
     _pattern(pattern),
     _speed(_enemyMovementSpeed),
     _direction(-90),
@@ -33,7 +33,7 @@ Pellet* Enemy::fire(sf::Vector2f yunPos){
         float dY = yunPos.y  - startingPos.y;
         float angle = (atan2(dY, dX) * 180 / PI);
         _fireCD = _enemyFireCD;
-        Pellet *enemyPellet = new Pellet(0, 0, 32, "images/pellets/enemy_spr_0.png",
+        Pellet *enemyPellet = new Pellet(0, 0, 32, Textures::_enemyPellet_tex0,
                                     _enemyFireSpeed, angle, _enemyFireDamage, 0);
         enemyPellet->_x = (this->_size / 2)*cos(angle/180*PI) + (this->_x);
         enemyPellet->_y = (this->_size / 2)*sin(angle/180*PI) + (this->_y);

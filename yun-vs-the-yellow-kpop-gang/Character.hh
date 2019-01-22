@@ -9,7 +9,7 @@ using namespace std;
 
 class Character: public Entity {
     public:
-        Character (float x, float y, float size, int hp, string imagePath);
+        Character (float x, float y, float size, int hp, sf::Texture* tex);
         int getHp () { return _hp; };
         void setHp (int hp) { _hp = hp; };
         void addHp (int hp) { _hp -= hp; };

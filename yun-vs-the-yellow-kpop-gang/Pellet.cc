@@ -6,10 +6,10 @@ using namespace std;
 
 
 
-Pellet::Pellet(float x, float y, float size, string imagePath,
+Pellet::Pellet(float x, float y, float size, sf::Texture* tex,
                float speed, float direction, int damage, int target)
 :
-    Entity(x, y, 64, imagePath),
+    Entity(x, y, 64, tex),
     _speed(speed),
     _direction(direction),
     _damage(damage),

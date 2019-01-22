@@ -32,9 +32,7 @@ class Game : public sf::RenderWindow {
         Game(sf::VideoMode mode, string name);
         ~Game();
 
-        void assignationSprites(sf::Sprite *spr, sf::Texture *tex,
-                                string imagePath, int = 800, int = 600);
-        void assignationTexturesPanels();
+        void assignationSprites(sf::Sprite *spr, sf::Texture *tex, int = 800, int = 600);
         // Utilisés dans le constructeur pour initialiser toutes les
         // attributs Sprite des menus, ainsi que les trois textures des panels.
 
@@ -104,19 +102,19 @@ class Game : public sf::RenderWindow {
 
         // Attributs : Sprites
         sf::Sprite _ingameBG_Spr;       // On a pour tous les menus un sprite
-        sf::Texture _ingameBG_Tex;      // pour le fond, ainsi qu'une
+                                        // pour le fond, ainsi qu'une
         sf::Sprite _mainMenuBG_Spr;     // texture associée. Cela permet
-        sf::Texture _mainMenuBG_Tex;    // d'afficher des images et
+                                        // d'afficher des images et
         sf::Sprite _optionsBG_Spr;      // on draw ensuite les
-        sf::Texture _optionsBG_Tex;     // sélections à highlight.
+                                        // sélections à highlight.
         sf::Sprite _selectLvlBG_Spr;    // BG pour BackGround, Spr pour Sprite,
-        sf::Texture _selectLvlBG_Tex;   // Tex pour Texture.
+                                        // Tex pour Texture.
         sf::Sprite _cursor_Spr;         // Celui-là à gauche, c'est pour les
-        sf::Texture _cursor_Tex;        // menus, pour indiquer le choix actuel.
+                                        // menus, pour indiquer le choix actuel.
         sf::Sprite _panel_Spr;
-        sf::Texture _panel_lvl1_Tex;
-        sf::Texture _panel_lvl2_Tex;
-        sf::Texture _panel_lvl3_Tex;
+
+
+
 
 
         // Attributs : Audio

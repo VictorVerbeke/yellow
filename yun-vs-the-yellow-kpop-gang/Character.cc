@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Character::Character (float x, float y, float size, int hp, string imagePath)
+Character::Character (float x, float y, float size, int hp, sf::Texture* tex)
 :
-    Entity(x, y, size, imagePath),
+    Entity(x, y, size, tex),
     _hp(hp)
 {}

@@ -5,7 +5,7 @@ using namespace std;
 
 class Entity {
     public:
-        Entity (float x, float y, float size, string imagePath);
+        Entity (float x, float y, float size, sf::Texture* tex);
 
         float _size;
         float _x;

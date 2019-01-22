@@ -12,7 +12,7 @@ class Enemy: public Character {
     public:
         Enemy();
         Enemy(float x, float y, float size, int hp,
-              string imagePath, Pattern pattern);
+              sf::Texture* tex, Pattern pattern);
         ~Enemy();
 
         // Overloads

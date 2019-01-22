@@ -39,12 +39,11 @@ sf::Texture* Textures::_yun_hurt_f1_tex = NULL;
 sf::Texture* Textures::_panel_lvl1_tex = NULL;
 sf::Texture* Textures::_panel_lvl2_tex = NULL;
 sf::Texture* Textures::_panel_lvl3_tex = NULL;
-sf::Texture* Textures::_backgroung_ingame_tex = NULL;
+sf::Texture* Textures::_background_ingame_tex = NULL;
 sf::Texture* Textures::_background_mainMenu_tex = NULL;
 sf::Texture* Textures::_background_options_tex = NULL;
 sf::Texture* Textures::_background_selectLvl_tex = NULL;
 sf::Texture* Textures::_cursor_tex = NULL;
-
 
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
@@ -54,14 +53,12 @@ Game::Game(sf::VideoMode mode, string name) :
     _gameState(beginState)
 {
     //setIcon("images/icon.png");
-    new Textures();
     setMouseCursorVisible(false);
     setVerticalSyncEnabled(false);
     setFramerateLimit(60);
     setActive(true);
     _music.setLoop(true);
     _volume = 100;
-
     // Assignations des valeurs de base aux Attributs : Flags
     upFlag = false;
     downFlag = false;
@@ -71,17 +68,13 @@ Game::Game(sf::VideoMode mode, string name) :
     firingFlag = false;
 
     // Création des Sprites
-    assignationSprites(&_ingameBG_Spr, &_ingameBG_Tex, "images/ingame_bg.jpg", 1620, 1080);
-    assignationSprites(&_mainMenuBG_Spr, &_mainMenuBG_Tex, "images/main_menu_bg.png");
-    assignationSprites(&_optionsBG_Spr, &_optionsBG_Tex, "images/options_bg.png");
-    assignationSprites(&_selectLvlBG_Spr, &_selectLvlBG_Tex, "images/select_lvl_bg.png");
-    assignationSprites(&_cursor_Spr, &_cursor_Tex, "images/cursor_24.png", 24, 24);
-    assignationSprites(&_panel_Spr, &_panel_lvl1_Tex, "images/Beenzino_panel_390_290.png", 390, 290);
+    assignationSprites(&_ingameBG_Spr, Textures::_background_ingame_tex, 1620, 1080);
+    assignationSprites(&_mainMenuBG_Spr, Textures::_background_mainMenu_tex);
+    assignationSprites(&_optionsBG_Spr, Textures::_background_options_tex);
+    assignationSprites(&_selectLvlBG_Spr, Textures::_background_selectLvl_tex);
+    assignationSprites(&_cursor_Spr, Textures::_cursor_tex, 24, 24);
+    assignationSprites(&_panel_Spr, Textures::_panel_lvl1_tex, 390, 290);
     _panel_Spr.setPosition(34, 263);
-
-    // Création textures
-    assignationTexturesPanels();
-
 
     // Text labels for volume & difficulty
     stringstream s;
@@ -116,38 +109,12 @@ Game::Game(sf::VideoMode mode, string name) :
     _bufferKill5.loadFromFile("sounds/yun_phrases/seine.ogg");
 }
 
-void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, string imagePath, int x, int y){
+void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, int x, int y){
 
-    int res;
-    res = tex->loadFromFile(imagePath);
-    if (!res) {
-        cout << "Error reading texture (" << imagePath << ')' << endl;
-        exit(1);
-    }
     spr->setTexture(*tex);
     spr->setTextureRect(sf::IntRect(0, 0, x, y));
     spr->setPosition(0,0);
     spr->setTexture(*tex);
-}
-
-void Game::assignationTexturesPanels(){
-
-    int res;
-    res = _panel_lvl1_Tex.loadFromFile("images/Beenzino_panel_390_290.png");
-    if (!res) {
-        cout << "Error reading texture (images/Beenzino_panel_390_290.png)" << endl;
-        exit(1);
-    }
-    res = _panel_lvl2_Tex.loadFromFile("images/GirlGeneration_panel_390_290.png");
-    if (!res) {
-        cout << "Error reading texture (images/GirlGeneration_panel_390_290.png)" << endl;
-        exit(1);
-    }
-    res = _panel_lvl3_Tex.loadFromFile("images/Jonghyun_panel_390_290.png");
-    if (!res) {
-        cout << "Error reading texture (images/Jonghyun_panel_390_290.png)" << endl;
-        exit(1);
-    }
 }
 
 Game::~Game(){
@@ -193,9 +160,9 @@ void Game::scriptedEvents(){
     _frameCounter++;
     switch (_frameCounter){
         case 100 : {
-            Enemy* enemy1 = new Enemy(900, 100, 32, yun._enemyStandardHP, "images/idol1_32.png", wave);
-            Enemy* enemy2 = new Enemy(900, 250, 32, yun._enemyStandardHP, "images/idol2_32.png", wave);
-            Enemy* enemy3 = new Enemy(900, 400, 32, yun._enemyStandardHP, "images/idol3_32.png", wave);
+            Enemy* enemy1 = new Enemy(900, 100, 32, yun._enemyStandardHP, Textures::_enemy_tex1, wave);
+            Enemy* enemy2 = new Enemy(900, 250, 32, yun._enemyStandardHP, Textures::_enemy_tex2, wave);
+            Enemy* enemy3 = new Enemy(900, 400, 32, yun._enemyStandardHP, Textures::_enemy_tex3, wave);
             addEnemyToVector(enemy1);
             addEnemyToVector(enemy2);
             addEnemyToVector(enemy3);
@@ -203,9 +170,9 @@ void Game::scriptedEvents(){
         }
 
         case 500 : {
-            Enemy* enemy4 = new Enemy(900, 100, 32, yun._enemyStandardHP, "images/idol1_32.png", wave);
-            Enemy* enemy5 = new Enemy(900, 250, 32, yun._enemyStandardHP, "images/idol2_32.png", wave);
-            Enemy* enemy6 = new Enemy(900, 400, 32, yun._enemyStandardHP, "images/idol3_32.png", wave);
+            Enemy* enemy4 = new Enemy(900, 100, 32, yun._enemyStandardHP, Textures::_enemy_tex1, wave);
+            Enemy* enemy5 = new Enemy(900, 250, 32, yun._enemyStandardHP, Textures::_enemy_tex2, wave);
+            Enemy* enemy6 = new Enemy(900, 400, 32, yun._enemyStandardHP, Textures::_enemy_tex3, wave);
             addEnemyToVector(enemy4);
             addEnemyToVector(enemy5);
             addEnemyToVector(enemy6);
@@ -376,7 +343,7 @@ void Game::checkEventIngame(){
 }
 
 
-// Methodes de collision:checkEventSel
+// Methodes de collision
 void Game::checkYunCollisions(){
     if (yun._invulCD == 0)
     {
@@ -394,10 +361,10 @@ void Game::checkYunCollisions(){
         yun._invulCD--;
         if (yun._isHurt == true){
             yun._isHurt = false;
-            yun._sprite.setTexture(yun._hurtTex);
+            yun._sprite.setTexture(*(Textures::_yun_hurt_tex));
         }
         if (yun._invulCD == 0){
-            yun._sprite.setTexture(yun._stillTex);
+            yun._sprite.setTexture(*(Textures::_yun_still_tex));
         }
         checkYunCollisionsPellets(false);
     }
@@ -796,7 +763,7 @@ void Game::changeLevel(int i){
     switch(_selectedLevel){
         case level1 :
             if (i > 0){
-                _panel_Spr.setTexture(_panel_lvl2_Tex);
+                _panel_Spr.setTexture(*(Textures::_panel_lvl2_tex));
                 _selectedLevel = level2;
             }
 
@@ -804,18 +771,18 @@ void Game::changeLevel(int i){
 
         case level2 :
             if (i > 0) {
-                _panel_Spr.setTexture(_panel_lvl3_Tex);
+                _panel_Spr.setTexture(*(Textures::_panel_lvl3_tex));
                 _selectedLevel = level3;
             }
             if (i < 0) {
-                _panel_Spr.setTexture(_panel_lvl1_Tex);
+                _panel_Spr.setTexture(*(Textures::_panel_lvl1_tex));
                 _selectedLevel = level1;
             }
             break;
 
         case level3 :
             if (i < 0) {
-                _panel_Spr.setTexture(_panel_lvl2_Tex);
+                _panel_Spr.setTexture(*(Textures::_panel_lvl2_tex));
                 _selectedLevel = level2;
             }
             break;

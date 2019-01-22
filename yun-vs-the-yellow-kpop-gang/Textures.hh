@@ -10,6 +10,7 @@ public:
 
     Textures();
     void textureAffectation(sf::Texture* tex, string str);
+    void generateTextures();
     static sf::Texture* _allyPellet_tex0;
     static sf::Texture* _allyPellet_tex1;
     static sf::Texture* _allyPellet_tex2;
@@ -35,7 +36,7 @@ public:
     static sf::Texture* _panel_lvl1_tex;
     static sf::Texture* _panel_lvl2_tex;
     static sf::Texture* _panel_lvl3_tex;
-    static sf::Texture* _backgroung_ingame_tex;
+    static sf::Texture* _background_ingame_tex;
     static sf::Texture* _background_mainMenu_tex;
     static sf::Texture* _background_options_tex;
     static sf::Texture* _background_selectLvl_tex;

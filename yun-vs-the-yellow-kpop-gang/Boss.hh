@@ -9,7 +9,7 @@ class Boss: public Enemy {
         // Constructeurs & Destructeurs
         Boss();
         Boss(float x, float y, float size, int hp,
-             string imagePath, Pattern pattern, Name name);
+             sf::Texture* tex, Pattern pattern, Name name);
         ~Boss(); // LVL 1 CROOK
 
         // Methodes

@@ -5,7 +5,7 @@
 
 class Pellet : public Entity {
     public:
-        Pellet(float x, float y, float size, string imagePath,
+        Pellet(float x, float y, float size, sf::Texture* tex,
                float speed, float direction, int damage, int target);
         ~Pellet();
 

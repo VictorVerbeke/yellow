@@ -1,9 +1,9 @@
 #include "PowerUp.hh"
 #define POWERUPSPEED 1.5
 
-PowerUp::PowerUp(float x, float y, float size, string imagePath, BonusType type, int power)
+PowerUp::PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power)
 :
-    Entity(x, y, size, imagePath),
+    Entity(x, y, size, tex),
     _type(type),
     _power(power),
     _speed(POWERUPSPEED),

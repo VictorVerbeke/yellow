@@ -10,9 +10,9 @@ Boss::Boss():
     _specialFireCD(0){}
 
 Boss::Boss(float x, float y, float size, int hp,
-     string imagePath, Pattern pattern, Name name)
+     sf::Texture* tex, Pattern pattern, Name name)
 :
-    Enemy(x, y, size, hp, imagePath, pattern),
+    Enemy(x, y, size, hp, tex, pattern),
     _name(name),
     _phase(0),
     _specialFireCD(0){}
