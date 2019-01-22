@@ -156,9 +156,15 @@ class Game : public sf::RenderWindow {
         sf::Text _difficultyText;
         vector<string> _difficultyNames;
 
-        sf::Sound _playerSound;
-        sf::SoundBuffer _damage1;
-        sf::SoundBuffer _damage2;
+        sf::Sound _playerDamageSound;
+        sf::Sound _playerKillSound;
+        sf::SoundBuffer _bufferDamage1;
+        sf::SoundBuffer _bufferDamage2;
+        sf::SoundBuffer _bufferKill1;
+        sf::SoundBuffer _bufferKill2;
+        sf::SoundBuffer _bufferKill3;
+        sf::SoundBuffer _bufferKill4;
+        sf::SoundBuffer _bufferKill5;
 };
 
 
