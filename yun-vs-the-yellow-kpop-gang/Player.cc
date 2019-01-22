@@ -19,6 +19,11 @@ Player::Player ():
         cout << "Error reading texture (images/yun_hurt_64.png)" << endl;
         exit(1);
     }
+    res = _hurt_f1_Tex.loadFromFile("images/yun_hurt_f1_64.png");
+    if (!res) {
+        cout << "Error reading texture (images/yun_hurt_f1_64.png)" << endl;
+        exit(1);
+    }
 }
 
 Player::Player (float x, float y, float size, string imagePath)
@@ -35,6 +40,7 @@ void Player::operator-(const float &b) {
     this->setHp(this->getHp() - b);
     this->_isHurt = true;
     this->_invulCD = _playerInvulCD;
+    this->_sprite.setTexture(this->_hurt_f1_Tex);
     cout << "Yun a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
 }
 

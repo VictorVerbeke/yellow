@@ -5,10 +5,10 @@
 // éléments statiques de Character.
 float Character::_playerFireCD = 15;
 float Character::_playerFireDamage = 10;
-float Character::_playerFireSpeed = 10;
+float Character::_playerFireSpeed = 1;
 float Character::_playerMovementSpeed = 4;
 float Character::_playerInvulCD = 60;
-float Character::_enemyFireCD = 80;
+float Character::_enemyFireCD = 8hurt_f1_Tex0;
 float Character::_enemyFireDamage = 5;
 float Character::_enemyFireSpeed = 4;
 float Character::_enemyMovementSpeed = 2;
@@ -369,17 +369,22 @@ void Game::checkYunCollisions(){
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
 
-
         if (rand() > RAND_MAX / 2)
             _playerDamageSound.setBuffer(_bufferDamage1);
         else
             _playerDamageSound.setBuffer(_bufferDamage2);
-
         _playerDamageSound.play();
     }
     else
     {
         yun._invulCD--;
+        if (yun._isHurt == true){
+            yun._isHurt = false;
+            yun._sprite.setTexture(yun._hurtTex);
+        }
+        if (yun._invulCD == 0){
+            yun._sprite.setTexture(yun._stillTex);
+        }
         checkYunCollisionsPellets(false);
     }
     checkYunCollisionsPowerUp();
