@@ -631,15 +631,15 @@ void Game::drawEntities(){
 
     // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
     for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
-        drawEntity(&(*it));
+        drawEntity((*it));
     for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
-        drawEntity(&(*it));
+        drawEntity((*it));
     for(vector<PowerUp>::iterator it = pUpVector.begin(); it != pUpVector.end(); it++)
-        drawEntity(&(*it));
+        drawEntity((*it));
     for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
-        drawEntity(&(*it));
+        drawEntity((*it));
     // Draw the Player after everything.
-    drawEntity(&yun);
+    drawEntity(yun);
 }
 
 
