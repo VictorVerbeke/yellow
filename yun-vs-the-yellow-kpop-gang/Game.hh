@@ -92,10 +92,11 @@ class Game : public sf::RenderWindow {
         void addPowerUpToVector(PowerUp *object);   // vecteurs. On les ajoute
         void addBossToVector(Boss *object);         // grâce aux fonctions ici.
 
-        // Gestion Musique, Volume, Etat & Niveau, ainsi que Difficulté
+        // Gestion du son, des niveaux, de la difficulté
         void changeMusic(string musicPath); // Modifie la musique lue
         void changeState(State nextState);  // Modifie l'état du jeu.
         void changeLevel(int i);    // Choisit le niveau suivant ou précédent
+        void playRandomKillSound(); // Joue un son de mort au hasard.
         void setVolume(int i);      // Change le volume de +/- 5%
         void setDifficulty(int i);  // Monte ou baisse la difficulté.
         void modifyDifficulty();    // Modifie les attributs statiques des characters.
@@ -106,7 +107,7 @@ class Game : public sf::RenderWindow {
         sf::Sprite _optionsBG_Spr;
         sf::Sprite _selectLvlBG_Spr;
         sf::Sprite _cursor_Spr;
-        sf::Sprite _panel_Spr;          
+        sf::Sprite _panel_Spr;
 
         // Attributs : Audio
         sf::Music _music;   // Car c'est important la musique.

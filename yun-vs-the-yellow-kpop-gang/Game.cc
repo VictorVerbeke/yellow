@@ -1,8 +1,26 @@
 #include "Game.hh"
 #include <ctime>
 
-// Déclaration nécessaire pour fonctionner des
-// éléments statiques de Character.
+// Bonjour ! Bienvenue dans la classe Game, où tout se déroule presque.
+// Afin de mieux comprendre comment le jeu fonctionne, veuillez vous
+// référencer au "Guide du Stagiaire qui devrait reprendre notre projet",
+// ou à aller voir le .h où chaque fonction est expliquée brièvement.
+// Nous avons essayé de bien commenter avec de rentre le code simple à
+// prendre en main, donc le guide ne sera pas vraiment nécessaire, mais
+// (si nous avons le temps de le faire correctement) il y aura peut-être
+// des schémas explicatifs de chaque étape du déroulement du jeu.
+// Bonne lecture !
+//                                  - Victor Verbeke, Dimitri Kokkonis.
+
+// Déclaration des variables statiques (par défaut) des classes du jeu.
+// Elles sont déclarées ici pour s'y référencer en allant juste en haut
+// du fichier. Character regroupe plein de variables concernant les
+// charactéristiques des entités de type "Charactère" (c'est pas pour rien),
+// tandis que Textures regroupe l'ensemble des textures utilisées dans le jeu.
+// Les variables "Character::" sont celles du niveau de difficulté "Normal".
+// Les variables "Textures::" sont juste des pointeurs nuls, ils sont
+// initialisés dans le main via l'initialisation d'un objet de classe Textures.
+
 float Character::_playerFireCD = 15;
 float Character::_playerFireDamage = 10;
 float Character::_playerFireSpeed = 1;
@@ -45,6 +63,17 @@ sf::Texture* Textures::_background_options_tex = NULL;
 sf::Texture* Textures::_background_selectLvl_tex = NULL;
 sf::Texture* Textures::_cursor_tex = NULL;
 
+
+// Le constructeur de la classe Game. La classe Game consiste en une
+// sorte de Superclasse qui dirige toutes les entités du jeu. Elle permet
+// de stocker chaque entité générée dans un vecteur associé à la classe,
+// de gérer les interactions entre entités, les mouvements des entités
+// et l'affichage des entités. Il faut penser à une classe sf::RenderWindow
+// à qui on aurait offert les cow power pour gérer le jeu.
+
+// Concernant le constructeur, il initialise une RenderWindow, puis
+// affecte à plein d'attributs des valeurs de base, pour qu'ils soient
+// utilisés plus tard. Les attributs sont détaillés un par un dans Game.hh.
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
     _frameCounter(0),
@@ -52,22 +81,25 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficulty(0),
     _gameState(beginState)
 {
-    //setIcon("images/icon.png");
+    // Configuration de la fenêtre de jeu.
     setMouseCursorVisible(false);
     setVerticalSyncEnabled(false);
     setFramerateLimit(60);
     setActive(true);
+
+    // Configuration de la musique.
     _music.setLoop(true);
-    _volume = 100;
+    _volume = 50;
+
     // Assignations des valeurs de base aux Attributs : Flags
-    upFlag = false;
-    downFlag = false;
-    rightFlag = false;
-    leftFlag = false;
-    shiftFlag = false;
+    upFlag = false;     // Chaque flag indique si une touche est enfoncée.
+    downFlag = false;   // Par exemple, upFlag indique si la flèche
+    rightFlag = false;  // directionnelle Haut est enfoncée.
+    leftFlag = false;   // Ces flags sont gérés dans les gestions de touche,
+    shiftFlag = false;  // donc dans la partie Event du code. On y reviendra.
     firingFlag = false;
 
-    // Création des Sprites
+    // Assignations des sprites servant de fond ou de navigation au menu.
     assignationSprites(&_ingameBG_Spr, Textures::_background_ingame_tex, 1620, 1080);
     assignationSprites(&_mainMenuBG_Spr, Textures::_background_mainMenu_tex);
     assignationSprites(&_optionsBG_Spr, Textures::_background_options_tex);
@@ -76,7 +108,7 @@ Game::Game(sf::VideoMode mode, string name) :
     assignationSprites(&_panel_Spr, Textures::_panel_lvl1_tex, 390, 290);
     _panel_Spr.setPosition(34, 263);
 
-    // Text labels for volume & difficulty
+    // Création des sprites textuels pour le volume et la difficulté.
     stringstream s;
     s << _volume << "%";
     _font.loadFromFile("fonts/OpenSans-Bold.ttf");
@@ -98,7 +130,7 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficultyText.setPosition(605, 292);
 
 
-    // PLAYER SOUND BUFFERS
+    // Buffers son pour le joueur.
     _bufferDamage1.loadFromFile("sounds/yun_phrases/damage_1.ogg");
     _bufferDamage2.loadFromFile("sounds/yun_phrases/damage_2.ogg");
 
@@ -109,6 +141,9 @@ Game::Game(sf::VideoMode mode, string name) :
     _bufferKill5.loadFromFile("sounds/yun_phrases/seine.ogg");
 }
 
+// AssignationSprites prend une adresse de sprite, une adresse de texture,
+// une taille x et une taille y, et colle tout ça pour créer un sprite avec
+// une texture, et tout ça dans un cadre allant de (0,0) à (x,y).
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, int x, int y){
 
     spr->setTexture(*tex);
@@ -117,37 +152,61 @@ void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, int x, int y){
     spr->setTexture(*tex);
 }
 
-Game::~Game(){
-}
+// Rien à voir dans le destructeur.
+Game::~Game(){}
 
 // Methode principale : Là où se déroule tout le jeu, beginGame().
 void Game::beginGame(){
+
+    // Le menu de départ est le menu principal. On commence aussi avec
+    // la difficulté en normal.
     changeState(mainMenu);
     setDifficulty(1);
-    // Run the program as long as the window is open
+
+    // Tant que la fenêtre est ouverte, le programme tourne.
     while (isOpen())
     {
+        // Selon l'état du jeu, le jeu se déroule différemment.
+        // On peut voir le jeu comme une machine à états : selon son état,
+        // son comportement est différent. Il faut voir ça comme le lieu où
+        // nous sommes (menu principal, donc comportement de menu principal,
+        // le niveau 1 donc comportement de gameplay, etc...).
         switch (_gameState){
+            // Cas du menu principal : Capture des inputs, puis affichage.
             case mainMenu:
                 checkEventMainMenu();
                 drawMainMenu();
                 break;
+
+            // Cas des options : Capture des inputs, puis affichage.
             case options:
                 checkEventOptions();
                 drawOptions();
                 break;
+
+            // Cas de la sélection de niveau : Capture des inputs, puis...
+            // ...affichage. On se répète un peu, c'est des menus quoi.
             case selectLvl:
                 checkEventSelectLvl();
                 drawSelectLvl();
                 break;
+
+            // Dans le cas du niveau 1, on est plus dans du gameplay. Les
+            // événements sont donc plus compliqués. Ca se déroule comme ça :
             case level1:
-                checkEventIngame();
-                scriptedEvents();
-                moveEntities();
-                checkAllCollisions();
-                drawIngame();
-                enemyAttack();
+                checkEventIngame();     // Capture des inputs.
+                scriptedEvents();       // Evenements scripté (apparition
+                                        // ennemis, boss, etc...).
+                moveEntities();         // Déplacement des entités.
+                checkAllCollisions();   // Vérification des collisions.
+                drawIngame();           // Affichage des entités.
+                enemyAttack();          // Attaque auto des ennemis.
                 break;
+
+            // Les autres états n'ont pas encore été codés. Il s'agit de
+            // niveaux supplémentaires et éventuellement d'un écran de
+            // game over, donc rien de folichon non plus. On peut jouer
+            // avec un seul niveau.
             default :
                 changeState(mainMenu);
                 break;
@@ -155,32 +214,56 @@ void Game::beginGame(){
     }
 }
 
+// Les événements scriptés, c'est l'apparition à un certain moment d'un
+// certain événément : spawn d'ennemi, de boss, de power-up, tout y est.
+// A terme, nous aimerions avoir un scriptedEvents() par niveau.
 void Game::scriptedEvents(){
 
+    // A chaque frame, on incrémente le compteur de frames.
+    // Le jeu se déroule à 60 FPS (idéalement), donc on peut considérer que
+    // _frameCounter/60 donnerait le nombre de secondes passées.
     _frameCounter++;
     switch (_frameCounter){
-        case 100 : {
+        // A 100 frames, donc au bout d'une minute et 66 centièmes en gros,
+        case 100 :
+            // Création de trois ennemis.
             addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
             addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        // Vous avez l'idée.
+        case 500 :
+            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
             addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
-        }
 
-        case 500 : {
-            Enemy* enemy4 = new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave);
-            Enemy* enemy5 = new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave);
-            Enemy* enemy6 = new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex3, wave);
-            addEnemyToVector(enemy4);
-            addEnemyToVector(enemy5);
-            addEnemyToVector(enemy6);
+        case 900 :
+            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(new Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
-        }
 
+        case 1000 :
+            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1100 :
+            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(new Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        // Si y'a rien, alors il ne se passe rien. Logique.
         default :
             break;
     }
 }
 
+// Fonction d'attaque de chaque ennemi.
+// Pour chaque ennemi dans le vecteur d'ennemi, on appelle la fonction fire().
+// L'ennemi tire vers le joueur. Puis ensuite, on réduit le cooldown pour
+// éviter qu'il tire en continu.
 void Game::enemyAttack(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
@@ -189,31 +272,47 @@ void Game::enemyAttack(){
     }
 }
 
+// goMenuSelection(), ça permet de naviguer entre les différents états du jeu.
+// Autrement dit, à part quand on est dans un niveau, les menus sont
+// naviguables à l'aide d'un curseur. La position du curseur indique le menu
+// sélectionné (comme "New Game"). En appuyant sur Entrée ou Espace, on va
+// dans le menu désigné.
 void Game::goMenuSelection(int sel){
+
+    // Selon l'état du jeu, la sélection a plus ou moins sens.
     switch(_gameState){
         case mainMenu :
-            if (sel == 0) changeState(level1);      // Bouton "New Game"
-            else if (sel == 1) changeState(selectLvl);   // Bouton "Level Select"
-            else if (sel == 2) changeState(options);     // Bouton "Options"
-            else if (sel == 3) this->close();                  // Bouton "Exit Game"
+            if (sel == 0) changeState(level1);          // Bouton "New Game"
+            else if (sel == 1) changeState(selectLvl);  // Bouton "Level Select"
+            else if (sel == 2) changeState(options);    // Bouton "Options"
+            else if (sel == 3) this->close();           // Bouton "Exit Game"
             break;
 
         case selectLvl:
-            if (sel == 0) changeState(_selectedLevel);
-            else if (sel == 1) changeState(mainMenu);// Bouton "Back to main menu"
+            if (sel == 0) changeState(_selectedLevel);  // On accède au niveau.
+            else if (sel == 1) changeState(mainMenu);   // Bouton "Main Menu"
             break;
 
         case options:
-            if (sel == 2) changeState(mainMenu);// Bouton "Back to main menu"
-            // Les autres boutons n'en sont pas, ils modifient des valeurs.
+            if (sel == 2) changeState(mainMenu);        // Bouton "Main Menu"
+            // Les autres boutons n'en sont pas, le sélecteur indique juste
+            // l'emplacement du champ à modifier, soit Volume ou Difficulty.
             break;
+
+        // Dans les autres états du jeu, cette fonction ne sert à rien.
+        // Elle devrait d'ailleurs ne jamais être appelée.
         default:
             break;
     }
 }
 
 
-// Gestion des events.
+// Gestion des events !
+// Chaque état à un checkEvent associé. Ils permettent d'enregistrer les
+// touches appuyées, puis d'agir en conséquence : modifier des flags ou
+// appeler des fonctions.
+
+// Events du menu principal
 void Game::checkEventMainMenu(){
 
     sf::Event event;
@@ -224,7 +323,9 @@ void Game::checkEventMainMenu(){
                 close();
                 break;
 
-            case sf::Event::KeyPressed:         // Ci-dessous : Equivaut à (x-1) % 4 mais ca marche pas bizarrement.
+            // Pour l'histoire du (x+3)%4, ça équivaut juste à un (x-1)%4.
+            // Pour une raison obscure, ça ne marche pas en faisant (x-1)%4...
+            case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection + 3)%4;
                 if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%4;
                 if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
@@ -238,6 +339,7 @@ void Game::checkEventMainMenu(){
     }
 }
 
+// Events du menu des options
 void Game::checkEventOptions(){
 
     sf::Event event;
@@ -248,22 +350,27 @@ void Game::checkEventOptions(){
                 close();
                 break;
 
+            // Le code devient un peu plus moche ici.
+            // Les effets des touches dépendent aussi de l'endroit sélectionné.
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Up) _menuSelection = (_menuSelection + 2) % 3;
-                else if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%3;
-                else if (event.key.code == sf::Keyboard::Left)
+                if (event.key.code == sf::Keyboard::Down) _menuSelection = (_menuSelection + 1)%3;
+
+                // Dans le cas de droite, il augmente le son OU la difficulté
+                // selon la position du curseur ("Volume" ou "Difficulty").
+                if (event.key.code == sf::Keyboard::Left)
                 {
                     if (_menuSelection == 0) setVolume(-1);     // Baisser le volume
-                    else if (_menuSelection == 1) setDifficulty(-1); // Baisser la difficulté
+                    if (_menuSelection == 1) setDifficulty(-1); // Baisser la difficulté
                 }
-                else if (event.key.code == sf::Keyboard::Right)
+                if (event.key.code == sf::Keyboard::Right)
                 {
                     if (_menuSelection == 0) setVolume(1);      // Augmenter le volume
-                    else if (_menuSelection == 1) setDifficulty(1);  // Augmenter la difficulté
+                    if (_menuSelection == 1) setDifficulty(1);  // Augmenter la difficulté
                 }
-                else if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
-                else if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
-                else if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
+                if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
+                if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
+                if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
                 break;
 
             default:
@@ -272,6 +379,7 @@ void Game::checkEventOptions(){
     }
 }
 
+// Events du Level Select
 void Game::checkEventSelectLvl(){
 
     sf::Event event;
@@ -300,8 +408,6 @@ void Game::checkEventSelectLvl(){
 
 void Game::checkEventIngame(){
 
-    x = 0;
-    y = 0;
     sf::Event event;
 
     while (pollEvent(event))
@@ -313,7 +419,15 @@ void Game::checkEventIngame(){
                 break;
 
             case sf::Event::KeyPressed:
-                // Process the up, down, left and right keys
+                // De manière assez rigolote, rester appuyer n'active pas
+                // l'event KeyPressed à chaque frame. Il s'active une fois,
+                // puis à chaque frame mais au bout d'un certain temps.
+                // On considère donc qu'à l'appui, on active le flag, et on
+                // attend qu'elle soit relachée pour désactiver le flag.
+                // Sauf pour Echap. C
+    // Yun va bouger : ces deux variables correspondent à ses déplacements.
+    // Selon les flags, ils vont être modifiés, donc on peut considérer que
+    // ce sont plus des dx et dy que x et y, mais peu importe.a, ça renvoit au menu principal.
                 if (event.key.code == sf::Keyboard::Up) upFlag = true;
                 if (event.key.code == sf::Keyboard::Down) downFlag = true;
                 if (event.key.code == sf::Keyboard::Left) leftFlag = true;
@@ -336,48 +450,70 @@ void Game::checkEventIngame(){
                 break;
         }
     }
+    // Si on appuie sur tirer, pew pew.
     if (firingFlag) addPelletToVector(yun.fire());
 }
 
 
 // Methodes de collision
+// Actuellement, on regarde les collisions des sprites. Il faut que je fasse
+// des hitbox car sinon elles sont trop grandes, car basées sur les fichiers
+// images qu'on fournit. C'est un TODO.
+
+// Vérification des collisions du joueur !
+// Si Yun est en frame d'invincibilité, alors il prend aucun dégat mais
+// supprime tous les pellets touchés. Sinon, il prend des dégats de la part
+// des ennemis ou des pellets.
 void Game::checkYunCollisions(){
     if (yun._invulCD == 0)
     {
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
 
+        // On affecte à chaque frame un son aléatoire pour quand Yun se
+        // fera toucher. Il en a deux, mais ils sont rigolos.
         if (rand() > RAND_MAX / 2)
             _playerDamageSound.setBuffer(_bufferDamage1);
         else
             _playerDamageSound.setBuffer(_bufferDamage2);
-        _playerDamageSound.play();
+        _playerDamageSound.play();  // On joue le son.
     }
     else
     {
-        yun._invulCD--;
-        if (yun._isHurt == true){
-            yun._isHurt = false;
+        yun._invulCD--; // On réduit le temps d'invincibilité du joueur.
+        if (yun._isHurt == true){   // Si il s'agit de la deuxième frame
+            yun._isHurt = false;    // d'invincibilité, alors on modifie la
+                                    // texture pour indiquer qu'il est blessé.
+                                    // La première frame est un Yun rouge, pour
+                                    // montrer la frame où il est blessé (check
+                                    // l'overload de Player pour ça.)
             yun._sprite.setTexture(*(Textures::_yun_hurt_tex));
         }
+        // A la dernière frame, on remet Yun tranquille content.
         if (yun._invulCD == 0){
             yun._sprite.setTexture(*(Textures::_yun_still_tex));
         }
         checkYunCollisionsPellets(false);
     }
+    // TODO : La collision avec les powerups.
     checkYunCollisionsPowerUp();
 }
 
+// Yun touche un ennemi = Il prend des dégats (si il est pas invulnérable).
+// Ici, on parcourt le vecteur d'ennemis et on invoque la surcharge - de Player
+// pour lui infliger des dégats.
 void Game::checkYunCollisionsEnemies(){
     // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
         if (yun._sprite.getGlobalBounds().intersects((&(*itEnemy))->_sprite.getGlobalBounds())){;
-            yun - 10;
+            yun - (Character::_enemyFireDamage * 2);
         }
     }
 }
 
+// Si Yun est vulnérable (true), alors il prend des dégats.
+// Dans les deux cas, il supprime les pellets touchés.
 void Game::checkYunCollisionsPellets(bool vulnerable){
 
     vector<Pellet>::iterator itPellet = pelletVector.begin();
@@ -394,8 +530,11 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
     }
 }
 
+// Si Yun touche un powerup, il est amélioré durant TOUTE la partie.
 void Game::checkYunCollisionsPowerUp(){} // TODO
 
+// Si un ennemi rencontre un pellet tiré par le joueur, alors il est blessé.
+// Pour la mort de l'ennemi, voir la surcharge de l'opérateur - dans Enemy.
 void Game::checkEnemyCollisions(){
     bool enemyKilled = false;
     // Les ennemis ne sont blessés que par les pellets tirés par Yun
@@ -418,70 +557,66 @@ void Game::checkEnemyCollisions(){
         if (enemyKilled == false) itEnemy++;
         else {
             itEnemy = enemyVector.erase(itEnemy);
-
-            // Enemy killed, play a victory sound
-
-            // Choose a random number between 0 and 4
-            int min = 0;
-            int max = 4;
-            int random_sound = min + (rand() % static_cast<int>(max - min + 1));
-
-            // Assing a sound buffer according to the number
-            switch (random_sound) {
-                case 0:
-                    _playerKillSound.setBuffer(_bufferKill1);
-                    break;
-                case 1:
-                    _playerKillSound.setBuffer(_bufferKill2);
-                    break;
-                case 2:
-                    _playerKillSound.setBuffer(_bufferKill3);
-                    break;
-                case 3:
-                    _playerKillSound.setBuffer(_bufferKill4);
-                    break;
-                case 4:
-                default:
-                    _playerKillSound.setBuffer(_bufferKill5);
-                    break;
-            }
-
-            // Play the sound
-            _playerKillSound.play();
+            playRandomKillSound(); // Enemy killed, play a victory sound
+            // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO TODO
         }
     }
 }
 
+// Appel de toutes les fonctions de collisions vues précédemment.
 void Game::checkAllCollisions(){
     checkYunCollisions();
     checkEnemyCollisions();
 }
 
 
-// Methodes de déplacementgoMe
+// Methodes de déplacement !
+// Toutes les classes possèdent un moyen de se déplacer : Yun manuellement (x,y)
+// et les autres ont une vitesse et une direction. A chaque frame, on fait
+// bouger les entités avec les fonctions suivantes.
+
+// moveYun permet de... bouger Yun. C'est grâce aux flags dans les Events.
 void Game::moveYun(){
-    // Update coordinates
+
+    // Yun va bouger : ces deux variables correspondent à ses déplacements.
+    // Selon les flags, ils vont être modifiés, donc on peut considérer que
+    // ce sont plus des dx et dy que x et y, mais peu importe.
     x = 0;
     y = 0;
+
+    // Si on appuie sur gauche et qu'on est pas sur le rebord gauche, alors
+    // on peut bouger vers la gauche. Même idée pour les quatre directions.
     if (leftFlag && yun._x > 0) x -= Character::_playerMovementSpeed;
     if (rightFlag && yun._x < getSize().x - yun._size) x += Character::_playerMovementSpeed;
     if (upFlag && yun._y > 0) y -= Character::_playerMovementSpeed;
     if (downFlag && yun._y < getSize().y - yun._size) y += Character::_playerMovementSpeed;
-    if (shiftFlag){
-        x = x/2;
-        y = y/2;
+
+    if (shiftFlag){     // Si on appuie sur Shift, on peut naviguer plus
+        x = x/2;        // lentement. Utile lors des situations délicates où
+        y = y/2;        // on doit naviguer entre les balles.
     }
-    moveEntity(&yun, x, y);
-    yun.decreaseCD();
+
+    moveEntity(&yun, x, y); // moveEntity viendra plus tard, mais ça permet de
+                            // faire bouger une entité.
+    yun.decreaseCD();       // Comme la fonction moveYun est appelée à chaque
+                            // frame, on en profite pour faire réduire son
+                            // cooldown d'attaque ici.
 }
 
+// MoveEntity(player) est différent de MoveYun, car il prend les variations
+// de position dans moveYun pour le faire bouger, lui et son sprite.
 void Game::moveEntity(Player *object, float x, float y){
     object->_x += x;
     object->_y += y;
     object->_sprite.setPosition(object->_x, object->_y);
-
 }
 
+// Pour les autres entités, c'est la même chose :
+// - On prend sa direction, sa vitesse, et on le fait bouger dans le sens de
+// sa direction par sa vitesse.
+// - Dans des cas spécifiques, le comportement est différent (variation de la
+// direction, ou non-mouvement, respectivement wave et still). Tout ça est
+// indiqué par le pattern des objets, voir enum dans la classe Enemy.
 void Game::moveEntity(Enemy *object){
     switch (object->_pattern){
         case line:
@@ -526,6 +661,8 @@ void Game::moveEntity(Boss *object){
     object->_sprite.setPosition(object->_x, object->_y);
 }
 
+// Les objets tels que les Pellets et les Powerup n'ont pas de pattern, donc
+// sont plus courts en terme de code.
 void Game::moveEntity(Pellet *object){
     object->_x += (object->_speed) * cos(object->_direction * PI / 180);
     object->_y += (object->_speed) * sin(object->_direction * PI / 180);
@@ -542,6 +679,7 @@ void Game::moveEntity(PowerUp *object){
 
 }
 
+// Somme de toutes les méthodes de déplacement d'entités.
 void Game::moveEntities(){
     moveYun();
 
@@ -790,6 +928,36 @@ void Game::changeLevel(int i){
         default :
             break;
     }
+}
+
+void Game::playRandomKillSound(){
+    // Choose a random number between 0 and 4
+    int min = 0;
+    int max = 4;
+    int random_sound = min + (rand() % static_cast<int>(max - min + 1));
+
+    // Assing a sound buffer according to the number
+    switch (random_sound) {
+        case 0:
+            _playerKillSound.setBuffer(_bufferKill1);
+            break;
+        case 1:
+            _playerKillSound.setBuffer(_bufferKill2);
+            break;
+        case 2:
+            _playerKillSound.setBuffer(_bufferKill3);
+            break;
+        case 3:
+            _playerKillSound.setBuffer(_bufferKill4);
+            break;
+        case 4:
+        default:
+            _playerKillSound.setBuffer(_bufferKill5);
+            break;
+    }
+
+    // Play the sound
+    _playerKillSound.play();
 }
 
 void Game::setVolume(int i){
