@@ -726,7 +726,14 @@ void Game::moveEntities(){
 }
 
 
-// Methodes d'affichage générales
+// Methodes d'affichage générales !
+// Pour chaque état du jeu, on a des méthodes d'affichage différentes.
+
+// Par exemple, pour le menu principal :
+// -> On efface et ajoute un fond de couleur unie.
+// -> On ajoute la texture de fond
+// -> On ajoute le curseur.
+// -> On affiche le tout.
 void Game::drawMainMenu(){
     clear(sf::Color(0,127,0));
     draw(_mainMenuBG_Spr);
@@ -737,7 +744,7 @@ void Game::drawMainMenu(){
 void Game::drawOptions(){
     clear(sf::Color(127,0,0));
     draw(_optionsBG_Spr);
-    draw(_volumeText);
+    draw(_volumeText);      // On affiche les textes.
     draw(_difficultyText);
     drawCursor();
     display();
@@ -746,7 +753,7 @@ void Game::drawOptions(){
 void Game::drawSelectLvl(){
     clear(sf::Color(0,0,127));
     draw(_selectLvlBG_Spr);
-    draw(_panel_Spr);
+    draw(_panel_Spr);   // On affiche les images des niveaux.
     drawCursor();
     display();
 }
@@ -754,11 +761,13 @@ void Game::drawSelectLvl(){
 void Game::drawIngame(){
     // Clear the window and apply grey background
     clear(sf::Color(0,0,0));
-    drawBackground();
-    drawEntities();
+    drawBackground();   // On affiche le background.
+    drawEntities();     // On affiche les entités
     display();
 }
 
+// Selon l'état du jeu et la sélection du menu (le bouton visé), on
+// déplace le curseur à l'écran. Toutes les valeurs sont faites à la main.
 void Game::drawCursor(){
     // Dépend du State et de _menuSelection.
     switch(_gameState){
@@ -787,34 +796,16 @@ void Game::drawCursor(){
     draw(_cursor_Spr);
 }
 
-// Methodes d'affichage Ingame
+// Methodes d'affichage Ingame !
+
+// On veut que le background défile en fond.
+// On fait donc en sorte que l'image soit basée sur le temps passé en jeu.
 void Game::drawBackground(){
     draw(_ingameBG_Spr);
     _ingameBG_Spr.setPosition(-0.1*_frameCounter, 0);
 }
 
-// void Game::drawEntity(Player* object){
-//     draw(object->_sprite);
-//     // On en profite : on réduit le cooldown de tir à chaque frame
-//     object->decreaseCD();
-// }
-//
-// void Game::drawEntity(Boss *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(Enemy *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(PowerUp *object){
-//     draw(object->_sprite);
-// }
-//
-// void Game::drawEntity(Pellet *object){
-//     draw(object->_sprite);
-// }
-
+// Méthode d'appel des différentes méthodes d'affichage des entités.
 void Game::drawEntities(){
 
     // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
@@ -831,7 +822,8 @@ void Game::drawEntities(){
 }
 
 
-// Methodes d'ajout d'instances
+// Methodes d'ajout d'entités dans les vecteurs de la classe Game.
+// Généralement on fait addXToVector(new X(args)).
 void Game::addPelletToVector(Pellet* object){
     if (object != NULL) pelletVector.push_back(*object);
 
@@ -849,7 +841,9 @@ void Game::addBossToVector(Boss* object){
     if (object != NULL) bossVector.push_back(*object);
 }
 
-// Gestion _gameState;
+// Gestion _gameState !
+// Permet d'affecter l'attribut _gameState, puis change les musiques,
+// Les vecteurs, etc... selon l'état actuel et le suivant.
 void Game::changeState(State nextState){
     _frameCounter = 0;
     _menuSelection = 0;
@@ -886,6 +880,8 @@ void Game::changeState(State nextState){
     }
 }
 
+// Cette méthode permet de changer de musique. Le musicPath est le chemin
+// du fichier à lire.
 void Game::changeMusic(string musicPath){
 
     _music.pause();
@@ -896,6 +892,11 @@ void Game::changeMusic(string musicPath){
     _music.play();
 }
 
+// Méthode qui permet de modifier l'image du niveau sélectionné.
+// On invoque changeLevel(-1) ou (1) pour aller respectivement au niveau
+// précédent ou suivant. Il faut savoir que ça change juste la sélection
+// du niveau et ça ne le charge pas. On passe par changeState pour change
+// de niveau.
 void Game::changeLevel(int i){
 
     switch(_selectedLevel){
@@ -930,6 +931,8 @@ void Game::changeLevel(int i){
     }
 }
 
+// Cette méthode joue un son aléatoire de Yun qui tue un ennemi.
+// Elle est invoquée quand Yun tue un ennemi.
 void Game::playRandomKillSound(){
     // Choose a random number between 0 and 4
     int min = 0;
@@ -960,6 +963,7 @@ void Game::playRandomKillSound(){
     _playerKillSound.play();
 }
 
+// Change le volume de la musique.
 void Game::setVolume(int i){
     if (i > 0){
         if (_volume < 100) _volume += 5;
@@ -971,11 +975,14 @@ void Game::setVolume(int i){
     stringstream s;
 
     s << _volume << "%";
-
+    _playerKillSound.setVolume(_volume);
+    _playerDamageSound.setVolume(_volume);
     _music.setVolume(_volume);
     _volumeText.setString(s.str());
 }
 
+// Même idée que pour changeLevel : +1 pour monter la difficulté,
+// -1 pour la descendre.
 void Game::setDifficulty(int i){
     // La difficulté va de 0 (easy) à 3 (yun, soit very hard)
     if (i > 0) if (_difficulty < 3) _difficulty++;
@@ -984,6 +991,7 @@ void Game::setDifficulty(int i){
     _difficultyText.setString(_difficultyNames[_difficulty]);
 }
 
+// Modifie toutes les variables liées à la difficulté.
 void Game::modifyDifficulty(){
 
     // To change the color of the difficulty text
