@@ -160,19 +160,16 @@ void Game::scriptedEvents(){
     _frameCounter++;
     switch (_frameCounter){
         case 100 : {
-            Enemy* enemy1 = new Enemy(900, 100, 32, yun._enemyStandardHP, Textures::_enemy_tex1, wave);
-            Enemy* enemy2 = new Enemy(900, 250, 32, yun._enemyStandardHP, Textures::_enemy_tex2, wave);
-            Enemy* enemy3 = new Enemy(900, 400, 32, yun._enemyStandardHP, Textures::_enemy_tex3, wave);
-            addEnemyToVector(enemy1);
-            addEnemyToVector(enemy2);
-            addEnemyToVector(enemy3);
+            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
         }
 
         case 500 : {
-            Enemy* enemy4 = new Enemy(900, 100, 32, yun._enemyStandardHP, Textures::_enemy_tex1, wave);
-            Enemy* enemy5 = new Enemy(900, 250, 32, yun._enemyStandardHP, Textures::_enemy_tex2, wave);
-            Enemy* enemy6 = new Enemy(900, 400, 32, yun._enemyStandardHP, Textures::_enemy_tex3, wave);
+            Enemy* enemy4 = new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave);
+            Enemy* enemy5 = new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave);
+            Enemy* enemy6 = new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex3, wave);
             addEnemyToVector(enemy4);
             addEnemyToVector(enemy5);
             addEnemyToVector(enemy6);
@@ -456,11 +453,8 @@ void Game::checkEnemyCollisions(){
 }
 
 void Game::checkAllCollisions(){
-
     checkYunCollisions();
     checkEnemyCollisions();
-
-
 }
 
 
@@ -469,10 +463,10 @@ void Game::moveYun(){
     // Update coordinates
     x = 0;
     y = 0;
-    if (leftFlag && yun._x > 0) x -= yun._playerMovementSpeed;
-    if (rightFlag && yun._x < getSize().x - yun._size) x += yun._playerMovementSpeed;
-    if (upFlag && yun._y > 0) y -= yun._playerMovementSpeed;
-    if (downFlag && yun._y < getSize().y - yun._size) y += yun._playerMovementSpeed;
+    if (leftFlag && yun._x > 0) x -= Character::_playerMovementSpeed;
+    if (rightFlag && yun._x < getSize().x - yun._size) x += Character::_playerMovementSpeed;
+    if (upFlag && yun._y > 0) y -= Character::_playerMovementSpeed;
+    if (downFlag && yun._y < getSize().y - yun._size) y += Character::_playerMovementSpeed;
     if (shiftFlag){
         x = x/2;
         y = y/2;
@@ -726,6 +720,12 @@ void Game::changeState(State nextState){
         case level1 :
         case level2 :
         case level3 :
+            enemyVector.clear();
+            pelletVector.clear();
+            pUpVector.clear();
+            bossVector.clear();
+            yun._x = 100;
+            yun._y = 274;
             if ((_gameState == mainMenu) || (_gameState == selectLvl))
                 changeMusic("sounds/musics/battle_music.ogg");
             _gameState = nextState;
@@ -824,61 +824,61 @@ void Game::modifyDifficulty(){
     switch (_difficulty)
     {
         case 0 :
-            yun._playerFireCD = 15;
-            yun._playerFireDamage = 50;
-            yun._playerFireSpeed = 10;
-            yun._playerMovementSpeed = 4;
-            yun._playerInvulCD = 100;
-            yun._enemyFireCD = 120;
-            yun._enemyFireDamage = 5;
-            yun._enemyFireSpeed = 2;
-            yun._enemyMovementSpeed = 2;
-            yun._enemyStandardHP = 30;
+            Character::_playerFireCD = 15;
+            Character::_playerFireDamage = 50;
+            Character::_playerFireSpeed = 10;
+            Character::_playerMovementSpeed = 4;
+            Character::_playerInvulCD = 100;
+            Character::_enemyFireCD = 120;
+            Character::_enemyFireDamage = 5;
+            Character::_enemyFireSpeed = 2;
+            Character::_enemyMovementSpeed = 2;
+            Character::_enemyStandardHP = 30;
             // change difficulty text color
             _difficultyText.setColor(sf::Color::Green);
             break;
 
         case 1 :
-            yun._playerFireCD = 15;
-            yun._playerFireDamage = 20;
-            yun._playerFireSpeed = 10;
-            yun._playerMovementSpeed = 4;
-            yun._playerInvulCD = 60;
-            yun._enemyFireCD = 80;
-            yun._enemyFireDamage = 5;
-            yun._enemyFireSpeed = 3;
-            yun._enemyMovementSpeed = 2;
-            yun._enemyStandardHP = 30;
+            Character::_playerFireCD = 15;
+            Character::_playerFireDamage = 20;
+            Character::_playerFireSpeed = 10;
+            Character::_playerMovementSpeed = 4;
+            Character::_playerInvulCD = 60;
+            Character::_enemyFireCD = 80;
+            Character::_enemyFireDamage = 5;
+            Character::_enemyFireSpeed = 3;
+            Character::_enemyMovementSpeed = 2;
+            Character::_enemyStandardHP = 30;
             // change difficulty text color
             _difficultyText.setColor(sf::Color::Yellow);
             break;
 
         case 2 :
-            yun._playerFireCD = 15;
-            yun._playerFireDamage = 15;
-            yun._playerFireSpeed = 10;
-            yun._playerMovementSpeed = 4;
-            yun._playerInvulCD = 40;
-            yun._enemyFireCD = 60;
-            yun._enemyFireDamage = 10;
-            yun._enemyFireSpeed = 4;
-            yun._enemyMovementSpeed = 2;
-            yun._enemyStandardHP = 30;
+            Character::_playerFireCD = 15;
+            Character::_playerFireDamage = 15;
+            Character::_playerFireSpeed = 10;
+            Character::_playerMovementSpeed = 4;
+            Character::_playerInvulCD = 40;
+            Character::_enemyFireCD = 60;
+            Character::_enemyFireDamage = 10;
+            Character::_enemyFireSpeed = 4;
+            Character::_enemyMovementSpeed = 2;
+            Character::_enemyStandardHP = 30;
             // change difficulty text color
             _difficultyText.setColor(orange);
             break;
 
         case 3:
-            yun._playerFireCD = 15;
-            yun._playerFireDamage = 10;
-            yun._playerFireSpeed = 10;
-            yun._playerMovementSpeed = 4;
-            yun._playerInvulCD = 30;
-            yun._enemyFireCD = 40;
-            yun._enemyFireDamage = 15;
-            yun._enemyFireSpeed = 5;
-            yun._enemyMovementSpeed = 2;
-            yun._enemyStandardHP = 40;
+            Character::_playerFireCD = 15;
+            Character::_playerFireDamage = 10;
+            Character::_playerFireSpeed = 10;
+            Character::_playerMovementSpeed = 4;
+            Character::_playerInvulCD = 30;
+            Character::_enemyFireCD = 40;
+            Character::_enemyFireDamage = 15;
+            Character::_enemyFireSpeed = 5;
+            Character::_enemyMovementSpeed = 2;
+            Character::_enemyStandardHP = 40;
             // change difficulty text color
             _difficultyText.setColor(sf::Color::Red);
             break;

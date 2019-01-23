@@ -102,20 +102,11 @@ class Game : public sf::RenderWindow {
 
         // Attributs : Sprites
         sf::Sprite _ingameBG_Spr;       // On a pour tous les menus un sprite
-                                        // pour le fond, ainsi qu'une
-        sf::Sprite _mainMenuBG_Spr;     // texture associée. Cela permet
-                                        // d'afficher des images et
-        sf::Sprite _optionsBG_Spr;      // on draw ensuite les
-                                        // sélections à highlight.
-        sf::Sprite _selectLvlBG_Spr;    // BG pour BackGround, Spr pour Sprite,
-                                        // Tex pour Texture.
-        sf::Sprite _cursor_Spr;         // Celui-là à gauche, c'est pour les
-                                        // menus, pour indiquer le choix actuel.
-        sf::Sprite _panel_Spr;
-
-
-
-
+        sf::Sprite _mainMenuBG_Spr;     // pour le fond.
+        sf::Sprite _optionsBG_Spr;
+        sf::Sprite _selectLvlBG_Spr;
+        sf::Sprite _cursor_Spr;
+        sf::Sprite _panel_Spr;          
 
         // Attributs : Audio
         sf::Music _music;   // Car c'est important la musique.
