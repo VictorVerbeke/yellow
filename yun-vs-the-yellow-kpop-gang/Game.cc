@@ -711,7 +711,7 @@ void Game::addBossToVector(Boss* object){
     if (object != NULL) bossVector.push_back(*object);
 }
 
-// Gestion    _gameState;
+// Gestion _gameState;
 void Game::changeState(State nextState){
     _frameCounter = 0;
     _menuSelection = 0;
