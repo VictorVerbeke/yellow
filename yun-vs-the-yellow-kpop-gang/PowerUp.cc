@@ -1,4 +1,5 @@
 #include "PowerUp.hh"
+#include <cmath>
 
 PowerUp::PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power)
 :
