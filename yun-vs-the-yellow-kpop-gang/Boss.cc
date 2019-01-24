@@ -1,5 +1,5 @@
 #include "Boss.hh"
-
+#include <cmath>
 
 Boss::Boss():
     Enemy(0,0,0,100,NULL, null),
