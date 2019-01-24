@@ -11,7 +11,6 @@ Entity::Entity (float x, float y, float size, sf::Texture* tex,
     _y(y)
 {
     (*tex).setSmooth(true);
-    _sprite.setTexture(*tex);
     _sprite.setTextureRect(sf::IntRect(_x, _y, _size, _size));
     _sprite.setPosition(_x, _y);
     _sprite.setTexture(*tex);

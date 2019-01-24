@@ -28,8 +28,7 @@ void Pellet::move(){
     newX = getX() + _speed * cos(_direction * PI /180);
     newY = getY() + _speed * sin(_direction * PI /180);
     setPosition(newX, newY);
-    this->_hitbox.setPosition(getX() + 15 * cos(_sprite.getRotation()),
-                              getY() + 15 * sin(_sprite.getRotation()));
+    _hitbox.setPosition(newX + cos(_hitbox.getRotation()*PI/180)*40, newY + sin(_hitbox.getRotation()*PI/180)*40);
     _frameCounter++;
     if (_frameCounter == 3) nextFrame();
 }
