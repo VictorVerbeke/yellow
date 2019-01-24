@@ -56,16 +56,16 @@ class Game : public sf::RenderWindow {
         void checkYunCollisionsPellets(bool vulnerable); // lesquels Yun peut
         void checkYunCollisionsPowerUp();   // interagir.
 
-        void checkEnemyCollisions();    // Check les collisions des ennemis
+        void checkEnemyCollisions();    // C.heck les collisions des ennemis
         void checkAllCollisions();      // Appelle toutes les détections de
                                         // collision.
 
         // Methodes de déplacement
-        void moveEntity(Player *object, float x, float y); // Le joueur se
-        void moveEntity(Boss *object);      // déplace selon les inputs, mais
-        void moveEntity(Enemy *object);     // les autres mouvements sont
-        void moveEntity(PowerUp *object);   // automatiques. Chaque autre entité
-        void moveEntity(Pellet *object);    // a une vitesse et une direction,
+        void moveEntity(Player object, float x, float y); // Le joueur se
+        void moveEntity(Boss object);      // déplace selon les inputs, mais
+        void moveEntity(Enemy object);     // les autres mouvements sont
+        void moveEntity(PowerUp object);   // automatiques. Chaque autre entité
+        void moveEntity(Pellet object);    // a une vitesse et une direction,
         void moveEntities();                // voir même un pattern de
                                             // déplacement. moveEntities()
                                             // appelle toutes ces méthodes.
@@ -87,10 +87,10 @@ class Game : public sf::RenderWindow {
 
 
         // Methodes d'ajout d'instances
-        void addPelletToVector(Pellet *object);     // Les entités (sauf Joueur)
-        void addEnemyToVector(Enemy *object);       // sont stockées dans des
-        void addPowerUpToVector(PowerUp *object);   // vecteurs. On les ajoute
-        void addBossToVector(Boss *object);         // grâce aux fonctions ici.
+        void addPelletToVector(Pellet object);     // Les entités (sauf Joueur)
+        void addEnemyToVector(Enemy object);       // sont stockées dans des
+        void addPowerUpToVector(PowerUp object);   // vecteurs. On les ajoute
+        void addBossToVector(Boss object);         // grâce aux fonctions ici.
 
         // Gestion du son, des niveaux, de la difficulté
         void changeMusic(string musicPath); // Modifie la musique lue

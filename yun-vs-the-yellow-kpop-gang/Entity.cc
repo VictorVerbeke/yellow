@@ -16,8 +16,15 @@ Entity::Entity (float x, float y, float size, sf::Texture* tex)
     _sprite.setTexture(*tex);
 }
 
-//
-// void Entity::setPosition(float x, float y){
-//     _x = x;
-//     _y = y;
-// }
+Entity::~Entity(){
+
+}
+
+
+// Methodes
+void Entity::setPosition(float x, float y){
+    _x = x;
+    _y = y;
+    _sprite.setPosition(x, y);
+    _sprite.setOrigin(_sprite.getLocalBounds().width/2, _sprite.getLocalBounds().height/2);
+}

@@ -1,7 +1,5 @@
 #include "Boss.hh"
-#define SPECIALFIRECD1 300
-#define SPECIALFIRECD2 250
-#define SPECIALFIRECD3 200
+
 
 Boss::Boss():
     Enemy(0,0,0,100,NULL, null),
@@ -18,7 +16,6 @@ Boss::Boss(float x, float y, float size, int hp,
     _specialFireCD(0){}
 
 Boss::~Boss(){
-    delete(this);
 }
 
 Pellet* Boss::SpecialFire(float size){

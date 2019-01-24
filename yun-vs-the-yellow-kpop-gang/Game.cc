@@ -26,7 +26,7 @@ float Character::_playerFireDamage = 10;
 float Character::_playerFireSpeed = 1;
 float Character::_playerMovementSpeed = 4;
 float Character::_playerInvulCD = 60;
-float Character::_enemyFireCD = 80;
+float Character::_enemyFireCD = 1;
 float Character::_enemyFireDamage = 5;
 float Character::_enemyFireSpeed = 4;
 float Character::_enemyMovementSpeed = 2;
@@ -224,34 +224,35 @@ void Game::scriptedEvents(){
     // _frameCounter/60 donnerait le nombre de secondes passées.
     _frameCounter++;
     switch (_frameCounter){
+
         // A 100 frames, donc au bout d'une minute et 66 centièmes en gros,
         case 100 :
             // Création de trois ennemis.
-            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-            addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
 
         // Vous avez l'idée.
         case 500 :
-            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-            addEnemyToVector(new Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
 
         case 900 :
-            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-            addEnemyToVector(new Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
 
         case 1000 :
-            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-            addEnemyToVector(new Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
 
         case 1100 :
-            addEnemyToVector(new Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-            addEnemyToVector(new Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
             break;
 
         // Si y'a rien, alors il ne se passe rien. Logique.
@@ -267,8 +268,9 @@ void Game::scriptedEvents(){
 void Game::enemyAttack(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
-        addPelletToVector((&(*itEnemy))->fire(yun._sprite.getPosition()));
-        (&(*itEnemy))->decreaseCD();
+        if ((*itEnemy).getFireCD() == 0)
+            addPelletToVector((*itEnemy).fire(yun._sprite.getPosition()));
+        (*itEnemy).decreaseCD();
     }
 }
 
@@ -451,7 +453,7 @@ void Game::checkEventIngame(){
         }
     }
     // Si on appuie sur tirer, pew pew.
-    if (firingFlag) addPelletToVector(yun.fire());
+    if (firingFlag) if (yun.getFireCD() == 0) addPelletToVector(yun.fire(yun._sprite.getPosition()));
 }
 
 
@@ -465,7 +467,7 @@ void Game::checkEventIngame(){
 // supprime tous les pellets touchés. Sinon, il prend des dégats de la part
 // des ennemis ou des pellets.
 void Game::checkYunCollisions(){
-    if (yun._invulCD == 0)
+    if (yun.getInvulCD() == 0)
     {
         checkYunCollisionsEnemies();
         checkYunCollisionsPellets(true);
@@ -480,9 +482,9 @@ void Game::checkYunCollisions(){
     }
     else
     {
-        yun._invulCD--; // On réduit le temps d'invincibilité du joueur.
-        if (yun._isHurt == true){   // Si il s'agit de la deuxième frame
-            yun._isHurt = false;    // d'invincibilité, alors on modifie la
+        yun.setInvulCD(yun.getInvulCD() - 1); // On réduit le temps d'invincibilité.
+        if (yun.getIsHurt() == true){   // Si il s'agit de la deuxième frame
+            yun.setIsHurt(false);   // d'invincibilité, alors on modifie la
                                     // texture pour indiquer qu'il est blessé.
                                     // La première frame est un Yun rouge, pour
                                     // montrer la frame où il est blessé (check
@@ -490,7 +492,7 @@ void Game::checkYunCollisions(){
             yun._sprite.setTexture(*(Textures::_yun_hurt_tex));
         }
         // A la dernière frame, on remet Yun tranquille content.
-        if (yun._invulCD == 0){
+        if (yun.getInvulCD() == 0){
             yun._sprite.setTexture(*(Textures::_yun_still_tex));
         }
         checkYunCollisionsPellets(false);
@@ -506,7 +508,8 @@ void Game::checkYunCollisionsEnemies(){
     // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
-        if (yun._sprite.getGlobalBounds().intersects((&(*itEnemy))->_sprite.getGlobalBounds())){;
+        if (yun._sprite.getGlobalBounds().intersects((*itEnemy)._sprite.getGlobalBounds()))
+        {
             yun - (Character::_enemyFireDamage * 2);
         }
     }
@@ -519,11 +522,11 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
     vector<Pellet>::iterator itPellet = pelletVector.begin();
     for ( ; itPellet != pelletVector.end(); )
     {
-        if ((&(*itPellet))->_target == 0) // Si les pellets visent Yun
+        if ((*itPellet)._target == 0) // Si les pellets visent Yun
         {
-            if (yun._sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds()))
+            if (yun._sprite.getGlobalBounds().intersects((*itPellet)._sprite.getGlobalBounds()))
             {
-                if (vulnerable) yun - (&(*itPellet))->_damage;  // Il prend des dégats
+                if (vulnerable) yun - (*itPellet)._damage;  // Il prend des dégats
                 itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
             } else itPellet++;
         } else itPellet++;
@@ -544,11 +547,11 @@ void Game::checkEnemyCollisions(){
         vector<Pellet>::iterator itPellet = pelletVector.begin();
         for ( ; itPellet != pelletVector.end(); ){
             if (enemyKilled == false){
-                if ((&(*itPellet))->_target == 1){
-                    if ((&(*itEnemy))->_sprite.getGlobalBounds().intersects((&(*itPellet))->_sprite.getGlobalBounds())){
-                        (*itEnemy) - (&(*itPellet))->_damage;
+                if ((*itPellet)._target == 1){
+                    if ((*itEnemy)._sprite.getGlobalBounds().intersects((*itPellet)._sprite.getGlobalBounds())){
+                        (*itEnemy) - (*itPellet)._damage;
                         itPellet = pelletVector.erase(itPellet);
-                        if ((&(*itEnemy))->getHp() <= 0) enemyKilled = true;
+                        if ((*itEnemy).getHp() <= 0) enemyKilled = true;
                     } else itPellet++;
                 } else itPellet++;
             } else itPellet++;
@@ -586,97 +589,22 @@ void Game::moveYun(){
 
     // Si on appuie sur gauche et qu'on est pas sur le rebord gauche, alors
     // on peut bouger vers la gauche. Même idée pour les quatre directions.
-    if (leftFlag && yun._x > 0) x -= Character::_playerMovementSpeed;
-    if (rightFlag && yun._x < getSize().x - yun._size) x += Character::_playerMovementSpeed;
-    if (upFlag && yun._y > 0) y -= Character::_playerMovementSpeed;
-    if (downFlag && yun._y < getSize().y - yun._size) y += Character::_playerMovementSpeed;
+    if (leftFlag && (yun._x - yun._size/2) > 0) x -= Character::_playerMovementSpeed;
+    if (rightFlag && (yun._x - yun._size/2) < getSize().x - yun._size) x += Character::_playerMovementSpeed;
+    if (upFlag && (yun._y - yun._size/2) > 0) y -= Character::_playerMovementSpeed;
+    if (downFlag && (yun._y - yun._size/2) < getSize().y - yun._size) y += Character::_playerMovementSpeed;
 
     if (shiftFlag){     // Si on appuie sur Shift, on peut naviguer plus
         x = x/2;        // lentement. Utile lors des situations délicates où
         y = y/2;        // on doit naviguer entre les balles.
     }
-
-    moveEntity(&yun, x, y); // moveEntity viendra plus tard, mais ça permet de
+    yun.move(x, y);
+    yun.decreaseCD();
+                            // moveEntity viendra plus tard, mais ça permet de
                             // faire bouger une entité.
-    yun.decreaseCD();       // Comme la fonction moveYun est appelée à chaque
+           // Comme la fonction moveYun est appelée à chaque
                             // frame, on en profite pour faire réduire son
                             // cooldown d'attaque ici.
-}
-
-// MoveEntity(player) est différent de MoveYun, car il prend les variations
-// de position dans moveYun pour le faire bouger, lui et son sprite.
-void Game::moveEntity(Player *object, float x, float y){
-    object->_x += x;
-    object->_y += y;
-    object->_sprite.setPosition(object->_x, object->_y);
-}
-
-// Pour les autres entités, c'est la même chose :
-// - On prend sa direction, sa vitesse, et on le fait bouger dans le sens de
-// sa direction par sa vitesse.
-// - Dans des cas spécifiques, le comportement est différent (variation de la
-// direction, ou non-mouvement, respectivement wave et still). Tout ça est
-// indiqué par le pattern des objets, voir enum dans la classe Enemy.
-void Game::moveEntity(Enemy *object){
-    switch (object->_pattern){
-        case line:
-            object->_x += object->_speed * sin(object->_direction * PI /180);
-            object->_y += object->_speed * cos(object->_direction * PI /180);
-            break;
-
-        case wave:
-            object->_x += object->_speed * sin(object->_direction * PI / 180);
-            object->_y += object->_speed * cos(object->_direction * PI / 180);
-            if (object->_direction >= -45) object->_directionVariation = -1;
-            if (object->_direction <= -135) object->_directionVariation = 1;
-            object->_direction += object->_directionVariation;
-            break;
-
-        case still:
-        default:
-            break;
-    }
-    object->_sprite.setPosition(object->_x, object->_y);
-}
-
-void Game::moveEntity(Boss *object){
-    switch (object->_pattern){
-        case line:
-        object->_x += object->_speed * sin(object->_direction * PI /180);
-        object->_y += object->_speed * cos(object->_direction * PI /180);
-            break;
-
-        case wave:
-            object->_x += object->_speed * sin(object->_direction * PI / 180);
-            object->_y += object->_speed * cos(object->_direction * PI / 180);
-            if (object->_direction >= 315) object->_directionVariation = -1;
-            if (object->_direction <= 225) object->_directionVariation = 1;
-            object->_direction += object->_directionVariation;
-            break;
-
-        case still:
-        default:
-            break;
-    }
-    object->_sprite.setPosition(object->_x, object->_y);
-}
-
-// Les objets tels que les Pellets et les Powerup n'ont pas de pattern, donc
-// sont plus courts en terme de code.
-void Game::moveEntity(Pellet *object){
-    object->_x += (object->_speed) * cos(object->_direction * PI / 180);
-    object->_y += (object->_speed) * sin(object->_direction * PI / 180);
-    object->_sprite.setPosition(object->_x, object->_y);
-    object->_frameCounter++;
-    if (object->_frameCounter == 3) object->nextFrame();
-
-}
-
-void Game::moveEntity(PowerUp *object){
-    object->_x += (object->_speed) * cos(object->_direction * PI / 180);
-    object->_y += (object->_speed) * sin(object->_direction * PI / 180);
-    object->_sprite.setPosition(object->_x, object->_y);
-
 }
 
 // Somme de toutes les méthodes de déplacement d'entités.
@@ -685,40 +613,40 @@ void Game::moveEntities(){
 
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); ){
-        if ((&(*itEnemy))->_x < -(&(*itEnemy))->_size || (&(*itEnemy))->_y < -(&(*itEnemy))->_size || (&(*itEnemy))->_y > getSize().y){
+        if ((*itEnemy)._x < -(*itEnemy)._size || (*itEnemy)._y < -(*itEnemy)._size || (*itEnemy)._y > getSize().y){
             itEnemy = enemyVector.erase(itEnemy);
         } else {
-            moveEntity(&(*itEnemy));
+            (*itEnemy).move();
             itEnemy++;
         }
     }
 
     vector<Pellet>::iterator itPellet = pelletVector.begin();
     for ( ; itPellet != pelletVector.end(); ){
-        if ((&(*itPellet))->_x < 0 || (&(*itPellet))->_x > getSize().x || (&(*itPellet))->_y < 0 || (&(*itPellet))->_y > getSize().y){
+        if ((*itPellet)._x < 0 || (*itPellet)._x > getSize().x || (*itPellet)._y < 0 || (*itPellet)._y > getSize().y){
             itPellet = pelletVector.erase(itPellet);
         } else {
-            moveEntity(&(*itPellet));
+            (*itPellet).move();
             itPellet++;
         }
     }
 
     vector<PowerUp>::iterator itPowerUp = pUpVector.begin();
     for ( ; itPowerUp != pUpVector.end(); ){
-        if ((&(*itPowerUp))->_x < 0 || (&(*itPowerUp))->_x > getSize().x || (&(*itPowerUp))->_y < 0 || (&(*itPowerUp))->_y > getSize().y){
+        if ((*itPowerUp)._x < 0 || (*itPowerUp)._x > getSize().x || (*itPowerUp)._y < 0 || (*itPowerUp)._y > getSize().y){
             itPowerUp = pUpVector.erase(itPowerUp);
         } else {
-            moveEntity(&(*itPowerUp));
+            (*itPowerUp).move();
             itPowerUp++;
         }
     }
 
     vector<Boss>::iterator itBoss = bossVector.begin();
     for ( ; itBoss != bossVector.end(); ){
-        if ((&(*itBoss))->_x < 0 || (&(*itBoss))->_x > getSize().x || (&(*itBoss))->_y < 0 || (&(*itBoss))->_y > getSize().y){
+        if ((*itBoss)._x < 0 || (*itBoss)._x > getSize().x || (*itBoss)._y < 0 || (*itBoss)._y > getSize().y){
             itBoss = bossVector.erase(itBoss);
         } else {
-            moveEntity(&(*itBoss));
+            (*itBoss).move();
             itBoss++;
         }
     }
@@ -824,21 +752,21 @@ void Game::drawEntities(){
 
 // Methodes d'ajout d'entités dans les vecteurs de la classe Game.
 // Généralement on fait addXToVector(new X(args)).
-void Game::addPelletToVector(Pellet* object){
-    if (object != NULL) pelletVector.push_back(*object);
+void Game::addPelletToVector(Pellet object){
+    pelletVector.push_back(object);
 
 }
 
-void Game::addEnemyToVector(Enemy* object){
-    if (object != NULL) enemyVector.push_back(*object);
+void Game::addEnemyToVector(Enemy object){
+    enemyVector.push_back(object);
 }
 
-void Game::addPowerUpToVector(PowerUp* object){
-    if (object != NULL) pUpVector.push_back(*object);
+void Game::addPowerUpToVector(PowerUp object){
+    pUpVector.push_back(object);
 }
 
-void Game::addBossToVector(Boss* object){
-    if (object != NULL) bossVector.push_back(*object);
+void Game::addBossToVector(Boss object){
+    bossVector.push_back(object);
 }
 
 // Gestion _gameState !
@@ -1020,7 +948,7 @@ void Game::modifyDifficulty(){
             Character::_playerFireSpeed = 10;
             Character::_playerMovementSpeed = 4;
             Character::_playerInvulCD = 60;
-            Character::_enemyFireCD = 80;
+            Character::_enemyFireCD = 1;
             Character::_enemyFireDamage = 5;
             Character::_enemyFireSpeed = 3;
             Character::_enemyMovementSpeed = 2;

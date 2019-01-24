@@ -3,6 +3,39 @@
 Textures::Textures(){
 }
 
+Textures::~Textures(){
+    delete(_allyPellet_tex0);
+    delete(_allyPellet_tex1);
+    delete(_allyPellet_tex2);
+    delete(_allyPellet_tex3);
+    delete(_allyPellet_tex4);
+    delete(_allyPellet_tex5);
+    delete(_allyPellet_tex6);
+    delete(_allyPellet_tex7);
+    delete(_enemyPellet_tex0);
+    delete(_enemyPellet_tex1);
+    delete(_enemyPellet_tex2);
+    delete(_enemyPellet_tex3);
+    delete(_enemyPellet_tex4);
+    delete(_enemyPellet_tex5);
+    delete(_enemyPellet_tex6);
+    delete(_enemyPellet_tex7);
+    delete(_enemy_tex1);
+    delete(_enemy_tex2);
+    delete(_enemy_tex3);
+    delete(_yun_still_tex);
+    delete(_yun_hurt_tex);
+    delete(_yun_hurt_f1_tex);
+    delete(_panel_lvl1_tex);
+    delete(_panel_lvl2_tex);
+    delete(_panel_lvl3_tex);
+    delete(_background_ingame_tex);
+    delete(_background_mainMenu_tex);
+    delete(_background_options_tex);
+    delete(_background_selectLvl_tex);
+    delete(_cursor_tex);
+}
+
 void Textures::generateTextures(){
 
     cout << "[TEXTURES] Initialisation des Textures." << endl;

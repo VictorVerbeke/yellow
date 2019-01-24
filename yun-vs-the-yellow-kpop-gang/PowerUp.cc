@@ -1,5 +1,4 @@
 #include "PowerUp.hh"
-#define POWERUPSPEED 1.5
 
 PowerUp::PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power)
 :
@@ -12,5 +11,11 @@ PowerUp::PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type,
 
 
 PowerUp::~PowerUp(){
-    delete(this);
+}
+
+void PowerUp::move(){
+    float newX, newY;
+    newX = getX() + _speed * sin(_direction * PI /180);
+    newY = getY() + _speed * cos(_direction * PI /180);
+    setPosition(newX, newY);
 }

@@ -27,19 +27,44 @@ void Player::operator-(const float &b) {
 }
 
 // Methodes
-
-Pellet* Player::fire(){
-    if (_fireCD == 0) {
-        _fireCD = _playerFireCD;
-        Pellet *created = new Pellet(0, 0, 32, Textures::_allyPellet_tex0,
-                            _playerFireSpeed, 0, _playerFireDamage, 1);
-        created->_x = this->_x + this->_size - 20;
-        created->_y = this->_y + (this->_size)/2 - 20;
-        return created;
-    }
-    return NULL;
+Pellet Player::fire(sf::Vector2f targetPos){
+    _fireCD = _playerFireCD;
+    Pellet created(0, 0, 32, Textures::_allyPellet_tex0,
+                   _playerFireSpeed, 0, _playerFireDamage, 1);
+    created._x = this->_x + this->_size - 20;
+    created._y = this->_y + (this->_size)/2 - 20;
+    return created;
 }
 
 void Player::decreaseCD(){
     if (_fireCD > 0) _fireCD--;
+}
+void Player::move(int x, int y){
+    setPosition(x + _x, y + _y);
+}
+// Getter, Setter.
+int Player::getInvulCD(){
+    return _invulCD;
+}
+
+void Player::setInvulCD(int newCD){
+    _invulCD = newCD;
+}
+
+
+unsigned int Player::getFireCD(){
+    return _fireCD;
+}
+
+void Player::setFireCD(unsigned int newCD){
+    _fireCD = newCD;
+}
+
+
+bool Player::getIsHurt(){
+    return _isHurt;
+}
+
+void Player::setIsHurt(bool newBool){
+    _isHurt = newBool;
 }

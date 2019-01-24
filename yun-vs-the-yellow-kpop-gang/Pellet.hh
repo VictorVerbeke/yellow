@@ -2,6 +2,7 @@
 #include "Entity.hh"
 #include "Textures.hh"
 
+#define PI 3.141592653
 
 class Pellet : public Entity {
     public:
@@ -10,6 +11,7 @@ class Pellet : public Entity {
         ~Pellet();
 
         void nextFrame();
+        void move();
 
         float _speed;
         float _direction;

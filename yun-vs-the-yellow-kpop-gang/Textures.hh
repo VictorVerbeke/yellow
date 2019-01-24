@@ -9,6 +9,7 @@ class Textures {
 public:
 
     Textures();
+    ~Textures();
     void textureAffectation(sf::Texture* tex, string str);
     void generateTextures();
     static sf::Texture* _allyPellet_tex0;

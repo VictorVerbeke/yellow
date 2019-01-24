@@ -22,6 +22,15 @@ Pellet::Pellet(float x, float y, float size, sf::Texture* tex,
 Pellet::~Pellet(){
 }
 
+void Pellet::move(){
+    float newX, newY;
+    newX = getX() + _speed * cos(_direction * PI /180);
+    newY = getY() + _speed * sin(_direction * PI /180);
+    setPosition(newX, newY);
+    _frameCounter++;
+    if (_frameCounter == 3) nextFrame();
+}
+
 void Pellet::nextFrame(){
     switch(_frameNumber){
         case 0 :

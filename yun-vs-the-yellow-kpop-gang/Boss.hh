@@ -1,6 +1,9 @@
 #pragma once
 #include "Enemy.hh"
 #include "Textures.hh"
+#define SPECIALFIRECD1 300
+#define SPECIALFIRECD2 250
+#define SPECIALFIRECD3 200
 
 enum Name { none, Beenzino, GirlGeneration, Jonghyun };
 

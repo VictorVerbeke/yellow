@@ -19,14 +19,19 @@ class Enemy: public Character {
         void operator-(const float &b);
 
         // Methodes
-        Pellet* fire(sf::Vector2f yunPos);
+        Pellet fire(sf::Vector2f targetPos);
         void decreaseCD();
+        void move();
 
+        // Getter, Setter.
+        unsigned int getFireCD();
+        void setFireCD(unsigned int newCD);
+
+    protected:
         // Attributs
         Pattern _pattern;
         float _speed;
         float _direction;
         int _directionVariation;
-    protected:
         unsigned int _fireCD;
 };

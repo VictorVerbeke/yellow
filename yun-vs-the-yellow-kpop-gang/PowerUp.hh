@@ -2,6 +2,9 @@
 #include "Entity.hh"
 #include "Textures.hh"
 
+#define PI 3.141592653
+#define POWERUPSPEED 1.5
+
 enum BonusType { speed, strength, invul };
 
 class PowerUp: public Entity {
@@ -9,10 +12,11 @@ class PowerUp: public Entity {
         PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power);
         ~PowerUp();
 
+        void move();
+
         BonusType _type;
         int _power;
         float _speed;
         float _direction;
     private:
-
 };
