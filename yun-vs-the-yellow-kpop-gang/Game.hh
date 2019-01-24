@@ -45,7 +45,9 @@ class Game : public sf::RenderWindow {
                                         // du jeu.
 
         // Methodes de codage des niveaux scriptés.
-        void scriptedEvents_lvl1();  // Permet l'apparition d'ennemis ingame
+        void scriptedEvents_lvl1(); // Permet l'apparition d'ennemis ingame
+        void scriptedEvents_lvl2(); // A chaque niveau correspond une série
+        void scriptedEvents_lvl3(); // d'apparition, donc des méthodes diff.
 
         // Methodes de gestions d'Event
         void checkEventMainMenu();  // Selon l'état du jeu (menu principal
@@ -132,6 +134,7 @@ class Game : public sf::RenderWindow {
         bool shiftFlag;     // un event au début, puis une série d'events
         bool firingFlag;    // continus plus tard. On préfère utiliser des flags
                             // pour dire qu'on appuie sur (ou relache) une key.
+        
 
         // Attributs : Divers
         float x;    // Correspond à la variation de position du joueur. On fait

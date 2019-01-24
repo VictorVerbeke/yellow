@@ -207,6 +207,15 @@ void Game::beginGame(){
                 bossAttack();           // Attaque auto des boss.
                 break;
 
+            case level2:
+                checkEventIngame();
+                scriptedEvents_lvl2();
+                moveEntities();
+                checkAllCollisions();
+                drawIngame();
+                enemyAttack();
+                bossAttack();
+                break;
             // Les autres états n'ont pas encore été codés. Il s'agit de
             // niveaux supplémentaires et éventuellement d'un écran de
             // game over, donc rien de folichon non plus. On peut jouer
@@ -230,57 +239,145 @@ void Game::scriptedEvents_lvl1(){
     switch (_frameCounter){
 
         // A 100 frames, donc au bout d'une minute et 66 centièmes en gros,
-        // case 100 :
-        //     // Création de trois ennemis.
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // // Vous avez l'idée.
-        // case 500 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // case 900 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // case 1000 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // case 1100 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // case 1500 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
-        //
-        // case 1800 :
-        //     addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
-        //     addEnemyToVector(Enemy(950, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(1000, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     addEnemyToVector(Enemy(1050, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
-        //     break;
+        case 100 :
+            // Création de trois ennemis.
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
 
-        case 3 :
+        // Vous avez l'idée.
+        case 500 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 900 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1000 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1100 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1500 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1800 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(950, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1000, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1050, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 2500 :
             addBossToVector(Boss(Beenzino, Textures::_boss_tex1));
-            Game::changeMusic("sounds/musics/beenzino.ogg");
+            changeMusic("sounds/musics/beenzino.ogg");
+            break;
+
+        case 2501 :
+            _frameCounter = 2500;
+            break;
+
+        case 2600 :
+            changeState(level1);
+            changeMusic("sounds/musics/battle_music.ogg");
+            break;
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
             break;
     }
 }
+
+void Game::scriptedEvents_lvl2(){
+    _frameCounter++;
+    switch (_frameCounter){
+
+        // A 100 frames, donc au bout d'une minute et 66 centièmes en gros,
+        case 100 :
+            // Création de trois ennemis.
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex2, wave));
+            break;
+
+        // Vous avez l'idée.
+        case 500 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            break;
+
+        case 900 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP * 1.25, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1000 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1100 :
+            addEnemyToVector(Enemy(1100, 100, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(1100, 400, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 1.5, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1500 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1800 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(950, 225, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1000, 350, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1050, 475, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1100, 475, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1150, 350, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1200, 225, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1250, 100, 32, Character::_enemyStandardHP * 0.75, Textures::_enemy_tex1, wave));
+            break;
+
+        case 2500 :
+            addBossToVector(Boss(GirlGeneration, Textures::_boss_tex2));
+            changeMusic("sounds/musics/girlgeneration.ogg");
+            break;
+
+        case 2501 :
+            _frameCounter = 2500;
+            break;
+
+        case 2600 :
+            changeState(level3);
+            changeMusic("sounds/musics/battle_music.ogg");
+            break;
+        // Si y'a rien, alors il ne se passe rien. Logique.
+        default :
+            break;
+    }
+}
+
+void Game::scriptedEvents_lvl3(){}
+
 
 // Fonction d'attaque de chaque ennemi.
 // Pour chaque ennemi dans le vecteur d'ennemi, on appelle la fonction fire().
@@ -626,9 +723,10 @@ void Game::checkBossCollisions(){
 
         if (isKilled == false) itBoss++;
         else {
+            _frameCounter++;
             itBoss = bossVector.erase(itBoss);
             playRandomKillSound(); // Enemy killed, play a victory sound
-            // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO TODO
+            // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO
         }
     }
 }
@@ -853,8 +951,7 @@ void Game::changeState(State nextState){
             bossVector.clear();
             yun._x = 100;
             yun._y = 274;
-            if ((_gameState == mainMenu) || (_gameState == selectLvl))
-                changeMusic("sounds/musics/battle_music.ogg");
+            changeMusic("sounds/musics/battle_music.ogg");
             _gameState = nextState;
             break;
 

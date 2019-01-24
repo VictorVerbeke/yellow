@@ -30,4 +30,9 @@ class Boss: public Enemy {
 
     protected:
         unsigned int _specialFireCD;
+
+    private:
+        float _bossFireDamage;
+        float _bossFireCD;
+        float _bossFireSpeed;
 };

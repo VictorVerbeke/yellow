@@ -12,7 +12,32 @@ Boss::Boss(Name name, sf::Texture* tex)
     _name(name),
     _phase(0)
 {
-    _directionVariation = 2;
+    switch(name){
+        case Beenzino :
+            _bossFireCD = _enemyFireCD * 0.75;
+            _bossFireDamage = _enemyFireDamage * 5;
+            _bossFireSpeed = _enemyFireSpeed * 2;
+            _directionVariation = 1;
+            break;
+        case GirlGeneration :
+            _bossFireCD = _enemyFireCD * 0.5;
+            _bossFireDamage = _enemyFireDamage * 3;
+            _bossFireSpeed = _enemyFireSpeed * 1.5;
+            _directionVariation = 0.3;
+            break;
+        case Jonghyun :
+            _bossFireCD = _enemyFireCD * 0.2;
+            _bossFireDamage = _enemyFireDamage;
+            _bossFireSpeed = _enemyFireSpeed;
+            _directionVariation = 3;
+            break;
+        default:
+            _bossFireCD = _enemyFireCD * 1000;
+            _bossFireDamage = _enemyFireDamage * 0;
+            _bossFireSpeed = _enemyFireSpeed * 1000;
+            _directionVariation = 0;
+            break;
+    }
 }
 
 Boss::~Boss(){
@@ -30,9 +55,9 @@ Pellet Boss::fire(sf::Vector2f targetPos){
     float dX = (targetPos.x) - bossPos.x - 64;
     float dY = (targetPos.y)  - bossPos.y - 64;
     float angle = (atan2(dY, dX) * 180 / PI);
-    _fireCD = _enemyFireCD / 2;
+    _fireCD = _bossFireCD;
     Pellet bossPellet(0, 0, 32, Textures::_enemyPellet_tex0,
-                       _enemyFireSpeed * 1.5, angle, _enemyFireDamage * 2, 0);
+                       _bossFireSpeed, angle, _bossFireDamage, 0);
     bossPellet._y = (this->_y)+(this->_size)/2;
     bossPellet._x = (this->_x)+(this->_size)/2;
     return bossPellet;
