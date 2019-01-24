@@ -216,6 +216,16 @@ void Game::beginGame(){
                 enemyAttack();
                 bossAttack();
                 break;
+
+            case level3:
+                checkEventIngame();
+                scriptedEvents_lvl3();
+                moveEntities();
+                checkAllCollisions();
+                drawIngame();
+                enemyAttack();
+                bossAttack();
+                break;
             // Les autres états n'ont pas encore été codés. Il s'agit de
             // niveaux supplémentaires et éventuellement d'un écran de
             // game over, donc rien de folichon non plus. On peut jouer
@@ -284,7 +294,6 @@ void Game::scriptedEvents_lvl1(){
 
         case 2500 :
             addBossToVector(Boss(Beenzino, Textures::_boss_tex1));
-            changeMusic("sounds/musics/beenzino.ogg");
             break;
 
         case 2501 :
@@ -292,8 +301,7 @@ void Game::scriptedEvents_lvl1(){
             break;
 
         case 2600 :
-            changeState(level1);
-            changeMusic("sounds/musics/battle_music.ogg");
+            changeState(level2);
             break;
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
@@ -359,7 +367,7 @@ void Game::scriptedEvents_lvl2(){
 
         case 2500 :
             addBossToVector(Boss(GirlGeneration, Textures::_boss_tex2));
-            changeMusic("sounds/musics/girlgeneration.ogg");
+
             break;
 
         case 2501 :
@@ -368,7 +376,6 @@ void Game::scriptedEvents_lvl2(){
 
         case 2600 :
             changeState(level3);
-            changeMusic("sounds/musics/battle_music.ogg");
             break;
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
@@ -376,7 +383,78 @@ void Game::scriptedEvents_lvl2(){
     }
 }
 
-void Game::scriptedEvents_lvl3(){}
+void Game::scriptedEvents_lvl3(){
+    _frameCounter++;
+    switch (_frameCounter){
+
+        // A 100 frames, donc au bout d'une minute et 66 centièmes en gros,
+        case 100 :
+            // Création de trois ennemis.
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex2, wave));
+            break;
+
+        // Vous avez l'idée.
+        case 500 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 4, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 4, Textures::_enemy_tex2, wave));
+            break;
+
+        case 900 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP * 1.75, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1000 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1100 :
+            addEnemyToVector(Enemy(1100, 100, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(1100, 400, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1500 :
+            addEnemyToVector(Enemy(900, 50, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(900, 175, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(900, 425, 32, Character::_enemyStandardHP * 2, Textures::_enemy_tex2, wave));
+            break;
+
+        case 1800 :
+            addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            addEnemyToVector(Enemy(1000, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1100, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1200, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1300, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1400, 350, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1500, 225, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
+            addEnemyToVector(Enemy(1600, 100, 32, Character::_enemyStandardHP, Textures::_enemy_tex1, wave));
+            break;
+
+        case 2500 :
+            addBossToVector(Boss(Jonghyun, Textures::_boss_tex3));
+            break;
+
+        case 2501 :
+            _frameCounter = 2500;
+            break;
+
+        case 2600 :
+            changeState(mainMenu);
+            break;
+        // Si y'a rien, alors il ne se passe rien. Logique.
+        default :
+            break;
+    }
+}
 
 
 // Fonction d'attaque de chaque ennemi.
@@ -943,7 +1021,25 @@ void Game::changeState(State nextState){
     yun.setHp(100);
     switch (nextState){
         case level1 :
+            enemyVector.clear();
+            pelletVector.clear();
+            pUpVector.clear();
+            bossVector.clear();
+            yun._x = 100;
+            yun._y = 274;
+            changeMusic("sounds/musics/beenzino.ogg");
+            _gameState = nextState;
+            break;
         case level2 :
+            enemyVector.clear();
+            pelletVector.clear();
+            pUpVector.clear();
+            bossVector.clear();
+            yun._x = 100;
+            yun._y = 274;
+            changeMusic("sounds/musics/girlgeneration.ogg");
+            _gameState = nextState;
+            break;
         case level3 :
             enemyVector.clear();
             pelletVector.clear();
@@ -951,7 +1047,7 @@ void Game::changeState(State nextState){
             bossVector.clear();
             yun._x = 100;
             yun._y = 274;
-            changeMusic("sounds/musics/battle_music.ogg");
+            changeMusic("sounds/musics/jonghyun.ogg");
             _gameState = nextState;
             break;
 

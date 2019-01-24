@@ -134,7 +134,7 @@ class Game : public sf::RenderWindow {
         bool shiftFlag;     // un event au début, puis une série d'events
         bool firingFlag;    // continus plus tard. On préfère utiliser des flags
                             // pour dire qu'on appuie sur (ou relache) une key.
-        
+
 
         // Attributs : Divers
         float x;    // Correspond à la variation de position du joueur. On fait
@@ -169,5 +169,5 @@ class Game : public sf::RenderWindow {
 template<class T>
 void Game::drawEntity (T object) {
     draw(object._sprite);       // A commenter pour voir les hitbox.
-    draw(object._hitbox);    // A décommenter pour voir les hitbox.
+    // draw(object._hitbox);    // A décommenter pour voir les hitbox.
 }
