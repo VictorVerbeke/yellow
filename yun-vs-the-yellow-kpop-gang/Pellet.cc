@@ -17,6 +17,7 @@ Pellet::Pellet(float x, float y, float size, sf::Texture* tex,
     _frameCounter(0),
     _frameNumber(0){
         this->_sprite.rotate(direction);
+        this->_hitbox.rotate(direction);
     }
 
 Pellet::~Pellet(){
@@ -27,7 +28,8 @@ void Pellet::move(){
     newX = getX() + _speed * cos(_direction * PI /180);
     newY = getY() + _speed * sin(_direction * PI /180);
     setPosition(newX, newY);
-    this->_hitbox.setPosition(getX()+42, getY()+25);
+    this->_hitbox.setPosition(getX() + 15 * cos(_sprite.getRotation()),
+                              getY() + 15 * sin(_sprite.getRotation()));
     _frameCounter++;
     if (_frameCounter == 3) nextFrame();
 }

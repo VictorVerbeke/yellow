@@ -204,6 +204,7 @@ void Game::beginGame(){
                 checkAllCollisions();   // Vérification des collisions.
                 drawIngame();           // Affichage des entités.
                 enemyAttack();          // Attaque auto des ennemis.
+                bossAttack();           // Attaque auto des boss.
                 break;
 
             // Les autres états n'ont pas encore été codés. Il s'agit de
@@ -272,7 +273,7 @@ void Game::scriptedEvents_lvl1(){
         //     addEnemyToVector(Enemy(1050, 475, 32, Character::_enemyStandardHP, Textures::_enemy_tex2, wave));
         //     break;
 
-        case 7 :
+        case 3 :
             addBossToVector(Boss(Beenzino, Textures::_boss_tex1));
             Game::changeMusic("sounds/musics/beenzino.ogg");
         // Si y'a rien, alors il ne se passe rien. Logique.
@@ -291,6 +292,16 @@ void Game::enemyAttack(){
         if ((*itEnemy).getFireCD() == 0)
             addPelletToVector((*itEnemy).fire(yun._sprite.getPosition()));
         (*itEnemy).decreaseCD();
+    }
+}
+
+// Même idée, mais pour des boss.
+void Game::bossAttack(){
+    vector<Boss>::iterator itBoss = bossVector.begin();
+    for ( ; itBoss != bossVector.end(); itBoss++){
+        if ((*itBoss).getFireCD() == 0)
+            addPelletToVector((*itBoss).fire(yun._sprite.getPosition()));
+        (*itBoss).decreaseCD();
     }
 }
 

@@ -41,5 +41,5 @@ void Player::decreaseCD(){
 }
 void Player::move(int x, int y){
     setPosition(x + _x, y + _y);
-    _hitbox.setPosition(_x + 10, _y + 12);
+    _hitbox.setPosition(_x + 10, _y + 10);
 }

@@ -39,6 +39,7 @@ class Game : public sf::RenderWindow {
         // Methodes du jeu
         void beginGame();       // Démarre le jeu, boucle principale.
         void enemyAttack();     // Automatise l'attaque des ennemis.
+        void bossAttack();
         void moveYun();         // Fait bouger le joueur selon les input
         void goMenuSelection(int sel);  // Permet de naviguer entre les états
                                         // du jeu.

@@ -18,8 +18,8 @@ Entity::Entity (float x, float y, float size, sf::Texture* tex,
     _hitbox = sf::RectangleShape(sf::Vector2f(hitbox_width, hitbox_height));
     _hitbox.setPosition(hitbox_x, hitbox_y);
     _hitbox.setFillColor(sf::Color(255,255,255, 100)); // Pour voir les hitbox en debug
-    _sprite.setOrigin(0,0);
-    _hitbox.setOrigin(0,0);
+    _sprite.setOrigin(_sprite.getGlobalBounds().width/2, _sprite.getGlobalBounds().height/2);
+    _hitbox.setOrigin((hitbox_x + hitbox_width)/2, (hitbox_y + hitbox_height)/2);
 }
 
 Entity::~Entity(){

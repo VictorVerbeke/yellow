@@ -2,9 +2,7 @@
 #include "Enemy.hh"
 #include "Textures.hh"
 #include "Character.hh"
-#define SPECIALFIRECD1 300
-#define SPECIALFIRECD2 250
-#define SPECIALFIRECD3 200
+#include "Player.hh"
 
 enum Name { none, Beenzino, GirlGeneration, Jonghyun };
 
@@ -20,8 +18,7 @@ class Boss: public Enemy {
 
         // Methodes
         void move();
-        vector<Pellet> SpecialFire();
-        void nextPhase();
+        Pellet fire(sf::Vector2f targetPos) override;
 
         // Getter, Setter
         unsigned int getSpecialCD(){ return _specialFireCD; }
