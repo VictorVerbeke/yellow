@@ -27,14 +27,14 @@ void Enemy::operator-(const float &b) {
 // Methodes
 Pellet Enemy::fire(sf::Vector2f targetPos){
     sf::Vector2f enemyPos = this->_sprite.getPosition();
-    float dX = (targetPos.x) - enemyPos.x;
-    float dY = (targetPos.y)  - enemyPos.y;
+    float dX = (targetPos.x) - enemyPos.x + 32;
+    float dY = (targetPos.y)  - enemyPos.y + 32;
     float angle = (atan2(dY, dX) * 180 / PI);
     _fireCD = _enemyFireCD;
     Pellet enemyPellet(0, 0, 32, Textures::_enemyPellet_tex0,
                        _enemyFireSpeed, angle, _enemyFireDamage, 0);
-    enemyPellet._y = (this->_size)*sin(angle/180*PI)*1.5 + (this->_y);
-    enemyPellet._x = (this->_size)*cos(angle/180*PI)*1.5 + (this->_x);
+    enemyPellet._y = (this->_size)*sin(angle/180*PI)*1.5 + (this->_y) + 16;
+    enemyPellet._x = (this->_size)*cos(angle/180*PI)*1.5 + (this->_x) + 16;
     return enemyPellet;
 }
 

@@ -32,6 +32,6 @@ class Enemy: public Character {
         Pattern _pattern;
         float _speed;
         float _direction;
-        int _directionVariation;
+        float _directionVariation;
         unsigned int _fireCD;
 };
