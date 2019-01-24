@@ -19,17 +19,16 @@ class Player: public Character {
         Pellet fire(sf::Vector2f targetPos); // Mais par contre, j'utilise pas
         void decreaseCD();                   // la position de fire(). Ahah.
         void move(int x, int y);
-        void move(){cout << "Faut pas utiliser move() sur yun, mais move(x, y) !" << endl ; };
+        void move(){cout << "Faut pas utiliser move() sur yun, mais move(x, y) !" << endl; };
 
-        // Getter, Setter.
-        int getInvulCD();
-        void setInvulCD(int newCD);
-
-        unsigned int getFireCD();
-        void setFireCD(unsigned int newCD);
-
-        bool getIsHurt();
-        void setIsHurt(bool newBool);
+        // Getter
+        unsigned int getFireCD(){ return _fireCD; }
+        int getInvulCD() { return _invulCD; }
+        bool getIsHurt() { return _isHurt; }
+        // Setter
+        void setFireCD(unsigned int newCD) { _fireCD = newCD; }
+        void setInvulCD(int newCD) { _invulCD = newCD; }
+        void setIsHurt(bool newBool) { _isHurt = newBool; }
 
     private:
         int _invulCD;

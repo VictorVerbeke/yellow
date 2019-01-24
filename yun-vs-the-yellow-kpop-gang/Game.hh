@@ -38,11 +38,13 @@ class Game : public sf::RenderWindow {
 
         // Methodes du jeu
         void beginGame();       // Démarre le jeu, boucle principale.
-        void scriptedEvents();  // Permet l'apparition d'ennemis ingame
         void enemyAttack();     // Automatise l'attaque des ennemis.
         void moveYun();         // Fait bouger le joueur selon les input
         void goMenuSelection(int sel);  // Permet de naviguer entre les états
                                         // du jeu.
+
+        // Methodes de codage des niveaux scriptés.
+        void scriptedEvents_lvl1();  // Permet l'apparition d'ennemis ingame
 
         // Methodes de gestions d'Event
         void checkEventMainMenu();  // Selon l'état du jeu (menu principal
@@ -56,7 +58,8 @@ class Game : public sf::RenderWindow {
         void checkYunCollisionsPellets(bool vulnerable); // lesquels Yun peut
         void checkYunCollisionsPowerUp();   // interagir.
 
-        void checkEnemyCollisions();    // C.heck les collisions des ennemis
+        void checkEnemyCollisions();    // Check les collisions des ennemis
+        void checkBossCollisions();     // Les boss aussi. Pas de discrimination.
         void checkAllCollisions();      // Appelle toutes les détections de
                                         // collision.
 
@@ -162,5 +165,5 @@ class Game : public sf::RenderWindow {
 template<class T>
 void Game::drawEntity (T object) {
     draw(object._sprite);       // A commenter pour voir les hitbox.
-    // draw(object._hitbox);    // A décommenter pour voir les hitbox.
+    draw(object._hitbox);    // A décommenter pour voir les hitbox.
 }

@@ -41,31 +41,5 @@ void Player::decreaseCD(){
 }
 void Player::move(int x, int y){
     setPosition(x + _x, y + _y);
-    _hitbox.setPosition(_x - 22, _y - 22);
-}
-// Getter, Setter.
-int Player::getInvulCD(){
-    return _invulCD;
-}
-
-void Player::setInvulCD(int newCD){
-    _invulCD = newCD;
-}
-
-
-unsigned int Player::getFireCD(){
-    return _fireCD;
-}
-
-void Player::setFireCD(unsigned int newCD){
-    _fireCD = newCD;
-}
-
-
-bool Player::getIsHurt(){
-    return _isHurt;
-}
-
-void Player::setIsHurt(bool newBool){
-    _isHurt = newBool;
+    _hitbox.setPosition(_x + 10, _y + 12);
 }

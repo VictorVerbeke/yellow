@@ -7,56 +7,55 @@ Boss::Boss():
     _phase(0),
     _specialFireCD(0){}
 
-Boss::Boss(float x, float y, float size, int hp,
-     sf::Texture* tex, Pattern pattern, Name name)
+Boss::Boss(Name name, sf::Texture* tex)
 :
-    Enemy(x, y, size, hp, tex, pattern),
+    Enemy(600, 200, 256, 100*Character::_enemyStandardHP, tex, null),
     _name(name),
     _phase(0),
-    _specialFireCD(0){}
+    _specialFireCD(0)
+{
+    _directionVariation = 2;
+}
 
 Boss::~Boss(){
 }
 
-Pellet* Boss::SpecialFire(float size){
+// Overloads
+void Boss::operator-(const float &b) {
+    this->setHp(this->getHp() - b);
+    cout << "Le boss a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
+}
+
+// Methodes
+vector<Pellet> Boss::SpecialFire(){
     switch (_phase) {
         case 1 :
-            if (_specialFireCD > 0) {
-                _specialFireCD --;
-                return NULL; // Exception sur push_back(NULL) à faire
-            }
-            else {
-                _specialFireCD = SPECIALFIRECD1;
-                return NULL; // TODO Faire la création de Pellet
-            }
+            _specialFireCD = SPECIALFIRECD1;
+            // TODO Faire la création de Pellet
             break;
 
         case 2 :
-            if (_specialFireCD > 0) {
-                _specialFireCD --;
-                return NULL; // Exception sur push_back(NULL) à faire
-            }
-            else {
-                _specialFireCD = SPECIALFIRECD2;
-                return NULL; // TODO Faire la création de Pellet
-            }
+            _specialFireCD = SPECIALFIRECD2;
+             // TODO Faire la création de Pellet
             break;
 
         case 3 :
-            if (_specialFireCD > 0) {
-                _specialFireCD --;
-                return NULL; // Exception sur push_back(NULL) à faire
-            }
-            else {
-                _specialFireCD = SPECIALFIRECD3;
-                return NULL; // TODO Faire la création de Pellet
-            }
+            _specialFireCD = SPECIALFIRECD3;
+            // TODO Faire la création de Pellet
             break;
 
         default :
-            return NULL;
             break;
     }
+}
+
+void Boss::move(){
+    float newX, newY;
+    if (getX() > 500) newX = getX() - 2;
+    else newX = getX();
+    _direction += _directionVariation;
+    newY = 200 + sin(_direction * PI / 180) * 150;
+    this->setPosition(newX, newY);
 }
 
 void Boss::nextPhase(){

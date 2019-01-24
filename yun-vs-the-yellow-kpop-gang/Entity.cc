@@ -17,7 +17,9 @@ Entity::Entity (float x, float y, float size, sf::Texture* tex,
     _sprite.setTexture(*tex);
     _hitbox = sf::RectangleShape(sf::Vector2f(hitbox_width, hitbox_height));
     _hitbox.setPosition(hitbox_x, hitbox_y);
-    _hitbox.setFillColor(sf::Color(255,255,255)); // Pour voir les hitbox en debug
+    _hitbox.setFillColor(sf::Color(255,255,255, 100)); // Pour voir les hitbox en debug
+    _sprite.setOrigin(0,0);
+    _hitbox.setOrigin(0,0);
 }
 
 Entity::~Entity(){
@@ -30,6 +32,5 @@ void Entity::setPosition(float x, float y){
     _x = x;
     _y = y;
     _sprite.setPosition(x, y);
-    _sprite.setOrigin(_sprite.getLocalBounds().width/2, _sprite.getLocalBounds().height/2);
     _hitbox.setPosition(x, y);
 }

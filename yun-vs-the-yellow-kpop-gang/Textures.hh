@@ -31,6 +31,9 @@ public:
     static sf::Texture* _enemy_tex1;
     static sf::Texture* _enemy_tex2;
     static sf::Texture* _enemy_tex3;
+    static sf::Texture*_boss_tex1;
+    static sf::Texture*_boss_tex2;
+    static sf::Texture*_boss_tex3;
     static sf::Texture* _yun_still_tex;
     static sf::Texture* _yun_hurt_tex;
     static sf::Texture* _yun_hurt_f1_tex;

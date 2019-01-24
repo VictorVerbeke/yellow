@@ -24,8 +24,8 @@ class Enemy: public Character {
         void move();
 
         // Getter, Setter.
-        unsigned int getFireCD();
-        void setFireCD(unsigned int newCD);
+        unsigned int getFireCD() {return _fireCD; }
+        void setFireCD(unsigned int newCD) { _fireCD = newCD; }
 
     protected:
         // Attributs

@@ -4,7 +4,7 @@
 Enemy::Enemy(float x, float y, float size, int hp,
              sf::Texture* tex, Pattern pattern)
 :
-    Character(0, 0, size, 50, tex, 0, 0, size, size),
+    Character(0, 0, size, hp, tex, 0, 0, size, size),
     _pattern(pattern),
     _speed(_enemyMovementSpeed),
     _direction(-90),
@@ -66,13 +66,4 @@ void Enemy::move(){
         default:
             break;
     }
-}
-
-// Getter, Setter
-unsigned int Enemy::getFireCD(){
-    return _fireCD;
-}
-
-void Enemy::setFireCD(unsigned int newCD){
-    _fireCD = newCD;
 }
