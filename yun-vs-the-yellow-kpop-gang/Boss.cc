@@ -27,14 +27,14 @@ void Boss::operator-(const float &b) {
 Pellet Boss::fire(sf::Vector2f targetPos){
     cout << "Coucou. " << endl;
     sf::Vector2f bossPos = this->_sprite.getPosition();
-    float dX = (targetPos.x) - bossPos.x;
-    float dY = (targetPos.y)  - bossPos.y;
+    float dX = (targetPos.x) - bossPos.x - 64;
+    float dY = (targetPos.y)  - bossPos.y - 64;
     float angle = (atan2(dY, dX) * 180 / PI);
     _fireCD = _enemyFireCD / 2;
     Pellet bossPellet(0, 0, 32, Textures::_enemyPellet_tex0,
-                       _enemyFireSpeed, angle, _enemyFireDamage, 0);
-    bossPellet._y = (this->_y);
-    bossPellet._x = (this->_x);
+                       _enemyFireSpeed * 1.5, angle, _enemyFireDamage * 2, 0);
+    bossPellet._y = (this->_y)+(this->_size)/2;
+    bossPellet._x = (this->_x)+(this->_size)/2;
     return bossPellet;
 }
 void Boss::move(){
