@@ -4,78 +4,49 @@ Textures::Textures(){
 }
 
 Textures::~Textures(){
-    delete(_allyPellet_tex0);
-    delete(_allyPellet_tex1);
-    delete(_allyPellet_tex2);
-    delete(_allyPellet_tex3);
-    delete(_allyPellet_tex4);
-    delete(_allyPellet_tex5);
-    delete(_allyPellet_tex6);
-    delete(_allyPellet_tex7);
-    delete(_enemyPellet_tex0);
-    delete(_enemyPellet_tex1);
-    delete(_enemyPellet_tex2);
-    delete(_enemyPellet_tex3);
-    delete(_enemyPellet_tex4);
-    delete(_enemyPellet_tex5);
-    delete(_enemyPellet_tex6);
-    delete(_enemyPellet_tex7);
-    delete(_enemy_tex1);
-    delete(_enemy_tex2);
-    delete(_enemy_tex3);
-    delete(_boss_tex1);
-    delete(_boss_tex2);
-    delete(_boss_tex3);
-    delete(_yun_still_tex);
-    delete(_yun_hurt_tex);
-    delete(_yun_hurt_f1_tex);
-    delete(_panel_lvl1_tex);
-    delete(_panel_lvl2_tex);
-    delete(_panel_lvl3_tex);
-    delete(_background_ingame_tex);
-    delete(_background_mainMenu_tex);
-    delete(_background_options_tex);
-    delete(_background_selectLvl_tex);
-    delete(_cursor_tex);
+    map<tex, sf::Texture*>::iterator it = texMap.begin();
+    for ( ; it != texMap.end(); it++) delete(it->second);
 }
+
+Textures::TexMap Textures::texMap = init_map();
 
 void Textures::generateTextures(){
 
     cout << "[TEXTURES] Initialisation des Textures." << endl;
     // Initialisation :
-    _allyPellet_tex0 = new sf::Texture();
-    _allyPellet_tex1 = new sf::Texture();
-    _allyPellet_tex2 = new sf::Texture();
-    _allyPellet_tex3 = new sf::Texture();
-    _allyPellet_tex4 = new sf::Texture();
-    _allyPellet_tex5 = new sf::Texture();
-    _allyPellet_tex6 = new sf::Texture();
-    _allyPellet_tex7 = new sf::Texture();
-    _enemyPellet_tex0 = new sf::Texture();
-    _enemyPellet_tex1 = new sf::Texture();
-    _enemyPellet_tex2 = new sf::Texture();
-    _enemyPellet_tex3 = new sf::Texture();
-    _enemyPellet_tex4 = new sf::Texture();
-    _enemyPellet_tex5 = new sf::Texture();
-    _enemyPellet_tex6 = new sf::Texture();
-    _enemyPellet_tex7 = new sf::Texture();
-    _enemy_tex1 = new sf::Texture();
-    _enemy_tex2 = new sf::Texture();
-    _enemy_tex3 = new sf::Texture();
-    _boss_tex1 = new sf::Texture();
-    _boss_tex2 = new sf::Texture();
-    _boss_tex3 = new sf::Texture();
-    _yun_still_tex = new sf::Texture();
-    _yun_hurt_tex = new sf::Texture();
-    _yun_hurt_f1_tex = new sf::Texture();
-    _panel_lvl1_tex = new sf::Texture();
-    _panel_lvl2_tex = new sf::Texture();
-    _panel_lvl3_tex = new sf::Texture();
-    _background_ingame_tex = new sf::Texture();
-    _background_mainMenu_tex = new sf::Texture();
-    _background_options_tex = new sf::Texture();
-    _background_selectLvl_tex = new sf::Texture();
-    _cursor_tex = new sf::Texture();
+    texMap[_allyPellet_tex0] = new sf::Texture();
+    texMap[_allyPellet_tex1] = new sf::Texture();
+    texMap[_allyPellet_tex2] = new sf::Texture();
+    texMap[_allyPellet_tex3] = new sf::Texture();
+    texMap[_allyPellet_tex4] = new sf::Texture();
+    texMap[_allyPellet_tex5] = new sf::Texture();
+    texMap[_allyPellet_tex6] = new sf::Texture();
+    texMap[_allyPellet_tex7] = new sf::Texture();
+    texMap[_enemyPellet_tex0] = new sf::Texture();
+    texMap[_enemyPellet_tex1] = new sf::Texture();
+    texMap[_enemyPellet_tex2] = new sf::Texture();
+    texMap[_enemyPellet_tex3] = new sf::Texture();
+    texMap[_enemyPellet_tex4] = new sf::Texture();
+    texMap[_enemyPellet_tex5] = new sf::Texture();
+    texMap[_enemyPellet_tex6] = new sf::Texture();
+    texMap[_enemyPellet_tex7] = new sf::Texture();
+    texMap[_enemy_tex1] = new sf::Texture();
+    texMap[_enemy_tex2] = new sf::Texture();
+    texMap[_enemy_tex3] = new sf::Texture();
+    texMap[_boss_tex1] = new sf::Texture();
+    texMap[_boss_tex2] = new sf::Texture();
+    texMap[_boss_tex3] = new sf::Texture();
+    texMap[_yun_still_tex] = new sf::Texture();
+    texMap[_yun_hurt_tex] = new sf::Texture();
+    texMap[_yun_hurt_f1_tex] = new sf::Texture();
+    texMap[_panel_lvl1_tex] = new sf::Texture();
+    texMap[_panel_lvl2_tex] = new sf::Texture();
+    texMap[_panel_lvl3_tex] = new sf::Texture();
+    texMap[_background_ingame_tex] = new sf::Texture();
+    texMap[_background_mainMenu_tex] = new sf::Texture();
+    texMap[_background_options_tex] = new sf::Texture();
+    texMap[_background_selectLvl_tex] = new sf::Texture();
+    texMap[_cursor_tex] = new sf::Texture();
 
     cout << "[TEXTURES] Toutes les textures ont été initialisées." << endl;
     cout << "[TEXTURES] Affectation des textures." << endl;
@@ -116,8 +87,8 @@ void Textures::generateTextures(){
 
     cout << "[TEXTURES] Fin d'affectation." << endl << endl;
 }
-void Textures::textureAffectation(sf::Texture* tex, string str){
-    int res = tex->loadFromFile(str);
+void Textures::textureAffectation(tex texture, string str){
+    int res = texMap[texture]->loadFromFile(str);
     if (!res) {
         cout << "Error reading texture (\"" << str <<"\"), aborting." << endl;
         exit(1);

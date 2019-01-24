@@ -1,48 +1,59 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <map>
+
+enum tex {
+    _allyPellet_tex0 = 0,
+    _allyPellet_tex1,
+    _allyPellet_tex2,
+    _allyPellet_tex3,
+    _allyPellet_tex4,
+    _allyPellet_tex5,
+    _allyPellet_tex6,
+    _allyPellet_tex7,
+    _enemyPellet_tex0,
+    _enemyPellet_tex1,
+    _enemyPellet_tex2,
+    _enemyPellet_tex3,
+    _enemyPellet_tex4,
+    _enemyPellet_tex5,
+    _enemyPellet_tex6,
+    _enemyPellet_tex7,
+    _enemy_tex1,
+    _enemy_tex2,
+    _enemy_tex3,
+    _boss_tex1,
+    _boss_tex2,
+    _boss_tex3,
+    _yun_still_tex,
+    _yun_hurt_tex,
+    _yun_hurt_f1_tex,
+    _panel_lvl1_tex,
+    _panel_lvl2_tex,
+    _panel_lvl3_tex,
+    _background_ingame_tex,
+    _background_mainMenu_tex,
+    _background_options_tex,
+    _background_selectLvl_tex,
+    _cursor_tex
+};
 
 using namespace std;
 
 class Textures {
 public:
-
+    typedef map<tex, sf::Texture*> TexMap;
     Textures();
     ~Textures();
-    void textureAffectation(sf::Texture* tex, string str);
+    void textureAffectation(tex texture, string str);
     void generateTextures();
-    static sf::Texture* _allyPellet_tex0;
-    static sf::Texture* _allyPellet_tex1;
-    static sf::Texture* _allyPellet_tex2;
-    static sf::Texture* _allyPellet_tex3;
-    static sf::Texture* _allyPellet_tex4;
-    static sf::Texture* _allyPellet_tex5;
-    static sf::Texture* _allyPellet_tex6;
-    static sf::Texture* _allyPellet_tex7;
-    static sf::Texture* _enemyPellet_tex0;
-    static sf::Texture* _enemyPellet_tex1;
-    static sf::Texture* _enemyPellet_tex2;
-    static sf::Texture* _enemyPellet_tex3;
-    static sf::Texture* _enemyPellet_tex4;
-    static sf::Texture* _enemyPellet_tex5;
-    static sf::Texture* _enemyPellet_tex6;
-    static sf::Texture* _enemyPellet_tex7;
-    static sf::Texture* _enemy_tex1;
-    static sf::Texture* _enemy_tex2;
-    static sf::Texture* _enemy_tex3;
-    static sf::Texture*_boss_tex1;
-    static sf::Texture*_boss_tex2;
-    static sf::Texture*_boss_tex3;
-    static sf::Texture* _yun_still_tex;
-    static sf::Texture* _yun_hurt_tex;
-    static sf::Texture* _yun_hurt_f1_tex;
-    static sf::Texture* _panel_lvl1_tex;
-    static sf::Texture* _panel_lvl2_tex;
-    static sf::Texture* _panel_lvl3_tex;
-    static sf::Texture* _background_ingame_tex;
-    static sf::Texture* _background_mainMenu_tex;
-    static sf::Texture* _background_options_tex;
-    static sf::Texture* _background_selectLvl_tex;
-    static sf::Texture* _cursor_tex;
+    static TexMap texMap;
+
+private:
+    static TexMap init_map(){
+        TexMap map;
+        map[_allyPellet_tex0] = NULL;
+        return map;
+    }
 };

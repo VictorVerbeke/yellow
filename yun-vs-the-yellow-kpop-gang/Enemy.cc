@@ -31,7 +31,7 @@ Pellet Enemy::fire(sf::Vector2f targetPos){
     float dY = (targetPos.y)  - enemyPos.y + 32;
     float angle = (atan2(dY, dX) * 180 / PI);
     _fireCD = _enemyFireCD;
-    Pellet enemyPellet(0, 0, 32, Textures::_enemyPellet_tex0,
+    Pellet enemyPellet(0, 0, 32, Textures::texMap[_enemyPellet_tex0],
                        _enemyFireSpeed, angle, _enemyFireDamage, 0);
     enemyPellet._y = (this->_size)*sin(angle/180*PI)*1.5 + (this->_y) + 16;
     enemyPellet._x = (this->_size)*cos(angle/180*PI)*1.5 + (this->_x) + 16;

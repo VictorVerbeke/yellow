@@ -56,7 +56,7 @@ Pellet Boss::fire(sf::Vector2f targetPos){
     float dY = (targetPos.y)  - bossPos.y - 64;
     float angle = (atan2(dY, dX) * 180 / PI);
     _fireCD = _bossFireCD;
-    Pellet bossPellet(0, 0, 32, Textures::_enemyPellet_tex0,
+    Pellet bossPellet(0, 0, 32, Textures::texMap[_enemyPellet_tex0],
                        _bossFireSpeed, angle, _bossFireDamage, 0);
     bossPellet._y = (this->_y)+(this->_size)/2;
     bossPellet._x = (this->_x)+(this->_size)/2;

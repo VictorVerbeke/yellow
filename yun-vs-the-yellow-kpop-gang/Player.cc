@@ -3,7 +3,7 @@
 using namespace std;
 
 Player::Player ():
-    Character(0, 0, 64, 100, Textures::_yun_still_tex, 10, 10, 44, 44),
+    Character(0, 0, 64, 100, Textures::texMap[_yun_still_tex], 10, 10, 44, 44),
     _invulCD(0),
     _fireCD(0)
 {}
@@ -22,14 +22,14 @@ void Player::operator-(const float &b) {
     this->setHp(this->getHp() - b);
     this->_isHurt = true;
     this->_invulCD = _playerInvulCD;
-    this->_sprite.setTexture(*(Textures::_yun_hurt_f1_tex));
+    this->_sprite.setTexture(*(Textures::texMap[_yun_hurt_f1_tex]));
     cout << "Yun a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
 }
 
 // Methodes
 Pellet Player::fire(sf::Vector2f targetPos){
     _fireCD = _playerFireCD;
-    Pellet created(0, 0, 32, Textures::_allyPellet_tex0,
+    Pellet created(0, 0, 32, Textures::texMap[_allyPellet_tex0],
                    _playerFireSpeed, 0, _playerFireDamage, 1);
     created._x = this->_x + this->_size - 20;
     created._y = this->_y + (this->_size)/2 - 20;
