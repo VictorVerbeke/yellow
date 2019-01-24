@@ -9,7 +9,8 @@ using namespace std;
 
 class Character: public Entity {
     public:
-        Character (float x, float y, float size, int hp, sf::Texture* tex);
+        Character (float x, float y, float size, int hp, sf::Texture* tex,
+                   float hitbox_x, float hitbox_y, float hitbox_width, float hitbox_height);
         int getHp () { return _hp; };
         void setHp (int hp) { _hp = hp; };
         void addHp (int hp) { _hp -= hp; };

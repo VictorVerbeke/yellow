@@ -3,14 +3,14 @@
 using namespace std;
 
 Player::Player ():
-    Character(0, 0, 64, 100, Textures::_yun_still_tex),
+    Character(0, 0, 64, 100, Textures::_yun_still_tex, 10, 10, 44, 44),
     _invulCD(0),
     _fireCD(0)
 {}
 
 Player::Player (float x, float y, float size, sf::Texture* tex)
 :
-    Character(x, y, size, 100, tex),
+    Character(x, y, size, 100, tex, 10, 10, 44, 44),
     _fireCD(0){}
 
 
@@ -41,6 +41,7 @@ void Player::decreaseCD(){
 }
 void Player::move(int x, int y){
     setPosition(x + _x, y + _y);
+    _hitbox.setPosition(_x - 22, _y - 22);
 }
 // Getter, Setter.
 int Player::getInvulCD(){

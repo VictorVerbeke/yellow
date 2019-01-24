@@ -426,10 +426,7 @@ void Game::checkEventIngame(){
                 // puis à chaque frame mais au bout d'un certain temps.
                 // On considère donc qu'à l'appui, on active le flag, et on
                 // attend qu'elle soit relachée pour désactiver le flag.
-                // Sauf pour Echap. C
-    // Yun va bouger : ces deux variables correspondent à ses déplacements.
-    // Selon les flags, ils vont être modifiés, donc on peut considérer que
-    // ce sont plus des dx et dy que x et y, mais peu importe.a, ça renvoit au menu principal.
+                // Sauf pour Echap. Ca, ça renvoit au menu principal.
                 if (event.key.code == sf::Keyboard::Up) upFlag = true;
                 if (event.key.code == sf::Keyboard::Down) downFlag = true;
                 if (event.key.code == sf::Keyboard::Left) leftFlag = true;
@@ -459,11 +456,14 @@ void Game::checkEventIngame(){
 
 // Methodes de collision
 // Actuellement, on regarde les collisions des sprites. Il faut que je fasse
-// des hitbox car sinon elles sont trop grandes, car basées sur les fichiers
-// images qu'on fournit. C'est un TODO.
+// des hitbox car sinon elles sont trop grandes, car basées sur les rectangles
+// des sprites, basés sur les images qu'on fournit. C'est un TODO.
 
 // Vérification des collisions du joueur !
 // Si Yun est en frame d'invincibilité, alors il prend aucun dégat mais
+    // Yun va bouger : ces deux variables correspondent à ses déplacements.
+    // Selon les flags, ils vont être modifiés, donc on peut considérer que
+    // ce sont plus des dx et dy que x et y, mais peu importe.
 // supprime tous les pellets touchés. Sinon, il prend des dégats de la part
 // des ennemis ou des pellets.
 void Game::checkYunCollisions(){
@@ -482,13 +482,12 @@ void Game::checkYunCollisions(){
     }
     else
     {
-        yun.setInvulCD(yun.getInvulCD() - 1); // On réduit le temps d'invincibilité.
-        if (yun.getIsHurt() == true){   // Si il s'agit de la deuxième frame
-            yun.setIsHurt(false);   // d'invincibilité, alors on modifie la
-                                    // texture pour indiquer qu'il est blessé.
-                                    // La première frame est un Yun rouge, pour
-                                    // montrer la frame où il est blessé (check
-                                    // l'overload de Player pour ça.)
+        yun.setInvulCD(yun.getInvulCD() - 1); // On réduit le temps
+        if (yun.getIsHurt() == true){   // d'invincibilité. Si il s'agit de la
+            yun.setIsHurt(false);   // deuxième frame d'invincibilité, alors on
+        // modifie la texture pour indiquer qu'il est blessé. La première frame
+        // est un Yun rouge, pour montrer la frame où il est blessé (check
+        // l'overload de Player pour ça.)
             yun._sprite.setTexture(*(Textures::_yun_hurt_tex));
         }
         // A la dernière frame, on remet Yun tranquille content.
@@ -508,7 +507,7 @@ void Game::checkYunCollisionsEnemies(){
     // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
-        if (yun._sprite.getGlobalBounds().intersects((*itEnemy)._sprite.getGlobalBounds()))
+        if (yun._hitbox.getGlobalBounds().intersects((*itEnemy)._hitbox.getGlobalBounds()))
         {
             yun - (Character::_enemyFireDamage * 2);
         }
@@ -524,7 +523,7 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
     {
         if ((*itPellet)._target == 0) // Si les pellets visent Yun
         {
-            if (yun._sprite.getGlobalBounds().intersects((*itPellet)._sprite.getGlobalBounds()))
+            if (yun._hitbox.getGlobalBounds().intersects((*itPellet)._hitbox.getGlobalBounds()))
             {
                 if (vulnerable) yun - (*itPellet)._damage;  // Il prend des dégats
                 itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
@@ -548,7 +547,7 @@ void Game::checkEnemyCollisions(){
         for ( ; itPellet != pelletVector.end(); ){
             if (enemyKilled == false){
                 if ((*itPellet)._target == 1){
-                    if ((*itEnemy)._sprite.getGlobalBounds().intersects((*itPellet)._sprite.getGlobalBounds())){
+                    if ((*itEnemy)._hitbox.getGlobalBounds().intersects((*itPellet)._hitbox.getGlobalBounds())){
                         (*itEnemy) - (*itPellet)._damage;
                         itPellet = pelletVector.erase(itPellet);
                         if ((*itEnemy).getHp() <= 0) enemyKilled = true;
@@ -559,6 +558,7 @@ void Game::checkEnemyCollisions(){
 
         if (enemyKilled == false) itEnemy++;
         else {
+
             itEnemy = enemyVector.erase(itEnemy);
             playRandomKillSound(); // Enemy killed, play a victory sound
             // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO TODO

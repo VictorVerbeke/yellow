@@ -2,7 +2,7 @@
 
 PowerUp::PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power)
 :
-    Entity(x, y, size, tex),
+    Entity(x, y, size, tex, 0, 0, size, size),
     _type(type),
     _power(power),
     _speed(POWERUPSPEED),

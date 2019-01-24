@@ -5,7 +5,8 @@ using namespace std;
 
 class Entity {
     public:
-        Entity (float x, float y, float size, sf::Texture *tex);
+        Entity (float x, float y, float size, sf::Texture *tex,
+            float hitbox_x, float hitbox_y, float hitbox_width, float hitbox_height);
         ~Entity();
 
         // Getter, Setter.
@@ -21,7 +22,7 @@ class Entity {
         float _x;
         float _y;
         sf::Sprite _sprite;
-
+        sf::RectangleShape _hitbox;
     protected:
 
 };

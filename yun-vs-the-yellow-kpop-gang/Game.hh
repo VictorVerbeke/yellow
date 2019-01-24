@@ -161,5 +161,6 @@ class Game : public sf::RenderWindow {
 
 template<class T>
 void Game::drawEntity (T object) {
-    draw(object._sprite);
+    draw(object._sprite);       // A commenter pour voir les hitbox.
+    // draw(object._hitbox);    // A décommenter pour voir les hitbox.
 }
