@@ -16,6 +16,7 @@ Pellet::Pellet(float x, float y, float size, sf::Texture* tex,
     _target(target),
     _frameCounter(0),
     _frameNumber(0){
+        this->_hitbox.setOrigin(0, -25);
         this->_sprite.rotate(direction);
         this->_hitbox.rotate(direction);
     }
