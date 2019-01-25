@@ -937,6 +937,7 @@ void Game::moveEntities(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); ){
         // Si l'ennemi sort de l'écran, on le supprime du vecteur.
+        // Il faut savoir que ça s'applique pas pour le côté droit car les ennemis (et boss) viennent de la droite.
         // Sinon, on le fait bouger.
         if ((*itEnemy).getX() < -(*itEnemy).getSize() || (*itEnemy).getY() < -(*itEnemy).getSize() || (*itEnemy).getY() > getSize().y){
             itEnemy = enemyVector.erase(itEnemy);
@@ -969,7 +970,7 @@ void Game::moveEntities(){
 
     vector<Boss>::iterator itBoss = bossVector.begin();
     for ( ; itBoss != bossVector.end(); ){
-        if ((*itBoss).getX() < 0 || (*itBoss).getX() > getSize().x || (*itBoss).getY() < 0 || (*itBoss).getY() > getSize().y){
+        if ((*itBoss).getX() < 0 || (*itBoss).getY() < 0 || (*itBoss).getY() > getSize().y){
             itBoss = bossVector.erase(itBoss);
         } else {
             (*itBoss).move();
