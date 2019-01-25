@@ -61,4 +61,4 @@ $ ./yun
 
 ## Pourquoi voulez-vous tuer les star de la K-Pop ?
 
-Car ils rendent Yun triste. Personne n'a envie que Yun soit triste. 
+Car ils rendent Yun triste. Personne n'a envie que Yun soit triste.
