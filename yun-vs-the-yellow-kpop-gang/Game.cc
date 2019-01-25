@@ -1112,16 +1112,25 @@ void Game::drawGUIYun ()
 void Game::drawGUIBoss ()
 {
     sf::Text bossHP;
+    sf::RectangleShape outlineBarreVieBoss(sf::Vector2f(200.f, 25.f));
+    sf::RectangleShape barreVieBoss(sf::Vector2f(bossVector[0].getHp() / (bossVector[0]._maxHp / 200.f), 25.f));
 
+    outlineBarreVieBoss.setPosition(580, 550);
+    outlineBarreVieBoss.setOutlineThickness(5.f);
+    outlineBarreVieBoss.setOutlineColor(sf::Color(40, 40, 40, 255));
+    outlineBarreVieBoss.setFillColor(sf::Color(0, 0, 0, 0));
+
+    barreVieBoss.setPosition(580, 550);
+    barreVieBoss.setFillColor(sf::Color::Yellow);
 
     bossHP.setFont(_font);
     bossHP.setCharacterSize(20);
     bossHP.setString("Boss's HP:");
-    bossHP.setPosition(500, 550);
-
-
+    bossHP.setPosition(460, 550);
 
     draw(bossHP);
+    draw(barreVieBoss);
+    draw(outlineBarreVieBoss);
 }
 
 

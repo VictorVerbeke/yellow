@@ -19,6 +19,7 @@ class Boss: public Enemy {
         // Methodes
         void move();
         Pellet fire(sf::Vector2f targetPos) override;
+        int _maxHp;
 
     private:
         // Attributs.

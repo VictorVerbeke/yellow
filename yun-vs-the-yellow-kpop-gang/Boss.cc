@@ -10,8 +10,9 @@ Boss::Boss():
 // pas correctement appeler le constructeur d'Enemy.
 Boss::Boss(Name name, sf::Texture* tex)
 :
-    Enemy(900, 200, 256, 75*Character::_enemyStandardHP, tex, null),
-    _name(name)
+    Enemy(900, 200, 256, 75 * Character::_enemyStandardHP, tex, null),
+    _name(name),
+    _maxHp(75 * Character::_enemyStandardHP)
 {
     switch(name){
         case Beenzino :
