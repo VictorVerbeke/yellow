@@ -92,6 +92,12 @@ class Game : public sf::RenderWindow {
         void drawEntities();            // toutes les appeler.
 
 
+        // Affichage des barres de vie
+        void drawGUIYun ();
+        void drawGUIBoss ();
+        void drawGUI ();
+
+
         // Methodes d'ajout d'instances
         void addPelletToVector(Pellet object);     // Les entités (sauf Joueur)
         void addEnemyToVector(Enemy object);       // sont stockées dans des

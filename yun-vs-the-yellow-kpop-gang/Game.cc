@@ -80,7 +80,7 @@ Game::Game(sf::VideoMode mode, string name) :
     // Création des sprites textuels pour le volume et la difficulté.
     stringstream s;
     s << _volume << "%";
-    _font.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/fonts/OpenSans-Bold.ttf");
+    _font.loadFromFile("fonts/OpenSans-Bold.ttf");
     _volumeText.setFont(_font);
     _volumeText.setCharacterSize(50);
     _volumeText.setString(s.str());
@@ -100,14 +100,14 @@ Game::Game(sf::VideoMode mode, string name) :
 
 
     // Buffers son pour le joueur.
-    _bufferDamage1.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/damage_1.ogg");
-    _bufferDamage2.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/damage_2.ogg");
+    _bufferDamage1.loadFromFile("sounds/yun_phrases/damage_1.ogg");
+    _bufferDamage2.loadFromFile("sounds/yun_phrases/damage_2.ogg");
 
-    _bufferKill1.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/oui.ogg");
-    _bufferKill2.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/protocole_rip_1.ogg");
-    _bufferKill3.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/protocole_rip_2.ogg");
-    _bufferKill4.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/RIP.ogg");
-    _bufferKill5.loadFromFile("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/yun_phrases/seine.ogg");
+    _bufferKill1.loadFromFile("sounds/yun_phrases/oui.ogg");
+    _bufferKill2.loadFromFile("sounds/yun_phrases/protocole_rip_1.ogg");
+    _bufferKill3.loadFromFile("sounds/yun_phrases/protocole_rip_2.ogg");
+    _bufferKill4.loadFromFile("sounds/yun_phrases/RIP.ogg");
+    _bufferKill5.loadFromFile("sounds/yun_phrases/seine.ogg");
 }
 
 // AssignationSprites prend une adresse de sprite, une adresse de texture,
@@ -1017,6 +1017,7 @@ void Game::drawIngame(){
     clear(sf::Color(0,0,0));
     drawBackground();   // On affiche le background.
     drawEntities();     // On affiche les entités
+    drawGUI();          // On affiche le GUI (barres de vie)
     display();
 }
 
@@ -1082,6 +1083,54 @@ void Game::drawEntities(){
 }
 
 
+// Méthode qui dessine le GUI (barres de vie) sur l'écran.
+void Game::drawGUIYun ()
+{
+    sf::Text yunHP;
+    sf::RectangleShape outlineBarreVieYun(sf::Vector2f(200.f, 25.f));
+    sf::RectangleShape barreVieYun(sf::Vector2f(yun.getHp() * 2, 25.f));
+
+    outlineBarreVieYun.setPosition(140, 20);
+    outlineBarreVieYun.setOutlineThickness(5.f);
+    outlineBarreVieYun.setOutlineColor(sf::Color(40, 40, 40, 255));
+    outlineBarreVieYun.setFillColor(sf::Color(0, 0, 0, 0));
+
+    barreVieYun.setPosition(140, 20);
+    barreVieYun.setFillColor(sf::Color::Green);
+
+    yunHP.setFont(_font);
+    yunHP.setCharacterSize(20);
+    yunHP.setString("Yun's HP:");
+    yunHP.setPosition(20, 20);
+
+    draw(yunHP);
+    draw(barreVieYun);
+    draw(outlineBarreVieYun);
+}
+
+
+void Game::drawGUIBoss ()
+{
+    sf::Text bossHP;
+
+
+    bossHP.setFont(_font);
+    bossHP.setCharacterSize(20);
+    bossHP.setString("Boss's HP:");
+    bossHP.setPosition(500, 550);
+
+
+
+    draw(bossHP);
+}
+
+
+void Game::drawGUI ()
+{
+    drawGUIYun();
+    if (bossVector.size() > 0) drawGUIBoss();
+}
+
 // Methodes d'ajout d'entités dans les vecteurs de la classe Game.
 // Généralement on fait addXToVector(X(...)).
 void Game::addPelletToVector(Pellet object){
@@ -1123,7 +1172,7 @@ void Game::changeState(State nextState){
             pUpVector.clear();      // des anciens niveaux.
             bossVector.clear();
             yun.setPosition(100, 274);  // On dit à Yun de se mettre en place.
-            changeMusic("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/musics/beenzino.ogg"); // On joue une musique.
+            changeMusic("sounds/musics/beenzino.ogg"); // On joue une musique.
             _gameState = nextState; // On met à jour l'état actuel.
             break;
 
@@ -1139,7 +1188,7 @@ void Game::changeState(State nextState){
             pUpVector.clear();
             bossVector.clear();
             yun.setPosition(100, 274);
-            changeMusic("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/musics/girlgeneration.ogg");
+            changeMusic("sounds/musics/girlgeneration.ogg");
             _gameState = nextState;
             break;
 
@@ -1154,7 +1203,7 @@ void Game::changeState(State nextState){
             pUpVector.clear();
             bossVector.clear();
             yun.setPosition(100, 274);
-            changeMusic("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/musics/jonghyun.ogg");
+            changeMusic("sounds/musics/jonghyun.ogg");
             _gameState = nextState;
             break;
 
@@ -1167,7 +1216,7 @@ void Game::changeState(State nextState){
         case options :
             // Si on démarre le jeu ou si on revient d'un niveau de jeu, on met la musique des menus.
             if ((_gameState == beginState) || (_gameState == level3) || (_gameState == level2) || (_gameState == level1))
-                changeMusic("/usr/local/lib/yun-vs-the-yellow-kpop-gang/assets/sounds/musics/main_menu_music.ogg");
+                changeMusic("sounds/musics/main_menu_music.ogg");
             _gameState = nextState;
             break;
 
