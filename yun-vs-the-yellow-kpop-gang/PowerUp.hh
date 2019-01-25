@@ -9,13 +9,13 @@ enum BonusType { speed, power, invul };
 
 class PowerUp: public Entity {
     public:
-        PowerUp(float x, float y, sf::Texture* tex, BonusType type, int power);
+        PowerUp(float x, float y, sf::Texture* tex, BonusType type, float power);
         ~PowerUp();
 
         void move();
 
         BonusType _type;
-        int _power;
+        float _power;
         float _speed;
         float _direction;
     private:

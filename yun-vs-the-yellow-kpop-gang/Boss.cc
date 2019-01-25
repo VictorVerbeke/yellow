@@ -46,11 +46,9 @@ Boss::~Boss(){
 // Overloads
 void Boss::operator-(const float &b) {
     this->setHp(this->getHp() - b);
-    cout << "Le boss a perdu " << b << " hp et est à " << this->getHp() << " hp." << endl;
 }
 
 Pellet Boss::fire(sf::Vector2f targetPos){
-    cout << "Coucou. " << endl;
     sf::Vector2f bossPos = this->_sprite.getPosition();
     float dX = (targetPos.x) - bossPos.x - 64;
     float dY = (targetPos.y)  - bossPos.y - 64;

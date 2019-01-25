@@ -169,7 +169,7 @@ class Game : public sf::RenderWindow {
 
 template<class T>
 void Game::drawEntity (T object) {
-    draw(object._sprite);       // A commenter pour voir les hitbox.
-    // draw(object._hitbox);    // A décommenter pour voir les hitbox.
+    draw(object._sprite);
+    draw(object._hitbox);    // A décommenter pour voir les hitbox.
     // Pour bien prendre en compte ce changement, il faut faire make clean all.
 }

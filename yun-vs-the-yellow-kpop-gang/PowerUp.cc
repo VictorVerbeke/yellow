@@ -1,7 +1,7 @@
 #include "PowerUp.hh"
 #include <cmath>
 
-PowerUp::PowerUp(float x, float y, sf::Texture* tex, BonusType type, int power)
+PowerUp::PowerUp(float x, float y, sf::Texture* tex, BonusType type, float power)
 :
     Entity(0, 0, 32, tex, 0, 0, 32, 32),
     _type(type),

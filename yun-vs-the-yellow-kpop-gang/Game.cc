@@ -668,6 +668,10 @@ void Game::checkYunCollisions(){
     }
     // TODO : La collision avec les powerups.
     checkYunCollisionsPowerUp();
+    if (yun.getHp() < 0){
+        cout << "Yun est mort de mauvais gout ! Retour au menu principal !" << endl;
+        changeState(mainMenu);
+    }
 }
 
 // Yun touche un ennemi = Il prend des dégats (si il est pas invulnérable).
@@ -723,7 +727,7 @@ void Game::checkYunCollisionsPowerUp(){
                     Character::_playerFireDamage += (*itPowerUp)._power;
                     break;
                 case speed :
-                    Character::_playerFireSpeed += (*itPowerUp)._power;
+                    Character::_playerMovementSpeed += (*itPowerUp)._power/5;
                     break;
                 case invul :
                     Character::_playerInvulCD += (*itPowerUp)._power;
@@ -732,6 +736,10 @@ void Game::checkYunCollisionsPowerUp(){
                     break;
             }
             itPowerUp = pUpVector.erase(itPowerUp); // On supprime le pUp.
+            cout << "\tUpdate des charactéristiques du joueur :" << endl;
+            cout << "\tDégats des projectiles : " << Character::_playerFireDamage << " HP" << endl;
+            cout << "\tVitesse de déplacement : " << Character::_playerMovementSpeed * 25  << " %" << endl;
+            cout << "\tFrames d'invulnérabilité : " << Character::_playerInvulCD << " frames"<< endl << endl;
         } else itPowerUp++;
     }
 }
@@ -763,7 +771,7 @@ void Game::checkEnemyCollisions(){
             switch (i){     // Ici, on crée un power-up au hasard : une chance
                 case 0 :    // sur deux à chaque ennemi tué de pop.
                 addPowerUpToVector(PowerUp((*itEnemy).getX(), (*itEnemy).getY(),
-                                   Textures::texMap[_allyPellet_tex0], power, 2));
+                                   Textures::texMap[_pUp_power_tex], power, 2));
                     break;
                 case 1 :
                 addPowerUpToVector(PowerUp((*itEnemy).getX(), (*itEnemy).getY(),
@@ -834,10 +842,10 @@ void Game::moveYun(){
 
     // Si on appuie sur gauche et qu'on est pas sur le rebord gauche, alors
     // on peut bouger vers la gauche. Même idée pour les quatre directions.
-    if (leftFlag && (yun._x - yun._size/2) > 0) x -= Character::_playerMovementSpeed;
-    if (rightFlag && (yun._x - yun._size/2) < getSize().x - yun._size) x += Character::_playerMovementSpeed;
-    if (upFlag && (yun._y - yun._size/2) > 0) y -= Character::_playerMovementSpeed;
-    if (downFlag && (yun._y - yun._size/2) < getSize().y - yun._size) y += Character::_playerMovementSpeed;
+    if (leftFlag && (yun._x) > 0) x -= Character::_playerMovementSpeed;
+    if (rightFlag && (yun._x + yun._size)< getSize().x) x += Character::_playerMovementSpeed;
+    if (upFlag && (yun._y) > 0) y -= Character::_playerMovementSpeed;
+    if (downFlag && (yun._y + yun._size) < getSize().y) y += Character::_playerMovementSpeed;
 
     if (shiftFlag){     // Si on appuie sur Shift, on peut naviguer plus
         x = x/2;        // lentement. Utile lors des situations délicates où
@@ -1022,7 +1030,11 @@ void Game::changeState(State nextState){
     yun.setHp(100);
     switch (nextState){
         case level1 :
-            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
+            if (_gameState == mainMenu || _gameState == selectLvl) {
+                modifyDifficulty();
+                cout << "Bienvenue en jeu ! Votre mission : Tuer la K-Pop !" << endl;
+            }
+            cout << "\t - - - [Niveau 1 - vs Beenzino] - - -" << endl;
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();
@@ -1033,7 +1045,11 @@ void Game::changeState(State nextState){
             _gameState = nextState;
             break;
         case level2 :
-            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
+            if (_gameState == mainMenu || _gameState == selectLvl) {
+            modifyDifficulty();
+                cout << "Bienvenue en jeu ! Votre mission : Tuer la K-Pop !" << endl;
+            }
+            cout << "\t - - - [Niveau 2 - vs Girl's Generation] - - -" << endl;
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();
@@ -1044,7 +1060,11 @@ void Game::changeState(State nextState){
             _gameState = nextState;
             break;
         case level3 :
-            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
+            if (_gameState == mainMenu || _gameState == selectLvl) {
+            modifyDifficulty();
+                cout << "Bienvenue en jeu ! Votre mission : Tuer la K-Pop !" << endl;
+            }
+            cout << "\t - - - [Niveau 3 - vs Jonghyun] - - -" << endl;
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();
