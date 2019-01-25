@@ -29,6 +29,7 @@ $ sudo apt-get install libsfml-dev
 Puis, il faut compiler le jeu :
 
 ```
+$ cd yellow-vs-the-yellow-kpop-gang
 $ make
 ```
 
@@ -50,6 +51,7 @@ $ brew install sfml
 Puis, il faut compiler le jeu :
 
 ```
+$ cd yellow-vs-the-yellow-kpop-gang
 $ make
 ```
 
