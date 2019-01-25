@@ -48,7 +48,8 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficulty(0),
     _menuSelection(0),
     _gameState(beginState),
-    _frameCounter(0)
+    _frameCounter(0),
+    _kills(0)
 {
     // Configuration de la fenêtre de jeu.
     setMouseCursorVisible(false);
@@ -845,6 +846,8 @@ void Game::checkEnemyCollisions(){
             }
             itEnemy = enemyVector.erase(itEnemy);
             playRandomKillSound(); // Enemy killed, play a victory sound
+
+            _kills++;
         }
     }
 }
@@ -878,6 +881,7 @@ void Game::checkBossCollisions(){
                                Textures::texMap[_pUp_power_tex], power, 5));
             itBoss = bossVector.erase(itBoss);
             playRandomKillSound(); // Enemy killed, play a victory sound
+            _kills += 10; // A boss kill counts for 10 minion kills
         }
     }
 }
@@ -1086,7 +1090,9 @@ void Game::drawEntities(){
 // Méthode qui dessine le GUI (barres de vie) sur l'écran.
 void Game::drawGUIYun ()
 {
+    stringstream killString;
     sf::Text yunHP;
+    sf::Text killCount;
     sf::RectangleShape outlineBarreVieYun(sf::Vector2f(200.f, 25.f));
     sf::RectangleShape barreVieYun(sf::Vector2f(yun.getHp() * 2, 25.f));
 
@@ -1103,6 +1109,13 @@ void Game::drawGUIYun ()
     yunHP.setString("Yun's HP:");
     yunHP.setPosition(20, 20);
 
+    killCount.setFont(_font);
+    killCount.setCharacterSize(20);
+    killString << "Kills: " << _kills;
+    killCount.setString(killString.str());
+    killCount.setPosition(680, 20);
+
+    draw(killCount);
     draw(yunHP);
     draw(barreVieYun);
     draw(outlineBarreVieYun);

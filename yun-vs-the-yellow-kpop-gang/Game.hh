@@ -169,6 +169,8 @@ class Game : public sf::RenderWindow {
         // Attributs : Divers
         long int _frameCounter; // Sert à compter le nombre de frames déroulées.
                                 // Ca sert pour les événements scriptés.
+
+        long int _kills;        // Sert à compter les kills.
 };
 
 // Fonction utilisant un template.

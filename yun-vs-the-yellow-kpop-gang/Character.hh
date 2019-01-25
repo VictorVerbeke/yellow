@@ -19,7 +19,6 @@ class Character: public Entity {
         virtual Pellet fire(sf::Vector2f targetPos) = 0;
         virtual void decreaseCD() = 0;
 
-
         // Les attributs statiques partagés par tous les characters.
         // Ils sont initialisés à l'initialisation de Yun, et modifiés par
         // la difficulté et les power-ups.
