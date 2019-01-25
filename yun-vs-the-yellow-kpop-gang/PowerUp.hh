@@ -5,11 +5,11 @@
 #define PI 3.141592653
 #define POWERUPSPEED 1.5
 
-enum BonusType { speed, strength, invul };
+enum BonusType { speed, power, invul };
 
 class PowerUp: public Entity {
     public:
-        PowerUp(float x, float y, float size, sf::Texture* tex, BonusType type, int power);
+        PowerUp(float x, float y, sf::Texture* tex, BonusType type, int power);
         ~PowerUp();
 
         void move();

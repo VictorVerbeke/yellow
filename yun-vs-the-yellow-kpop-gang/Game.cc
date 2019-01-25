@@ -1,5 +1,4 @@
 #include "Game.hh"
-#include <ctime>
 
 // Bonjour ! Bienvenue dans la classe Game, où tout se déroule presque.
 // Afin de mieux comprendre comment le jeu fonctionne, veuillez vous
@@ -113,7 +112,7 @@ Game::Game(sf::VideoMode mode, string name) :
 // une taille x et une taille y, et colle tout ça pour créer un sprite avec
 // une texture, et tout ça dans un cadre allant de (0,0) à (x,y).
 void Game::assignationSprites(sf::Sprite *spr, sf::Texture *tex, int x, int y){
-
+//Orienté vers le bas
     spr->setTexture(*tex);
     spr->setTextureRect(sf::IntRect(0, 0, x, y));
     spr->setPosition(0,0);
@@ -713,7 +712,29 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
 }
 
 // Si Yun touche un powerup, il est amélioré durant TOUTE la partie.
-void Game::checkYunCollisionsPowerUp(){} // TODO
+void Game::checkYunCollisionsPowerUp(){
+    vector<PowerUp>::iterator itPowerUp = pUpVector.begin();
+    for ( ; itPowerUp != pUpVector.end(); )
+    {
+        if (yun._hitbox.getGlobalBounds().intersects((*itPowerUp)._hitbox.getGlobalBounds()))
+        {
+            switch((*itPowerUp)._type){
+                case power :
+                    Character::_playerFireDamage += (*itPowerUp)._power;
+                    break;
+                case speed :
+                    Character::_playerFireSpeed += (*itPowerUp)._power;
+                    break;
+                case invul :
+                    Character::_playerInvulCD += (*itPowerUp)._power;
+                    break;
+                default :
+                    break;
+            }
+            itPowerUp = pUpVector.erase(itPowerUp); // On supprime le pUp.
+        } else itPowerUp++;
+    }
+}
 
 // Si un ennemi rencontre un pellet tiré par le joueur, alors il est blessé.
 // Pour la mort de l'ennemi, voir la surcharge de l'opérateur - dans Enemy.
@@ -738,10 +759,25 @@ void Game::checkEnemyCollisions(){
 
         if (enemyKilled == false) itEnemy++;
         else {
-
+            int i = rand()%6;
+            switch (i){     // Ici, on crée un power-up au hasard : une chance
+                case 0 :    // sur deux à chaque ennemi tué de pop.
+                addPowerUpToVector(PowerUp((*itEnemy).getX(), (*itEnemy).getY(),
+                                   Textures::texMap[_allyPellet_tex0], power, 2));
+                    break;
+                case 1 :
+                addPowerUpToVector(PowerUp((*itEnemy).getX(), (*itEnemy).getY(),
+                                   Textures::texMap[_pUp_speed_tex], speed, 2));
+                    break;
+                case 2 :
+                addPowerUpToVector(PowerUp((*itEnemy).getX(), (*itEnemy).getY(),
+                                   Textures::texMap[_pUp_invul_tex], invul, 2));
+                    break;
+                default:
+                    break;
+            }
             itEnemy = enemyVector.erase(itEnemy);
             playRandomKillSound(); // Enemy killed, play a victory sound
-            // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO TODO
         }
     }
 }
@@ -767,9 +803,10 @@ void Game::checkBossCollisions(){
         if (isKilled == false) itBoss++;
         else {
             _frameCounter++;
+            addPowerUpToVector(PowerUp((*itBoss).getX(), (*itBoss).getY(),
+                               Textures::texMap[_pUp_power_tex], power, 5));
             itBoss = bossVector.erase(itBoss);
             playRandomKillSound(); // Enemy killed, play a victory sound
-            // addPowerUpToVector(new PowerUp()); // TODO POWERUPS TODO
         }
     }
 }
@@ -962,7 +999,6 @@ void Game::drawEntities(){
 // Généralement on fait addXToVector(new X(args)).
 void Game::addPelletToVector(Pellet object){
     pelletVector.push_back(object);
-
 }
 
 void Game::addEnemyToVector(Enemy object){
@@ -986,6 +1022,7 @@ void Game::changeState(State nextState){
     yun.setHp(100);
     switch (nextState){
         case level1 :
+            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();
@@ -996,6 +1033,7 @@ void Game::changeState(State nextState){
             _gameState = nextState;
             break;
         case level2 :
+            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();
@@ -1006,6 +1044,7 @@ void Game::changeState(State nextState){
             _gameState = nextState;
             break;
         case level3 :
+            if (_gameState == mainMenu || _gameState == selectLvl) modifyDifficulty();
             enemyVector.clear();
             pelletVector.clear();
             pUpVector.clear();

@@ -36,6 +36,9 @@ void Textures::generateTextures(){
     texMap[_boss_tex1] = new sf::Texture();
     texMap[_boss_tex2] = new sf::Texture();
     texMap[_boss_tex3] = new sf::Texture();
+    texMap[_pUp_power_tex] = new sf::Texture();
+    texMap[_pUp_speed_tex] = new sf::Texture();
+    texMap[_pUp_invul_tex] = new sf::Texture();
     texMap[_yun_still_tex] = new sf::Texture();
     texMap[_yun_hurt_tex] = new sf::Texture();
     texMap[_yun_hurt_f1_tex] = new sf::Texture();
@@ -73,6 +76,9 @@ void Textures::generateTextures(){
     textureAffectation(_boss_tex1, "images/beenzino_256.png");
     textureAffectation(_boss_tex2, "images/girls_generation_256.png");
     textureAffectation(_boss_tex3, "images/jonghyun_256.png");
+    textureAffectation(_pUp_invul_tex, "images/pup_invul_32.png");
+    textureAffectation(_pUp_speed_tex, "images/pup_speed_32.png");
+    textureAffectation(_pUp_power_tex, "images/pup_power_32.png");
     textureAffectation(_yun_still_tex, "images/yun_still_64.png");
     textureAffectation(_yun_hurt_tex, "images/yun_hurt_64.png");
     textureAffectation(_yun_hurt_f1_tex, "images/yun_hurt_f1_64.png");

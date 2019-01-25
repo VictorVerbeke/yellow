@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <ctime>
 #include <vector>
 #include <exception>
 #include "Player.hh"
@@ -170,4 +171,5 @@ template<class T>
 void Game::drawEntity (T object) {
     draw(object._sprite);       // A commenter pour voir les hitbox.
     // draw(object._hitbox);    // A décommenter pour voir les hitbox.
+    // Pour bien prendre en compte ce changement, il faut faire make clean all.
 }
