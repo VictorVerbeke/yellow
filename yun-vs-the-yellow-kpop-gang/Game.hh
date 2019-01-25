@@ -93,6 +93,8 @@ class Game : public sf::RenderWindow {
 
 
         // Affichage des barres de vie
+        void drawGUIYun ();
+        void drawGUIBoss ();
         void drawGUI ();
 
 

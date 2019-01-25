@@ -1083,7 +1083,7 @@ void Game::drawEntities(){
 
 
 // Méthode qui dessine le GUI (barres de vie) sur l'écran.
-void Game::drawGUI ()
+void Game::drawGUIYun ()
 {
     sf::Text yunHP;
     sf::RectangleShape outlineBarreVieYun(sf::Vector2f(200.f, 25.f));
@@ -1107,6 +1107,28 @@ void Game::drawGUI ()
     draw(outlineBarreVieYun);
 }
 
+
+void Game::drawGUIBoss ()
+{
+    sf::Text bossHP;
+
+
+    bossHP.setFont(_font);
+    bossHP.setCharacterSize(20);
+    bossHP.setString("Boss's HP:");
+    bossHP.setPosition(500, 550);
+
+
+
+    draw(bossHP);
+}
+
+
+void Game::drawGUI ()
+{
+    drawGUIYun();
+    if (bossVector.size() > 0) drawGUIBoss();
+}
 
 // Methodes d'ajout d'entités dans les vecteurs de la classe Game.
 // Généralement on fait addXToVector(X(...)).
