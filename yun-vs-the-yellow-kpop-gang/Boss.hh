@@ -20,19 +20,10 @@ class Boss: public Enemy {
         void move();
         Pellet fire(sf::Vector2f targetPos) override;
 
-        // Getter, Setter
-        unsigned int getSpecialCD(){ return _specialFireCD; }
-        void setSpecialCD(unsigned int newCD){ _specialFireCD = newCD; }
-
-        // Attributs
-        Name _name;
-        int _phase;
-
-    protected:
-        unsigned int _specialFireCD;
-
     private:
-        float _bossFireDamage;
-        float _bossFireCD;
-        float _bossFireSpeed;
+        // Attributs.
+        Name _name; // Le nom du boss, permet de modifier les stats du genre :
+        float _bossFireDamage;  // - les dégats du boss,
+        float _bossFireCD;      // - sa vitesse de feu,
+        float _bossFireSpeed;   // - la vitesse des Pellet tirés.
 };

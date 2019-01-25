@@ -2,19 +2,21 @@
 
 // Bonjour ! Bienvenue dans la classe Game, où tout se déroule presque.
 // Afin de mieux comprendre comment le jeu fonctionne, veuillez vous
-// référencer au "Guide du Stagiaire qui devrait reprendre notre projet",
+// référencer au "Guide au Stagiaire qui devrait reprendre notre projet"
+// (il s'agit du PDF rendu avec le mail, c'est le nom secondaire du fichier)
 // ou à aller voir le .h où chaque fonction est expliquée brièvement.
-// Nous avons essayé de bien commenter avec de rentre le code simple à
-// prendre en main, donc le guide ne sera pas vraiment nécessaire, mais
+// Nous avons essayé de bien commenter afin de rendre le code simple à lire et
+// à prendre en main, donc le guide ne sera pas vraiment nécessaire, mais
 // (si nous avons le temps de le faire correctement) il y aura peut-être
 // des schémas explicatifs de chaque étape du déroulement du jeu.
 // Bonne lecture !
+//                                Pas longtemps avant la date de rendu,
 //                                  - Victor Verbeke, Dimitri Kokkonis.
 
 // Déclaration des variables statiques (par défaut) des classes du jeu.
 // Elles sont déclarées ici pour s'y référencer en allant juste en haut
 // du fichier. Character regroupe plein de variables concernant les
-// charactéristiques des entités de type "Charactère" (c'est pas pour rien),
+// caractéristiques des entités héritant de Character (c'est pas pour rien),
 // tandis que Textures texMap[egroupe] l'ensemble des textures utilisées dans le jeu.
 // Les variables "Character::" sont celles du niveau de difficulté "Normal".
 // Les variables "Textures::" sont juste des pointeurs nuls, ils sont
@@ -43,10 +45,10 @@ float Character::_enemyStandardHP = 30;
 // utilisés plus tard. Les attributs sont détaillés un par un dans Game.hh.
 Game::Game(sf::VideoMode mode, string name) :
     sf::RenderWindow(mode, name),
-    _frameCounter(0),
-    _menuSelection(0),
     _difficulty(0),
-    _gameState(beginState)
+    _menuSelection(0),
+    _gameState(beginState),
+    _frameCounter(0)
 {
     // Configuration de la fenêtre de jeu.
     setMouseCursorVisible(false);
@@ -82,7 +84,7 @@ Game::Game(sf::VideoMode mode, string name) :
     _volumeText.setFont(_font);
     _volumeText.setCharacterSize(50);
     _volumeText.setString(s.str());
-    _volumeText.setColor(sf::Color::Yellow);
+    _volumeText.setFillColor(sf::Color::Yellow);
     _volumeText.setPosition(590, 193);
 
     _difficultyNames.push_back("Easy");
@@ -93,7 +95,7 @@ Game::Game(sf::VideoMode mode, string name) :
     _difficultyText.setFont(_font);
     _difficultyText.setCharacterSize(50);
     _difficultyText.setString(_difficultyNames[_difficulty]);
-    _difficultyText.setColor(sf::Color::Yellow);
+    _difficultyText.setFillColor(sf::Color::Yellow);
     _difficultyText.setPosition(605, 292);
 
 
@@ -220,7 +222,7 @@ void Game::scriptedEvents_lvl1(){
             addEnemyToVector(Enemy(900, 400, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             break;
 
-        // Vous avez l'idée.
+        // Vous avez l'idée : Frame 500, création de trois ennemis.
         case 500 :
             addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex1], wave));
             addEnemyToVector(Enemy(900, 250, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
@@ -242,31 +244,33 @@ void Game::scriptedEvents_lvl1(){
             addEnemyToVector(Enemy(900, 300, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             break;
 
-        case 1500 :
+        case 1500 : // On a essayé de créer différents patterns d'arrivée d'ennemis. Ici, ils sont en ligne.
             addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex1], wave));
             addEnemyToVector(Enemy(900, 225, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             addEnemyToVector(Enemy(900, 350, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             addEnemyToVector(Enemy(900, 475, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             break;
 
-        case 1800 :
+        case 1800 : // Ici, ils sont en diagonale.
             addEnemyToVector(Enemy(900, 100, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex1], wave));
             addEnemyToVector(Enemy(950, 225, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             addEnemyToVector(Enemy(1000, 350, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             addEnemyToVector(Enemy(1050, 475, 32, Character::_enemyStandardHP, Textures::texMap[_enemy_tex2], wave));
             break;
 
-        case 2500 :
+        case 2500 : // Apparition du boss !
             addBossToVector(Boss(Beenzino, Textures::texMap[_boss_tex1]));
             break;
 
-        case 2501 :
-            _frameCounter = 2500;
-            break;
+            case 2501 :
+                _frameCounter = 2500; // On bloque le jeu à la frame 2500. Une fois
+                // le boss vaincu, on peut reprendre le compte.
+                break;
 
-        case 2600 :
-            changeState(level2);
-            break;
+            case 2800 : // Après avoir vaincu le boss, le joueur a 300 frames, soit
+                changeState(level2);    // cinq secondes, pour aller chercher le
+                break;                  // powerup que le boss a fait tomber.
+
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
             break;
@@ -334,13 +338,15 @@ void Game::scriptedEvents_lvl2(){
 
             break;
 
-        case 2501 :
-            _frameCounter = 2500;
-            break;
+            case 2501 :
+                _frameCounter = 2500; // On bloque le jeu à la frame 2500. Une fois
+                // le boss vaincu, on peut reprendre le compte.
+                break;
 
-        case 2600 :
-            changeState(level3);
-            break;
+            case 2800 : // Après avoir vaincu le boss, le joueur a 300 frames, soit
+                changeState(level3);    // cinq secondes, pour aller chercher le
+                break;                  // powerup que le boss a fait tomber.
+
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
             break;
@@ -408,12 +414,14 @@ void Game::scriptedEvents_lvl3(){
             break;
 
         case 2501 :
-            _frameCounter = 2500;
+            _frameCounter = 2500; // On bloque le jeu à la frame 2500. Une fois
+            // le boss vaincu, on peut reprendre le compte.
             break;
 
-        case 2600 :
-            changeState(mainMenu);
-            break;
+        case 2800 : // Après avoir vaincu le boss, le joueur a 300 frames, soit
+            changeState(mainMenu);  // cinq secondes, pour aller chercher le
+            break;                  // powerup que le boss a fait tomber.
+
         // Si y'a rien, alors il ne se passe rien. Logique.
         default :
             break;
@@ -423,8 +431,9 @@ void Game::scriptedEvents_lvl3(){
 
 // Fonction d'attaque de chaque ennemi.
 // Pour chaque ennemi dans le vecteur d'ennemi, on appelle la fonction fire().
-// L'ennemi tire vers le joueur. Puis ensuite, on réduit le cooldown pour
-// éviter qu'il tire en continu.
+// L'ennemi tire vers le joueur.  Grâce à la fonction fire, on lui donne un
+// cooldown pour éviter qu'il tire en continu. Ensuite, on réduit le cooldown
+// pour qu'il puisse tirer de nouveau au bout d'un moment.
 void Game::enemyAttack(){
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
@@ -535,11 +544,13 @@ void Game::checkEventOptions(){
                     if (_menuSelection == 0) setVolume(-1);     // Baisser le volume
                     if (_menuSelection == 1) setDifficulty(-1); // Baisser la difficulté
                 }
+
                 if (event.key.code == sf::Keyboard::Right)
                 {
                     if (_menuSelection == 0) setVolume(1);      // Augmenter le volume
                     if (_menuSelection == 1) setDifficulty(1);  // Augmenter la difficulté
                 }
+
                 if (event.key.code == sf::Keyboard::Return) goMenuSelection(_menuSelection);
                 if (event.key.code == sf::Keyboard::Space) goMenuSelection(_menuSelection);
                 if (event.key.code == sf::Keyboard::Escape) changeState(mainMenu);
@@ -631,16 +642,13 @@ void Game::checkEventIngame(){
 
 // Vérification des collisions du joueur !
 // Si Yun est en frame d'invincibilité, alors il prend aucun dégat mais
-    // Yun va bouger : ces deux variables correspondent à ses déplacements.
-    // Selon les flags, ils vont être modifiés, donc on peut considérer que
-    // ce sont plus des dx et dy que x et y, mais peu importe.
 // supprime tous les pellets touchés. Sinon, il prend des dégats de la part
 // des ennemis ou des pellets.
 void Game::checkYunCollisions(){
     if (yun.getInvulCD() == 0)
     {
-        checkYunCollisionsEnemies();
-        checkYunCollisionsPellets(true);
+        checkYunCollisionsEnemies();        // Pour les ennemis
+        checkYunCollisionsPellets(true);    // Pour les balles.
 
         // On affecte à chaque frame un son aléatoire pour quand Yun se
         // fera toucher. Il en a deux, mais ils sont rigolos.
@@ -652,33 +660,40 @@ void Game::checkYunCollisions(){
     }
     else
     {
-        yun.setInvulCD(yun.getInvulCD() - 1); // On réduit le temps
-        if (yun.getIsHurt() == true){   // d'invincibilité. Si il s'agit de la
-            yun.setIsHurt(false);   // deuxième frame d'invincibilité, alors on
-        // modifie la texture pour indiquer qu'il est blessé. La première frame
-        // est un Yun rouge, pour montrer la frame où il est blessé (check
-        // l'overload de Player pour ça.)
+        yun.setInvulCD(yun.getInvulCD() - 1);   // On réduit le temps
+        if (yun.getIsHurt() == true){           // d'invincibilité. Si il s'agit
+            yun.setIsHurt(false);               // de la deuxième frame
+        // d'invincibilité, alors on modifie la texture pour indiquer qu'il est
+        // blessé. La première frame est un Yun rouge, pour montrer la frame où
+        // il est blessé (check l'overload de Player pour ça).
             yun._sprite.setTexture(*(Textures::texMap[_yun_hurt_tex]));
         }
-        // A la dernière frame, on remet Yun tranquille content.
+        // A la dernière frame, on remet Yun tranquille content (il peut donc
+        // de nouveau se faire taper par les stars de K-pop).
         if (yun.getInvulCD() == 0){
             yun._sprite.setTexture(*(Textures::texMap[_yun_still_tex]));
         }
-        checkYunCollisionsPellets(false);
+        checkYunCollisionsPellets(false); // False correspond à "Il ne peut pas
+        // se faire blesser par les balles, car invulnérable".
     }
-    // TODO : La collision avec les powerups.
+
+    // Collision avec les powerUp.
     checkYunCollisionsPowerUp();
+
+    // Si Yun meurt, alors on le dit dans le terminal, et on retourne au
+    // menu principal.
     if (yun.getHp() < 0){
         cout << "Yun est mort de mauvais gout ! Retour au menu principal !" << endl;
         changeState(mainMenu);
     }
 }
 
-// Yun touche un ennemi = Il prend des dégats (si il est pas invulnérable).
-// Ici, on parcourt le vecteur d'ennemis et on invoque la surcharge - de Player
-// pour lui infliger des dégats.
+
 void Game::checkYunCollisionsEnemies(){
+
     // Si yun n'est pas invulnérable, il prend des dégats des ennemis.
+    // Pour chaque Enemy du vecteur Enemy, si il y a collision,
+    // alors Yun prend des dégats (via la surcharge -(const &float)).
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); itEnemy++){
         if (yun._hitbox.getGlobalBounds().intersects((*itEnemy)._hitbox.getGlobalBounds()))
@@ -688,6 +703,7 @@ void Game::checkYunCollisionsEnemies(){
     }
 
     // Au passage, il prend la même chose de la part des boss.
+    // Juste, ça fait plus mal.
     vector<Boss>::iterator itBoss = bossVector.begin();
     for ( ; itBoss != bossVector.end(); itBoss++){
         if (yun._hitbox.getGlobalBounds().intersects((*itBoss)._hitbox.getGlobalBounds()))
@@ -701,14 +717,26 @@ void Game::checkYunCollisionsEnemies(){
 // Dans les deux cas, il supprime les pellets touchés.
 void Game::checkYunCollisionsPellets(bool vulnerable){
 
+    // Pseudo-code équivalent :
+    //  Pour chaque pellet dans le vecteur de pellet :
+    //      | Si la cible du Pellet est bien Yun :
+    //      |    | Si il y a collision des hitbox :
+    //      |    |    | Si Yun est vulnérable :
+    //      |    |    |    | Yun prend des dégats,
+    //      |    |    |    | On supprime le pellet du vecteur de pellets.
+    //      |    |    | On supprime le pellet.
+    //      |    | Sinon, pellet suivant.
+    //      | Sinon, pellet suivant.
+    //  Fin Pour.
+
     vector<Pellet>::iterator itPellet = pelletVector.begin();
     for ( ; itPellet != pelletVector.end(); )
     {
-        if ((*itPellet)._target == 0) // Si les pellets visent Yun
+        if ((*itPellet).getTarget() == 0) // Si les pellets visent Yun
         {
             if (yun._hitbox.getGlobalBounds().intersects((*itPellet)._hitbox.getGlobalBounds()))
             {
-                if (vulnerable) yun - (*itPellet)._damage;  // Il prend des dégats
+                if (vulnerable) yun - (*itPellet).getDamage();  // Il prend des dégats
                 itPellet = pelletVector.erase(itPellet); // On supprime le pellet.
             } else itPellet++;
         } else itPellet++;
@@ -717,26 +745,36 @@ void Game::checkYunCollisionsPellets(bool vulnerable){
 
 // Si Yun touche un powerup, il est amélioré durant TOUTE la partie.
 void Game::checkYunCollisionsPowerUp(){
+
+    // Pseudo-code équivalent de la fonction :
+    //  Pour chaque powerUp dans le vecteur de powerUps :
+    //      | Si il y a collision des hitboxs :
+    //      |    | Selon le type, les caractéristiques de Yun sont améliorées.
+    //      |    | On affiche dans le terminal les caractéristiques de Yun.
+    //      |    | On efface le powerUp du vecteur de powerUps.
+    //      | Sinon, on va au powerUp suivant.
+    //  Fin Pour.
+
     vector<PowerUp>::iterator itPowerUp = pUpVector.begin();
     for ( ; itPowerUp != pUpVector.end(); )
     {
         if (yun._hitbox.getGlobalBounds().intersects((*itPowerUp)._hitbox.getGlobalBounds()))
         {
-            switch((*itPowerUp)._type){
+            switch((*itPowerUp).getType()){
                 case power :
-                    Character::_playerFireDamage += (*itPowerUp)._power;
+                    Character::_playerFireDamage += (*itPowerUp).getPower();
                     break;
                 case speed :
-                    Character::_playerMovementSpeed += (*itPowerUp)._power/5;
+                    Character::_playerMovementSpeed += (*itPowerUp).getPower()/5;
                     break;
                 case invul :
-                    Character::_playerInvulCD += (*itPowerUp)._power;
+                    Character::_playerInvulCD += (*itPowerUp).getPower();
                     break;
                 default :
                     break;
             }
-            itPowerUp = pUpVector.erase(itPowerUp); // On supprime le pUp.
-            cout << "\tUpdate des charactéristiques du joueur :" << endl;
+            itPowerUp = pUpVector.erase(itPowerUp); // On supprime le powerUp.
+            cout << "\tUpdate des caractéristiques du joueur :" << endl;
             cout << "\tDégats des projectiles : " << Character::_playerFireDamage << " HP" << endl;
             cout << "\tVitesse de déplacement : " << Character::_playerMovementSpeed * 25  << " %" << endl;
             cout << "\tFrames d'invulnérabilité : " << Character::_playerInvulCD << " frames"<< endl << endl;
@@ -745,24 +783,45 @@ void Game::checkYunCollisionsPowerUp(){
 }
 
 // Si un ennemi rencontre un pellet tiré par le joueur, alors il est blessé.
-// Pour la mort de l'ennemi, voir la surcharge de l'opérateur - dans Enemy.
+// Pour les dégats de l'ennemi, voir la surcharge de l'opérateur - dans Enemy.
 void Game::checkEnemyCollisions(){
+
     bool enemyKilled = false;
-    // Les ennemis ne sont blessés que par les pellets tirés par Yun
+
+    // Les ennemis ne sont blessés que par les pellets tirés par Yun.
+    // Retranscription de ce qu'il y a en-dessous :
+    //
+    // Pour chaque ennemi dans le vecteur d'ennemi :
+    // 1 : Pour chaque Pellet dans le vecteur de Pellet :
+    //   - Si l'ennemi est pas mort :
+    //     - Si la cible visée par le Pellet est bien un ennemi :
+    //       - Si les hitbox des deux entités se superposent :
+    //          - Alors l'ennemi prend des dégats !
+    //          - On efface le Pellet.
+    //          - Si l'ennemi n'a plus de vie, alors il est tué. (logique)
+    //        - Sinon, on va au Pellet suivant.
+    //      - Sinon, on va au Pellet suivant. (Echo, echo)
+    //    - Sinon, on va à la fin du vecteur de pellet.
+    // 2 : Si l'ennemi est mort :
+    //   - On crée (peut-être, 50% de chance) un power-up et on l'ajoute au jeu
+    //   - On supprime l'ennemi du vecteur d'ennemis
+    //   - On joue un son de mort (Yun qui dit une phrase).
+    // 3 : Y'a pas de trois, c'est fini.
+
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); ){
         enemyKilled = false;
         vector<Pellet>::iterator itPellet = pelletVector.begin();
         for ( ; itPellet != pelletVector.end(); ){
             if (enemyKilled == false){
-                if ((*itPellet)._target == 1){
+                if ((*itPellet).getTarget() == 1){
                     if ((*itEnemy)._hitbox.getGlobalBounds().intersects((*itPellet)._hitbox.getGlobalBounds())){
-                        (*itEnemy) - (*itPellet)._damage;
+                        (*itEnemy) - (*itPellet).getDamage();
                         itPellet = pelletVector.erase(itPellet);
                         if ((*itEnemy).getHp() <= 0) enemyKilled = true;
                     } else itPellet++;
                 } else itPellet++;
-            } else itPellet++;
+            } else itPellet = pelletVector.end();
         }
 
         if (enemyKilled == false) itEnemy++;
@@ -791,6 +850,10 @@ void Game::checkEnemyCollisions(){
 }
 
 void Game::checkBossCollisions(){
+
+    // C'est la même idée que pour l'ennemi. La différence est que
+    // le boss donne obligatoirement un powerUp de dégats, très puissant. (+5)
+
     bool isKilled = false;
     vector<Boss>::iterator itBoss = bossVector.begin();
     for ( ; itBoss != bossVector.end(); ){
@@ -798,9 +861,9 @@ void Game::checkBossCollisions(){
         vector<Pellet>::iterator itPellet = pelletVector.begin();
         for ( ; itPellet != pelletVector.end(); ){
             if (isKilled == false){
-                if ((*itPellet)._target == 1){
+                if ((*itPellet).getTarget() == 1){
                     if ((*itBoss)._hitbox.getGlobalBounds().intersects((*itPellet)._hitbox.getGlobalBounds())){
-                        (*itBoss) - (*itPellet)._damage;
+                        (*itBoss) - (*itPellet).getDamage();
                         itPellet = pelletVector.erase(itPellet);
                         if ((*itBoss).getHp() <= 0) isKilled = true;
                     } else itPellet++;
@@ -818,6 +881,7 @@ void Game::checkBossCollisions(){
         }
     }
 }
+
 // Appel de toutes les fonctions de collisions vues précédemment.
 void Game::checkAllCollisions(){
     checkYunCollisions();
@@ -827,11 +891,13 @@ void Game::checkAllCollisions(){
 
 
 // Methodes de déplacement !
-// Toutes les classes possèdent un moyen de se déplacer : Yun manuellement (x,y)
-// et les autres ont une vitesse et une direction. A chaque frame, on fait
+// Toutes les classes possèdent un moyen de se déplacer : Yun manuellement
+// grace à move(x,y), contrairement aux autres entités qui se déplace avec
+// move() qui fait appel à leurs attributs protégés. A chaque frame, on fait
 // bouger les entités avec les fonctions suivantes.
 
-// moveYun permet de... bouger Yun. C'est grâce aux flags dans les Events.
+// moveYun permet de bouger Yun.
+// Cette méthode utilise les flags modifiés dans checkEventIngame().
 void Game::moveYun(){
 
     // Yun va bouger : ces deux variables correspondent à ses déplacements.
@@ -842,31 +908,37 @@ void Game::moveYun(){
 
     // Si on appuie sur gauche et qu'on est pas sur le rebord gauche, alors
     // on peut bouger vers la gauche. Même idée pour les quatre directions.
-    if (leftFlag && (yun._x) > 0) x -= Character::_playerMovementSpeed;
-    if (rightFlag && (yun._x + yun._size)< getSize().x) x += Character::_playerMovementSpeed;
-    if (upFlag && (yun._y) > 0) y -= Character::_playerMovementSpeed;
-    if (downFlag && (yun._y + yun._size) < getSize().y) y += Character::_playerMovementSpeed;
+    if (leftFlag && (yun.getX()) > 0) x -= Character::_playerMovementSpeed;
+    if (rightFlag && (yun.getX() + yun.getSize())< getSize().x) x += Character::_playerMovementSpeed;
+    if (upFlag && (yun.getY()) > 0) y -= Character::_playerMovementSpeed;
+    if (downFlag && (yun.getY() + yun.getSize()) < getSize().y) y += Character::_playerMovementSpeed;
 
     if (shiftFlag){     // Si on appuie sur Shift, on peut naviguer plus
         x = x/2;        // lentement. Utile lors des situations délicates où
-        y = y/2;        // on doit naviguer entre les balles.
-    }
-    yun.move(x, y);
-    yun.decreaseCD();
-                            // moveEntity viendra plus tard, mais ça permet de
-                            // faire bouger une entité.
-           // Comme la fonction moveYun est appelée à chaque
-                            // frame, on en profite pour faire réduire son
-                            // cooldown d'attaque ici.
+        y = y/2;        // on doit naviguer entre les balles, ou quand on a
+    }                   // une vitesse trop élevée grâce aux power-ups.
+
+    yun.move(x, y);     // Comme la fonction moveYun est appelée à chaque
+    yun.decreaseCD();   // frame, on en profite pour faire réduire son
+                        // cooldown d'attaque ici.
 }
 
-// Somme de toutes les méthodes de déplacement d'entités.
+// Somme de toutes les déplacements d'entités.
 void Game::moveEntities(){
-    moveYun();
 
+    moveYun(); // On fait bouger Yun.
+
+    // C'est la même idée pour les quatre vecteurs. Je vais pas recréer
+    // une fonction pour chaque itérateur, l'idée est simple et les blocs sont
+    // assez espacés pour comprendre. Voici quand même une explication pour
+    // l'un des vecteurs :
+
+    // Pour tous les Enemy dans le vecteur d'Enemy, on les fait bouger.
     vector<Enemy>::iterator itEnemy = enemyVector.begin();
     for ( ; itEnemy != enemyVector.end(); ){
-        if ((*itEnemy)._x < -(*itEnemy)._size || (*itEnemy)._y < -(*itEnemy)._size || (*itEnemy)._y > getSize().y){
+        // Si l'ennemi sort de l'écran, on le supprime du vecteur.
+        // Sinon, on le fait bouger.
+        if ((*itEnemy).getX() < -(*itEnemy).getSize() || (*itEnemy).getY() < -(*itEnemy).getSize() || (*itEnemy).getY() > getSize().y){
             itEnemy = enemyVector.erase(itEnemy);
         } else {
             (*itEnemy).move();
@@ -874,9 +946,10 @@ void Game::moveEntities(){
         }
     }
 
+
     vector<Pellet>::iterator itPellet = pelletVector.begin();
     for ( ; itPellet != pelletVector.end(); ){
-        if ((*itPellet)._x < 0 || (*itPellet)._x > getSize().x || (*itPellet)._y < 0 || (*itPellet)._y > getSize().y){
+        if ((*itPellet).getX() < 0 || (*itPellet).getX() > getSize().x || (*itPellet).getY() < 0 || (*itPellet).getY() > getSize().y){
             itPellet = pelletVector.erase(itPellet);
         } else {
             (*itPellet).move();
@@ -886,7 +959,7 @@ void Game::moveEntities(){
 
     vector<PowerUp>::iterator itPowerUp = pUpVector.begin();
     for ( ; itPowerUp != pUpVector.end(); ){
-        if ((*itPowerUp)._x < 0 || (*itPowerUp)._x > getSize().x || (*itPowerUp)._y < 0 || (*itPowerUp)._y > getSize().y){
+        if ((*itPowerUp).getX() < 0 || (*itPowerUp).getX() > getSize().x || (*itPowerUp).getY() < 0 || (*itPowerUp).getY() > getSize().y){
             itPowerUp = pUpVector.erase(itPowerUp);
         } else {
             (*itPowerUp).move();
@@ -896,14 +969,13 @@ void Game::moveEntities(){
 
     vector<Boss>::iterator itBoss = bossVector.begin();
     for ( ; itBoss != bossVector.end(); ){
-        if ((*itBoss)._x < 0 || (*itBoss)._x > getSize().x || (*itBoss)._y < 0 || (*itBoss)._y > getSize().y){
+        if ((*itBoss).getX() < 0 || (*itBoss).getX() > getSize().x || (*itBoss).getY() < 0 || (*itBoss).getY() > getSize().y){
             itBoss = bossVector.erase(itBoss);
         } else {
             (*itBoss).move();
             itBoss++;
         }
     }
-
 }
 
 
@@ -948,7 +1020,9 @@ void Game::drawIngame(){
 }
 
 // Selon l'état du jeu et la sélection du menu (le bouton visé), on
-// déplace le curseur à l'écran. Toutes les valeurs sont faites à la main.
+// déplace le curseur à l'écran. Toutes les valeurs sont faites à la main,
+// donc veuillez ne pas y toucher ! Enfin vous pouvez, mais à vous de les
+// remettre après.
 void Game::drawCursor(){
     // Dépend du State et de _menuSelection.
     switch(_gameState){
@@ -970,7 +1044,7 @@ void Game::drawCursor(){
             if (_menuSelection == 2) _cursor_Spr.setPosition(470, 460);
             break;
 
-        default: // On le sort de l'écran.
+        default: // On le sort de l'écran, comme ça on le voit pas.
             _cursor_Spr.setPosition(-100, -100);
             break;
     }
@@ -981,6 +1055,8 @@ void Game::drawCursor(){
 
 // On veut que le background défile en fond.
 // On fait donc en sorte que l'image soit basée sur le temps passé en jeu.
+// Vu que le _frameCounter est bloqué en jeu, ça bloque aussi le fond durant
+// les combats de Boss.
 void Game::drawBackground(){
     draw(_ingameBG_Spr);
     _ingameBG_Spr.setPosition(-0.1*_frameCounter, 0);
@@ -989,7 +1065,8 @@ void Game::drawBackground(){
 // Méthode d'appel des différentes méthodes d'affichage des entités.
 void Game::drawEntities(){
 
-    // Draw every Pellet, Enemy, Boss and PowerUp (weird flex but ok)
+    // Pour chaque entité dans chaque vecteur, on affiche l'entité.
+    // drawEntity() vient de RenderWindow, dont Game hérite.
     for(vector<Enemy>::iterator it = enemyVector.begin(); it != enemyVector.end(); it++)
         drawEntity((*it));
     for(vector<Boss>::iterator it = bossVector.begin(); it != bossVector.end(); it++)
@@ -999,12 +1076,13 @@ void Game::drawEntities(){
     for(vector<Pellet>::iterator it = pelletVector.begin(); it != pelletVector.end(); it++)
         drawEntity((*it));
     // Draw the Player after everything.
-    drawEntity(yun);
+    drawEntity(yun);     // Les commentaires en anglais c'est Dimitri, il
+                         // a vraiment les habitudes d'un pro.
 }
 
 
 // Methodes d'ajout d'entités dans les vecteurs de la classe Game.
-// Généralement on fait addXToVector(new X(args)).
+// Généralement on fait addXToVector(X(...)).
 void Game::addPelletToVector(Pellet object){
     pelletVector.push_back(object);
 }
@@ -1023,28 +1101,33 @@ void Game::addBossToVector(Boss object){
 
 // Gestion _gameState !
 // Permet d'affecter l'attribut _gameState, puis change les musiques,
-// Les vecteurs, etc... selon l'état actuel et le suivant.
+// les vecteurs, et d'autres valeurs selon l'état actuel et le suivant.
 void Game::changeState(State nextState){
-    _frameCounter = 0;
-    _menuSelection = 0;
-    yun.setHp(100);
-    switch (nextState){
+    _frameCounter = 0;      // Réinitialisation du compteur de frames et
+    _menuSelection = 0;     // du menu sélectionné (pour la navigation entre
+    yun.setHp(100);         // menus au début du jeu). On restaure aussi la vie
+                            // du joueur.
+    switch (nextState){     // Selon l'état où on se dirige ! (et pas celui où
+                            // on est !!)
         case level1 :
+            // Si on vient du menu principal ou de la sélection de niveau,
+            // autrement dit si il s'agit de notre premier niveau.
             if (_gameState == mainMenu || _gameState == selectLvl) {
-                modifyDifficulty();
+                modifyDifficulty(); // On reset les caractéristiques.
                 cout << "Bienvenue en jeu ! Votre mission : Tuer la K-Pop !" << endl;
             }
             cout << "\t - - - [Niveau 1 - vs Beenzino] - - -" << endl;
-            enemyVector.clear();
-            pelletVector.clear();
-            pUpVector.clear();
+            enemyVector.clear();    // On nettoie les vecteurs, pour éviter
+            pelletVector.clear();   // d'avoir les ennemis/balles/powerUps
+            pUpVector.clear();      // des anciens niveaux.
             bossVector.clear();
-            yun._x = 100;
-            yun._y = 274;
-            changeMusic("sounds/musics/beenzino.ogg");
-            _gameState = nextState;
+            yun.setPosition(100, 274);  // On dit à Yun de se mettre en place.
+            changeMusic("sounds/musics/beenzino.ogg"); // On joue une musique.
+            _gameState = nextState; // On met à jour l'état actuel.
             break;
+
         case level2 :
+            // C'est la même idée pour tous les niveaux.
             if (_gameState == mainMenu || _gameState == selectLvl) {
             modifyDifficulty();
                 cout << "Bienvenue en jeu ! Votre mission : Tuer la K-Pop !" << endl;
@@ -1054,11 +1137,11 @@ void Game::changeState(State nextState){
             pelletVector.clear();
             pUpVector.clear();
             bossVector.clear();
-            yun._x = 100;
-            yun._y = 274;
+            yun.setPosition(100, 274);
             changeMusic("sounds/musics/girlgeneration.ogg");
             _gameState = nextState;
             break;
+
         case level3 :
             if (_gameState == mainMenu || _gameState == selectLvl) {
             modifyDifficulty();
@@ -1069,31 +1152,32 @@ void Game::changeState(State nextState){
             pelletVector.clear();
             pUpVector.clear();
             bossVector.clear();
-            yun._x = 100;
-            yun._y = 274;
+            yun.setPosition(100, 274);
             changeMusic("sounds/musics/jonghyun.ogg");
             _gameState = nextState;
             break;
 
-        case selectLvl :
+        case selectLvl : // Menu de sélection de niveau !
             _selectedLevel = level1; // Petit hack pour toujours afficher le
             changeLevel(1);     // premier niveau en arrivant sur le menu :
             changeLevel(-1);    // mettre au niveau 1, avancer puis reculer pour
                                 // mettre à jour l'affichage.
         case mainMenu :
         case options :
+            // Si on démarre le jeu ou si on revient d'un niveau de jeu, on met la musique des menus.
             if ((_gameState == beginState) || (_gameState == level3) || (_gameState == level2) || (_gameState == level1))
                 changeMusic("sounds/musics/main_menu_music.ogg");
             _gameState = nextState;
             break;
 
+        // Sinon, on fait rien.
         default:
             break;
     }
 }
 
-// Cette méthode permet de changer de musique. Le musicPath est le chemin
-// du fichier à lire.
+// Cette méthode permet de changer de musique.
+// Le musicPath est le chemin du fichier à lire.
 void Game::changeMusic(string musicPath){
 
     _music.pause();
@@ -1178,19 +1262,19 @@ void Game::playRandomKillSound(){
 // Change le volume de la musique.
 void Game::setVolume(int i){
     if (i > 0){
-        if (_volume < 100) _volume += 5;
-    }
+        if (_volume < 100) _volume += 1; // Par tranches de 1%, mais quand on
+    }                                    // reste appuyé, ça va vite.
     else if (i < 0){
-        if (_volume > 0) _volume -= 5;
+        if (_volume > 0) _volume -= 1;
     }
 
     stringstream s;
 
-    s << _volume << "%";
-    _playerKillSound.setVolume(_volume);
-    _playerDamageSound.setVolume(_volume);
+    s << _volume << "%"; // De la forme "60%" par exemple.
+    _playerKillSound.setVolume(_volume);    // On modifie le volume des effets
+    _playerDamageSound.setVolume(_volume);  // sonores, ainsi que de la musique.
     _music.setVolume(_volume);
-    _volumeText.setString(s.str());
+    _volumeText.setString(s.str()); // On affiche le volume sous forme de texte.
 }
 
 // Même idée que pour changeLevel : +1 pour monter la difficulté,
@@ -1223,7 +1307,7 @@ void Game::modifyDifficulty(){
             Character::_enemyMovementSpeed = 2;
             Character::_enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setColor(sf::Color::Green);
+            _difficultyText.setFillColor(sf::Color::Green);
             break;
 
         case 1 :
@@ -1238,7 +1322,7 @@ void Game::modifyDifficulty(){
             Character::_enemyMovementSpeed = 2;
             Character::_enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setColor(sf::Color::Yellow);
+            _difficultyText.setFillColor(sf::Color::Yellow);
             break;
 
         case 2 :
@@ -1253,7 +1337,7 @@ void Game::modifyDifficulty(){
             Character::_enemyMovementSpeed = 2;
             Character::_enemyStandardHP = 30;
             // change difficulty text color
-            _difficultyText.setColor(orange);
+            _difficultyText.setFillColor(orange);
             break;
 
         case 3:
@@ -1268,7 +1352,10 @@ void Game::modifyDifficulty(){
             Character::_enemyMovementSpeed = 2;
             Character::_enemyStandardHP = 40;
             // change difficulty text color
-            _difficultyText.setColor(sf::Color::Red);
+            _difficultyText.setFillColor(sf::Color::Red);
             break;
     }
 }
+
+// Voilà, c'est la fin de la classe Game.
+// Quelle aventure !.

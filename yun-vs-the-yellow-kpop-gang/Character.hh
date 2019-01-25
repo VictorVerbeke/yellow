@@ -17,8 +17,7 @@ class Character: public Entity {
 
         // Une fonction virtuelle, car tous les characters utilisent fire().
         virtual Pellet fire(sf::Vector2f targetPos) = 0;
-
-        void decreaseCD();
+        virtual void decreaseCD() = 0;
 
 
         // Les attributs statiques partagés par tous les characters.
