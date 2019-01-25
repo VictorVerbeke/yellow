@@ -11,8 +11,8 @@ Boss::Boss():
 Boss::Boss(Name name, sf::Texture* tex)
 :
     Enemy(900, 200, 256, 75 * Character::_enemyStandardHP, tex, null),
-    _name(name),
-    _maxHp(75 * Character::_enemyStandardHP)
+    _maxHp(75 * Character::_enemyStandardHP),
+    _name(name)
 {
     switch(name){
         case Beenzino :
